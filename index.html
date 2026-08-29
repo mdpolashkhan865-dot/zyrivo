@@ -1,1341 +1,1153 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#111827">
-<title>ZYRIVO</title>
-
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  -webkit-tap-highlight-color:transparent;
-}
-
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:#f3f5f9;
-  color:#111827;
-  padding-bottom:75px;
-}
-
-button{
-  border:0;
-  background:none;
-  cursor:pointer;
-}
-
-.topbar{
-  height:64px;
-  background:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 15px;
-  position:sticky;
-  top:0;
-  z-index:20;
-  box-shadow:0 1px 8px rgba(0,0,0,.08);
-}
-
-.logo{
-  font-size:27px;
-  font-weight:900;
-  letter-spacing:-1px;
-  color:#2563eb;
-}
-
-.logo span{
-  color:#111827;
-}
-
-.top-icons{
-  display:flex;
-  gap:9px;
-}
-
-.icon-btn{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  background:#f1f5f9;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:21px;
-}
-
-.page{
-  max-width:700px;
-  margin:auto;
-}
-
-.composer{
-  background:#fff;
-  padding:15px;
-  margin-bottom:10px;
-}
-
-.compose-row{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.avatar{
-  width:45px;
-  height:45px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#2563eb,#7c3aed);
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-  font-size:17px;
-}
-
-.input-box{
-  flex:1;
-  background:#f1f5f9;
-  border-radius:25px;
-  padding:13px 18px;
-  color:#64748b;
-  font-size:15px;
-}
-
-.quick-actions{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  margin-top:14px;
-  border-top:1px solid #eee;
-  padding-top:12px;
-}
-
-.quick-actions button{
-  padding:9px;
-  font-size:14px;
-  font-weight:bold;
-  color:#475569;
-}
-
-.stories{
-  background:#fff;
-  padding:12px 10px;
-  display:flex;
-  gap:9px;
-  overflow-x:auto;
-  margin-bottom:10px;
-}
-
-.stories::-webkit-scrollbar{
-  display:none;
-}
-
-.story{
-  min-width:105px;
-  height:150px;
-  border-radius:13px;
-  overflow:hidden;
-  position:relative;
-  background:linear-gradient(145deg,#1d4ed8,#7c3aed);
-  color:white;
-  display:flex;
-  align-items:flex-end;
-  padding:10px;
-  font-weight:bold;
-}
-
-.story.create{
-  background:linear-gradient(145deg,#dbeafe,#eff6ff);
-  color:#2563eb;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  font-size:15px;
-}
-
-.story .story-avatar{
-  position:absolute;
-  top:9px;
-  left:9px;
-  width:34px;
-  height:34px;
-  border:3px solid #2563eb;
-  border-radius:50%;
-  background:#fff;
-}
-
-.post{
-  background:#fff;
-  margin-bottom:10px;
-  padding-top:14px;
-}
-
-.post-head{
-  display:flex;
-  align-items:center;
-  padding:0 15px 10px;
-  gap:10px;
-}
-
-.user-info{
-  flex:1;
-}
-
-.user-info strong{
-  display:block;
-  font-size:15px;
-}
-
-.user-info small{
-  color:#64748b;
-}
-
-.more{
-  font-size:23px;
-}
-
-.post-text{
-  padding:0 15px 12px;
-  line-height:1.5;
-  font-size:15px;
-}
-
-.post-media{
-  width:100%;
-  min-height:210px;
-  background:linear-gradient(135deg,#172554,#2563eb,#7c3aed);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#fff;
-  font-size:55px;
-}
-
-.post-stats{
-  display:flex;
-  justify-content:space-between;
-  padding:10px 15px;
-  color:#64748b;
-  font-size:13px;
-  border-bottom:1px solid #eee;
-}
-
-.post-actions{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-}
-
-.post-actions button{
-  padding:13px 5px;
-  font-weight:bold;
-  color:#475569;
-}
-
-.post-actions button:active{
-  background:#eff6ff;
-  color:#2563eb;
-}
-
-.bottom-nav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  height:68px;
-  background:#fff;
-  border-top:1px solid #ddd;
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  z-index:30;
-}
-
-.nav-btn{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:3px;
-  color:#64748b;
-  font-size:11px;
-  font-weight:bold;
-}
-
-.nav-btn span{
-  font-size:23px;
-}
-
-.nav-btn.active{
-  color:#2563eb;
-}
-
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.55);
-  z-index:50;
-  align-items:flex-end;
-  justify-content:center;
-}
-
-.modal-box{
-  background:#fff;
-  width:100%;
-  max-width:700px;
-  max-height:90vh;
-  overflow:auto;
-  border-radius:22px 22px 0 0;
-  padding:20px;
-}
-
-.modal-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:18px;
-}
-
-.modal-title h2{
-  font-size:21px;
-}
-
-.close{
-  font-size:27px;
-}
-
-textarea{
-  width:100%;
-  height:130px;
-  resize:none;
-  border:1px solid #ddd;
-  border-radius:15px;
-  padding:14px;
-  font-size:16px;
-  outline:none;
-}
-
-.primary{
-  width:100%;
-  padding:14px;
-  margin-top:12px;
-  background:#2563eb;
-  color:white;
-  border-radius:13px;
-  font-weight:bold;
-  font-size:16px;
-}
-
-.tool-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
-}
-
-.tool{
-  padding:20px 12px;
-  border-radius:17px;
-  background:#f1f5f9;
-  text-align:center;
-  font-weight:bold;
-}
-
-.tool-icon{
-  font-size:35px;
-  display:block;
-  margin-bottom:8px;
-}
-
-.search{
-  width:100%;
-  padding:14px;
-  border:1px solid #ddd;
-  border-radius:13px;
-  margin-bottom:15px;
-  font-size:15px;
-}
-
-.profile{
-  background:#fff;
-  text-align:center;
-  padding-bottom:20px;
-}
-
-.cover{
-  height:150px;
-  background:linear-gradient(135deg,#2563eb,#7c3aed,#db2777);
-}
-
-.profile .big-avatar{
-  width:90px;
-  height:90px;
-  border-radius:50%;
-  background:#111827;
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin:-45px auto 10px;
-  border:5px solid #fff;
-  font-size:30px;
-  font-weight:bold;
-}
-
-.profile h2{
-  margin-bottom:5px;
-}
-
-.profile p{
-  color:#64748b;
-}
-
-.profile-stats{
-  display:flex;
-  justify-content:center;
-  gap:35px;
-  margin-top:15px;
-}
-
-.profile-stats strong{
-  display:block;
-}
-
-.section{
-  display:none;
-}
-
-.section.active{
-  display:block;
-}
-
-.ai-header{
-  background:linear-gradient(135deg,#111827,#312e81);
-  color:white;
-  padding:25px 18px;
-  border-radius:0 0 20px 20px;
-}
-
-.ai-header h1{
-  font-size:27px;
-  margin-bottom:7px;
-}
-
-.ai-header p{
-  opacity:.8;
-}
-
-.ai-box{
-  margin:15px;
-  background:white;
-  border-radius:18px;
-  padding:15px;
-}
-
-.ai-input{
-  width:100%;
-  border:1px solid #ddd;
-  border-radius:13px;
-  padding:14px;
-  font-size:15px;
-}
-
-.ai-response{
-  margin-top:12px;
-  background:#f1f5f9;
-  padding:14px;
-  border-radius:13px;
-  display:none;
-}
-
-.message{
-  background:#fff;
-  padding:15px;
-  display:flex;
-  gap:12px;
-  border-bottom:1px solid #eee;
-}
-
-.message-content{
-  flex:1;
-}
-
-.message-content strong{
-  display:block;
-}
-
-.message-content small{
-  color:#64748b;
-}
-
-.market-card{
-  background:#fff;
-  margin:10px;
-  padding:15px;
-  border-radius:16px;
-}
-
-.price{
-  color:#16a34a;
-  font-size:20px;
-  font-weight:bold;
-  margin-top:8px;
-}
-
-@media(min-width:700px){
-  body{
-    background:#eef2f7;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<header class="topbar">
-  <div class="logo">ZYRIVO<span>+</span></div>
-
-  <div class="top-icons">
-    <button class="icon-btn" onclick="openModal('searchModal')">🔍</button>
-    <button class="icon-btn" onclick="openModal('createModal')">＋</button>
-    <button class="icon-btn" onclick="showSection('messages')">💬</button>
-  </div>
-</header>
-
-<main class="page">
-
-<!-- HOME -->
-<section id="home" class="section active">
-
-  <div class="composer">
-    <div class="compose-row">
-      <div class="avatar">Z</div>
-      <div class="input-box" onclick="openModal('createModal')">
-        What's on your mind?
-      </div>
-    </div>
-
-    <div class="quick-actions">
-      <button onclick="openModal('createModal')">📝 Post</button>
-      <button onclick="openModal('videoModal')">🎬 Video</button>
-      <button onclick="openModal('shortModal')">⚡ Short</button>
-    </div>
-  </div>
-
-  <div class="stories">
-    <div class="story create" onclick="openModal('storyModal')">
-      <div>➕<br>Create Story</div>
-    </div>
-
-    <div class="story">
-      <div class="story-avatar">M</div>
-      Misty Moni
-    </div>
-
-    <div class="story">
-      <div class="story-avatar">R</div>
-      Rima Das
-    </div>
-
-    <div class="story">
-      <div class="story-avatar">S</div>
-      Shahin
-    </div>
-  </div>
-
-  <article class="post">
-    <div class="post-head">
-      <div class="avatar">N</div>
-      <div class="user-info">
-        <strong>Nur Islam</strong>
-        <small>1d · 🌎</small>
-      </div>
-      <button class="more">•••</button>
-    </div>
-
-    <div class="post-text">
-      বাবা আর চার ভাই একসাথে ❤️
-    </div>
-
-    <div class="post-media">
-      👨‍👨‍👦‍👦
-    </div>
-
-    <div class="post-stats">
-      <span>👍 ❤️ 1.2K</span>
-      <span>86 Comments · 32 Shares</span>
-    </div>
-
-    <div class="post-actions">
-      <button onclick="likePost(this)">👍 Like</button>
-      <button onclick="commentPost()">💬 Comment</button>
-      <button onclick="sharePost()">↗ Share</button>
-    </div>
-  </article>
-
-  <article class="post">
-    <div class="post-head">
-      <div class="avatar">Z</div>
-      <div class="user-info">
-        <strong>ZYRIVO Creator</strong>
-        <small>Sponsored · 🌎</small>
-      </div>
-      <button class="more">•••</button>
-    </div>
-
-    <div class="post-text">
-      Welcome to the next generation of social media. 🚀
-    </div>
-
-    <div class="post-media">
-      ▶️
-    </div>
-
-    <div class="post-stats">
-      <span>👍 ❤️ 5.8K</span>
-      <span>420 Comments · 180 Shares</span>
-    </div>
-
-    <div class="post-actions">
-      <button onclick="likePost(this)">👍 Like</button>
-      <button onclick="commentPost()">💬 Comment</button>
-      <button onclick="sharePost()">↗ Share</button>
-    </div>
-  </article>
-
-</section>
-
-
-<!-- SHORTS -->
-<section id="shorts" class="section">
-
-  <div class="ai-header">
-    <h1>⚡ ZYRIVO Shorts</h1>
-    <p>Discover short videos from creators worldwide.</p>
-  </div>
-
-  <div class="post">
-    <div class="post-media" style="height:500px;">
-      ▶️
-    </div>
-    <div class="post-head">
-      <div class="avatar">A</div>
-      <div class="user-info">
-        <strong>ZYRIVO Creator</strong>
-        <small>1.4M views</small>
-      </div>
-    </div>
-    <div class="post-text">
-      Amazing short video 🔥 #ZYRIVO #Shorts
-    </div>
-    <div class="post-actions">
-      <button>❤️ 25K</button>
-      <button>💬 1.8K</button>
-      <button>↗ Share</button>
-    </div>
-  </div>
-
-</section>
-
-
-<!-- VIDEOS -->
-<section id="videos" class="section">
-
-  <div class="ai-header">
-    <h1>🎬 ZYRIVO Video</h1>
-    <p>Long-form videos and premium creator content.</p>
-  </div>
-
-  <article class="post">
-    <div class="post-media" style="height:300px;">
-      ▶️
-    </div>
-    <div class="post-text">
-      The future of global creators starts here.
-    </div>
-    <div class="post-stats">
-      <span>2.8M Views</span>
-      <span>3 days ago</span>
-    </div>
-    <div class="post-actions">
-      <button>👍 Like</button>
-      <button>💬 Comment</button>
-      <button>↗ Share</button>
-    </div>
-  </article>
-
-</section>
-
-
-<!-- AI -->
-<section id="ai" class="section">
-
-  <div class="ai-header">
-    <h1>✦ ZYRIVO AI</h1>
-    <p>Your intelligent creative assistant.</p>
-  </div>
-
-  <div class="ai-box">
-
-    <input id="aiInput"
-      class="ai-input"
-      placeholder="Ask anything or describe what you want...">
-
-    <button class="primary" onclick="askAI()">
-      ✦ Generate Answer
-    </button>
-
-    <div id="aiResponse" class="ai-response">
-      <b>ZYRIVO AI</b><br><br>
-      Your AI assistant is ready. In the full version, multiple AI engines
-      will be connected here for text, image, video, audio and creative tools.
-    </div>
-
-  </div>
-
-  <div class="tool-grid">
-
-    <div class="tool">
-      <span class="tool-icon">🖼️</span>
-      Text → Image
-    </div>
-
-    <div class="tool">
-      <span class="tool-icon">🎥</span>
-      Text → Video
-    </div>
-
-    <div class="tool">
-      <span class="tool-icon">🗣️</span>
-      Text → Audio
-    </div>
-
-    <div class="tool">
-      <span class="tool-icon">✨</span>
-      Image → Video
-    </div>
-
-    <div class="tool">
-      <span class="tool-icon">🎵</span>
-      AI Music
-    </div>
-
-    <div class="tool">
-      <span class="tool-icon">✍️</span>
-      AI Writer
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- MESSAGES -->
-<section id="messages" class="section">
-
-  <div class="ai-header">
-    <h1>💬 Messages</h1>
-    <p>Connect privately with people around the world.</p>
-  </div>
-
-  <div class="message">
-    <div class="avatar">A</div>
-    <div class="message-content">
-      <strong>Alex Creator</strong>
-      <small>Hey! Welcome to ZYRIVO 👋</small>
-    </div>
-    <span>2m</span>
-  </div>
-
-  <div class="message">
-    <div class="avatar">R</div>
-    <div class="message-content">
-      <strong>Rima Das</strong>
-      <small>Sent a photo 📷</small>
-    </div>
-    <span>10m</span>
-  </div>
-
-  <div class="message">
-    <div class="avatar">M</div>
-    <div class="message-content">
-      <strong>Misty Moni</strong>
-      <small>See you soon!</small>
-    </div>
-    <span>1h</span>
-  </div>
-
-</section>
-
-
-<!-- MARKET -->
-<section id="market" class="section">
-
-  <div class="ai-header">
-    <h1>🛍️ ZYRIVO Market</h1>
-    <p>Buy, sell and grow your creator business.</p>
-  </div>
-
-  <div class="market-card">
-    <h3>Creator Digital Package</h3>
-    <p>Premium creator resources</p>
-    <div class="price">$9.99</div>
-    <button class="primary">View Product</button>
-  </div>
-
-  <div class="market-card">
-    <h3>ZYRIVO Creator Store</h3>
-    <p>Sell your own products and services.</p>
-    <button class="primary">Open Store</button>
-  </div>
-
-</section>
-
-
-<!-- PROFILE -->
-<section id="profile" class="section">
-
-  <div class="profile">
-
-    <div class="cover"></div>
-
-    <div class="big-avatar">Z</div>
-
-    <h2>ZYRIVO Creator</h2>
-    <p>@zyrivo_creator</p>
-
-    <div class="profile-stats">
-      <div>
-        <strong>12.5K</strong>
-        <small>Followers</small>
-      </div>
-
-      <div>
-        <strong>284</strong>
-        <small>Following</small>
-      </div>
-
-      <div>
-        <strong>186</strong>
-        <small>Posts</small>
-      </div>
-    </div>
-
-    <button class="primary" style="width:90%;">
-      Edit Profile
-    </button>
-
-  </div>
-
-</section>
-
-</main>
-
-
-<!-- BOTTOM NAV -->
-
-<nav class="bottom-nav">
-
-  <button class="nav-btn active" onclick="showSection('home',this)">
-    <span>⌂</span>
-    Home
-  </button>
-
-  <button class="nav-btn" onclick="showSection('shorts',this)">
-    <span>▶</span>
-    Shorts
-  </button>
-
-  <button class="nav-btn" onclick="showSection('videos',this)">
-    <span>🎬</span>
-    Video
-  </button>
-
-  <button class="nav-btn" onclick="showSection('ai',this)">
-    <span>✦</span>
-    AI
-  </button>
-
-  <button class="nav-btn" onclick="showSection('market',this)">
-    <span>🛍</span>
-    Market
-  </button>
-
-  <button class="nav-btn" onclick="showSection('profile',this)">
-    <span>●</span>
-    Profile
-  </button>
-
-</nav>
-
-
-<!-- CREATE POST MODAL -->
-
-<div id="createModal" class="modal">
-  <div class="modal-box">
-
-    <div class="modal-title">
-      <h2>Create Post</h2>
-      <button class="close" onclick="closeModal('createModal')">×</button>
-    </div>
-
-    <textarea id="postText"
-      placeholder="What's on your mind?"></textarea>
-
-    <button class="primary" onclick="createPost()">
-      Publish Post
-    </button>
-
-  </div>
-</div>
-
-
-<!-- VIDEO MODAL -->
-
-<div id="videoModal" class="modal">
-  <div class="modal-box">
-
-    <div class="modal-title">
-      <h2>🎬 Upload Video</h2>
-      <button class="close" onclick="closeModal('videoModal')">×</button>
-    </div>
-
-    <p>Select a video from your phone.</p>
-
-    <input type="file"
-      accept="video/*"
-      style="margin-top:20px;width:100%;">
-
-    <button class="primary">
-      Upload Video
-    </button>
-
-  </div>
-</div>
-
-
-<!-- SHORT MODAL -->
-
-<div id="shortModal" class="modal">
-  <div class="modal-box">
-
-    <div class="modal-title">
-      <h2>⚡ Create Short</h2>
-      <button class="close" onclick="closeModal('shortModal')">×</button>
-    </div>
-
-    <p>Create a vertical short video.</p>
-
-    <input type="file"
-      accept="video/*"
-      style="margin-top:20px;width:100%;">
-
-    <button class="primary">
-      Publish Short
-    </button>
-
-  </div>
-</div>
-
-
-<!-- STORY MODAL -->
-
-<div id="storyModal" class="modal">
-  <div class="modal-box">
-
-    <div class="modal-title">
-      <h2>📸 Create Story</h2>
-      <button class="close" onclick="closeModal('storyModal')">×</button>
-    </div>
-
-    <input type="file"
-      accept="image/*,video/*"
-      style="width:100%;">
-
-    <button class="primary">
-      Publish Story
-    </button>
-
-  </div>
-</div>
-
-
-<!-- SEARCH MODAL -->
-
-<div id="searchModal" class="modal">
-  <div class="modal-box">
-
-    <div class="modal-title">
-      <h2>🔍 Search ZYRIVO</h2>
-      <button class="close" onclick="closeModal('searchModal')">×</button>
-    </div>
-
-    <input class="search"
-      placeholder="Search people, videos, posts...">
-
-    <div class="tool-grid">
-
-      <div class="tool">
-        👤<br>People
-      </div>
-
-      <div class="tool">
-        🎬<br>Videos
-      </div>
-
-      <div class="tool">
-        ⚡<br>Shorts
-      </div>
-
-      <div class="tool">
-        🛍️<br>Market
-      </div>
-
-    </div>
-
-  </div>
-</div>
-
-
-<script>
-
-function showSection(id,button){
-
-  document.querySelectorAll('.section')
-    .forEach(section=>{
-      section.classList.remove('active');
-    });
-
-  document.getElementById(id)
-    .classList.add('active');
-
-  document.querySelectorAll('.nav-btn')
-    .forEach(btn=>{
-      btn.classList.remove('active');
-    });
-
-  if(button){
-    button.classList.add('active');
-  }
-
-  window.scrollTo(0,0);
-}
-
-
-function openModal(id){
-  document.getElementById(id).style.display='flex';
-}
-
-
-function closeModal(id){
-  document.getElementById(id).style.display='none';
-}
-
-
-function createPost(){
-
-  const text=document.getElementById('postText').value.trim();
-
-  if(!text){
-    alert('Please write something first.');
-    return;
-  }
-
-  const post=document.createElement('article');
-
-  post.className='post';
-
-  post.innerHTML=`
-
-    <div class="post-head">
-
-      <div class="avatar">Z</div>
-
-      <div class="user-info">
-        <strong>ZYRIVO Creator</strong>
-        <small>Just now · 🌎</small>
-      </div>
-
-      <button class="more">•••</button>
-
-    </div>
-
-    <div class="post-text">
-      ${escapeHTML(text)}
-    </div>
-
-    <div class="post-stats">
-      <span>0 Likes</span>
-      <span>0 Comments · 0 Shares</span>
-    </div>
-
-    <div class="post-actions">
-      <button onclick="likePost(this)">👍 Like</button>
-      <button onclick="commentPost()">💬 Comment</button>
-      <button onclick="sharePost()">↗ Share</button>
-    </div>
-  `;
-
-  document.getElementById('home')
-    .appendChild(post);
-
-  document.getElementById('postText').value='';
-
-  closeModal('createModal');
-
-  showSection('home');
-
-  alert('Post published on ZYRIVO!');
-}
-
-
-function escapeHTML(text){
-
-  const div=document.createElement('div');
-
-  div.textContent=text;
-
-  return div.innerHTML;
-}
-
-
-function likePost(button){
-
-  button.innerHTML='❤️ Liked';
-
-  button.style.color='#2563eb';
-}
-
-
-function commentPost(){
-
-  const comment=prompt('Write your comment:');
-
-  if(comment){
-    alert('Comment added!');
-  }
-}
-
-
-function sharePost(){
-
-  if(navigator.share){
-
-    navigator.share({
-      title:'ZYRIVO',
-      text:'Check this post on ZYRIVO'
-    });
-
-  }else{
-
-    alert('Post link copied!');
-
-  }
-}
-
-
-function askAI(){
-
-  const input=document
-    .getElementById('aiInput')
-    .value
-    .trim();
-
-  if(!input){
-
-    alert('Write your question first.');
-
-    return;
-  }
-
-  const response=document
-    .getElementById('aiResponse');
-
-  response.style.display='block';
-
-  response.innerHTML=`
-
-    <b>✦ ZYRIVO AI</b><br><br>
-
-    You asked:<br>
-    <b>${escapeHTML(input)}</b><br><br>
-
-    Demo response: ZYRIVO AI is ready to help.
-    In the production version, real AI engines will
-    process your request and generate text, images,
-    audio and video.
-
-  `;
-}
-
-
-document.querySelectorAll('.modal')
-.forEach(modal=>{
-
-  modal.addEventListener('click',function(e){
-
-    if(e.target===modal){
-
-      modal.style.display='none';
-
-    }
-
-  });
-
-});
-  
-
-/* ZYRIVO EXTRA FEATURES */
-
-/* ===== ZYRIVO EXTRA FEATURES ===== */
-
-/* 1. Like system */
-function likePost(button){
-
-  if(button.dataset.liked === "true"){
-    button.dataset.liked = "false";
-    button.innerHTML = "👍 Like";
-    button.style.color = "#475569";
-  }else{
-    button.dataset.liked = "true";
-    button.innerHTML = "❤️ Liked";
-    button.style.color = "#2563eb";
-  }
-
-}
-
-
-/* 2. Comment system */
-function commentPost(){
-
-  const comment = prompt("Write your comment:");
-
-  if(!comment || !comment.trim()){
-    return;
-  }
-
-  alert("Comment added successfully! 💬");
-}
+You are the lead full-stack architect, UI/UX designer, security engineer and senior developer for my project.
+
+PROJECT NAME:
+ZYRIVO
+
+MISSION:
+Build ZYRIVO as an original global social creator platform inspired by the general usability of modern social platforms, but DO NOT copy Facebook, TikTok, YouTube, Instagram, WhatsApp, X or any other platform's proprietary UI, code, branding or assets.
+
+ZYRIVO should have a much more modern, professional, clean and original interface.
+
+IMPORTANT:
+Do NOT keep patching the existing broken code.
+Do NOT add duplicate <script> tags.
+Do NOT create duplicate functions.
+Do NOT leave broken event listeners.
+Do NOT produce dead buttons.
+Do NOT fake backend functionality as if it were real.
+First restructure the project cleanly and then implement the features.
+
+==================================================
+1. CORE PLATFORM
+==================================================
+
+Create ZYRIVO as a Progressive Web App (PWA) that:
+
+- Works on Android phones
+- Works on mobile browsers
+- Works on desktop browsers
+- Can be installed from supported browsers
+- Can later be packaged for Google Play Store
+- Responsive on all screen sizes
+- Fast loading
+- Mobile-first
+- Accessible
+- Modern animations
+- Dark/light theme
+- Professional typography
+- Smooth navigation
+- No unnecessary heavy libraries
+
+Main sections:
+
+1. Home / News Feed
+2. Explore
+3. Short Videos
+4. Long Videos
+5. Create
+6. AI Studio
+7. Messages
+8. Notifications
+9. Marketplace
+10. Creator Dashboard
+11. Wallet
+12. Profile
+13. Settings
+
+==================================================
+2. ORIGINAL ZYRIVO UI
+==================================================
+
+Design a unique ZYRIVO visual system.
+
+Do NOT clone Facebook/TikTok/YouTube.
+
+Use:
+
+- modern cards
+- rounded components
+- clean spacing
+- professional icons
+- smooth transitions
+- responsive bottom navigation on mobile
+- sidebar/navigation on larger screens
+- clear typography
+- large touch targets
+- creator-focused dashboard
+- modern media viewer
+- clean settings pages
+
+All buttons must actually perform their intended frontend action.
+
+==================================================
+3. NEWS FEED
+==================================================
+
+Implement a functional feed system.
+
+Users can:
+
+- create text posts
+- upload images
+- upload videos
+- add captions
+- add hashtags
+- like
+- unlike
+- comment
+- reply to comments
+- share
+- save/bookmark
+- follow/unfollow creators
+- report content
+- hide content
+- copy post link
+- view post details
+
+Feed should support:
+
+- Latest
+- Following
+- Trending
+- Recommended
+
+Use reusable PostCard components.
+
+==================================================
+4. SHORT VIDEO
+==================================================
+
+Create a vertical short-video experience.
+
+Requirements:
+
+- 9:16 videos
+- vertical swipe-style navigation
+- autoplay when visible
+- pause when not visible
+- mute/unmute
+- like
+- comment
+- share
+- save
+- follow creator
+- report
+- video description
+- hashtags
+- creator information
+
+Do not copy TikTok's interface exactly.
+
+==================================================
+5. LONG VIDEO
+==================================================
+
+Create a professional video section.
+
+Features:
+
+- video upload
+- title
+- description
+- thumbnail
+- category
+- hashtags
+- views
+- likes
+- comments
+- shares
+- saves
+- creator profile
+- related videos
+- watch history
+
+Prepare architecture for future adaptive streaming.
+
+For the first version, use normal web video playback.
+
+==================================================
+6. CREATOR PROFILE
+==================================================
+
+Creator profile must contain:
+
+- profile photo
+- cover/banner
+- username
+- display name
+- bio
+- followers
+- following
+- posts
+- short videos
+- long videos
+- marketplace products
+- creator verification status
+- social links
+- earnings summary
+- follow button
+- message button
+
+Tabs:
+
+Posts
+Shorts
+Videos
+Marketplace
+
+==================================================
+7. AUTHENTICATION
+==================================================
+
+Create a proper authentication architecture.
+
+Support:
+
+- email signup
+- email login
+- logout
+- password reset
+- profile creation
+- username
+- profile image
+
+Prepare architecture for:
+
+- Google login
+- Apple login
+- other OAuth providers
+
+Never store passwords in localStorage.
+
+For demo mode, clearly label local/demo authentication.
+
+Production authentication must use a secure backend/auth provider.
+
+==================================================
+8. MESSAGING
+==================================================
 
-
-/* 3. Share system */
-function sharePost(){
+Create ZYRIVO messaging architecture.
 
-  if(navigator.share){
+Features:
 
-    navigator.share({
-      title:"ZYRIVO",
-      text:"Check this post on ZYRIVO"
-    }).catch(()=>{});
+- one-to-one chat
+- conversation list
+- unread count
+- online/offline status
+- typing indicator
+- message timestamps
+- text messages
+- image messages
+- video messages
+- audio messages
+- message reactions
+- delete message
+- reply to message
+- block user
+- report user
 
-  }else{
+Prepare architecture for realtime backend.
 
-    alert("Post link copied! ↗");
+Do NOT pretend localStorage messaging is a secure production messaging system.
 
-  }
+==================================================
+9. NOTIFICATIONS
+==================================================
 
-}
+Implement notification center.
 
+Notification types:
 
-/* 4. AI quick tools */
-document.querySelectorAll(".tool").forEach(tool=>{
+- likes
+- comments
+- replies
+- follows
+- messages
+- mentions
+- shares
+- marketplace events
+- creator earnings
+- system announcements
 
-  tool.addEventListener("click",function(){
+Include:
 
-    const name = this.innerText.trim();
+- unread count
+- mark as read
+- mark all as read
+- notification preferences
 
-    if(name.includes("Text → Image")){
-      alert("🖼️ Text → Image\n\nThis AI tool will generate images from your text.");
-    }
+==================================================
+10. AI STUDIO
+==================================================
 
-    else if(name.includes("Text → Video")){
-      alert("🎥 Text → Video\n\nThis AI tool will generate videos from your text.");
-    }
+Create a dedicated ZYRIVO AI Studio.
 
-    else if(name.includes("Text → Audio")){
-      alert("🗣️ Text → Audio\n\nThis AI tool will generate audio from your text.");
-    }
+The UI should have separate tools:
 
-    else if(name.includes("Image → Video")){
-      alert("✨ Image → Video\n\nThis AI tool will turn an image into a video.");
-    }
+1. AI Chat
+2. Text to Image
+3. Text to Video
+4. Image to Video
+5. Text to Audio
+6. Script Generator
+7. Caption Generator
+8. Thumbnail Generator
+9. Translation
+10. Content Assistant
 
-    else if(name.includes("AI Music")){
-      alert("🎵 AI Music\n\nThis AI tool will create music.");
-    }
+Video formats:
 
-    else if(name.includes("AI Writer")){
-      alert("✍️ AI Writer\n\nThis AI tool will help create written content.");
-    }
+- 9:16
+- 16:9
+- 1:1
 
-  });
+Maximum requested generation length:
 
-});
+30 seconds.
 
+IMPORTANT:
 
-/* 5. Search */
-const searchInput = document.querySelector("#searchModal .search");
+Do NOT claim that fake AI generation is real.
 
-if(searchInput){
+Create a provider-adapter architecture:
 
-  searchInput.addEventListener("input",function(){
+AIProvider
+TextProvider
+ImageProvider
+VideoProvider
+AudioProvider
 
-    const query = this.value.toLowerCase().trim();
+Each provider must be replaceable through configuration.
 
-    document.querySelectorAll("#searchModal .tool").forEach(tool=>{
+The UI should work in DEMO MODE without paid API keys.
 
-      if(!query){
-        tool.style.display = "";
-        return;
-      }
+When an API key is unavailable, clearly show:
 
-      tool.style.display =
-        tool.innerText.toLowerCase().includes(query)
-        ? ""
-        : "none";
+"Demo mode — connect an AI provider to generate real content."
 
-    });
+Do not expose secret API keys in frontend JavaScript.
 
-  });
+==================================================
+11. FREE AND PREMIUM
+==================================================
 
-}
+Create subscription architecture.
 
+Plans:
 
-/* 6. Close modal with ESC */
-document.addEventListener("keydown",function(e){
+FREE
+WEEKLY
+MONTHLY
+YEARLY
 
-  if(e.key === "Escape"){
+Default premium example price:
 
-    document.querySelectorAll(".modal").forEach(modal=>{
-      modal.style.display = "none";
-    });
+500 BDT/month equivalent,
 
-  }
+but make prices configurable by admin and country.
 
-});
+FREE users:
 
+- can use core social features
+- may see advertisements
+- have configurable AI usage limits
 
-/* 7. Prevent empty AI response */
-const aiInput = document.getElementById("aiInput");
+PREMIUM users:
 
-if(aiInput){
+- fewer/no advertisements according to admin settings
+- higher AI limits
+- premium creator tools
+- additional storage/features
 
-  aiInput.addEventListener("keydown",function(e){
+Admin must be able to change:
 
-    if(e.key === "Enter"){
-      e.preventDefault();
-      askAI();
-    }
+- price
+- limits
+- advertisements
+- feature availability
+- plan status
 
-  });
+Do not hardcode business rules.
 
-}
+==================================================
+12. CREATOR MONETIZATION
+==================================================
 
+Create monetization architecture.
 
-/* ===== END ZYRIVO EXTRA FEATURES ===== */
-</script>
+Creator dashboard must display:
 
-</body>
-</html>
+- daily earnings
+- weekly earnings
+- monthly earnings
+- lifetime earnings
+- views
+- engagement
+- estimated earnings
+- pending balance
+- payable balance
+- payout history
+
+Example business rule:
+
+1000 qualified views = configurable $2 gross revenue.
+
+Creator share = configurable 50%.
+
+Platform share = configurable 50%.
+
+These numbers MUST be configurable from admin settings.
+
+Do not pretend money is actually transferred.
+
+Create a payout state machine:
+
+PENDING
+APPROVED
+PROCESSING
+PAID
+FAILED
+CANCELLED
+
+Minimum payout threshold example:
+
+$100.
+
+Payout window:
+
+1st–7th of the month.
+
+But all of these must be configurable.
+
+==================================================
+13. PAYOUT METHODS
+==================================================
+
+Prepare payout architecture for:
+
+- bank transfer
+- mobile banking
+- bKash
+- Nagad
+- Rocket
+- international payment providers
+
+Country-specific payout methods must be configurable.
+
+Tax/VAT/fees must be configurable.
+
+Never implement fake financial transfers.
+
+Production payouts require a legitimate payment provider and verified backend.
+
+==================================================
+14. CREATOR MARKETPLACE
+==================================================
+
+Create marketplace.
+
+Creators can:
+
+- create products
+- upload product images
+- title
+- description
+- price
+- inventory
+- category
+- shipping information
+- digital products
+- physical products
+
+Buyers can:
+
+- search
+- filter
+- view product
+- add to cart
+- checkout architecture
+- order history
+- seller profile
+- report product
+
+Prepare secure payment integration architecture.
+
+==================================================
+15. AD SYSTEM
+==================================================
+
+Create an internal advertising architecture.
+
+Ad types:
+
+- feed ad
+- video ad
+- banner
+- creator promotion
+- marketplace promotion
+
+Admin controls:
+
+- enable/disable ads
+- frequency
+- placement
+- advertiser
+- campaign
+- budget
+- start date
+- end date
+- analytics
+
+Do not fabricate advertiser revenue.
+
+==================================================
+16. OWNER / ADMIN SYSTEM
+==================================================
+
+This is extremely important.
+
+Create TWO separate roles:
+
+OWNER
+CREATOR / USER
+
+Owner must have a private administration system.
+
+Regular creators/users must NEVER receive owner credentials or owner-only data.
+
+Do NOT hide owner security merely through frontend CSS or JavaScript.
+
+Owner permissions must be enforced by backend authorization.
+
+Owner dashboard should contain:
+
+Dashboard
+Users
+Creators
+Posts
+Videos
+Shorts
+Comments
+Messages moderation
+Reports
+Marketplace
+Orders
+Subscriptions
+AI Providers
+AI Usage
+Advertisements
+Monetization
+Creator Earnings
+Platform Earnings
+Payouts
+Wallet
+Transactions
+Analytics
+Notifications
+System Settings
+Security
+Feature Flags
+Maintenance
+Audit Logs
+
+==================================================
+17. OWNER WALLET
+==================================================
+
+Create owner wallet architecture.
+
+Display:
+
+- total platform revenue
+- creator share
+- platform share
+- advertising revenue
+- subscription revenue
+- marketplace revenue
+- AI revenue
+- payout liabilities
+- available balance
+- pending balance
+- transaction history
+
+Allow configurable withdrawal methods.
+
+Never expose owner wallet data to normal users.
+
+==================================================
+18. ADMIN FEATURE CONTROL
+==================================================
+
+Owner must be able to enable/disable features using feature flags.
+
+Examples:
+
+feedEnabled
+shortsEnabled
+longVideoEnabled
+messagingEnabled
+marketplaceEnabled
+aiEnabled
+monetizationEnabled
+adsEnabled
+subscriptionsEnabled
+
+Also:
+
+maintenanceMode
+registrationEnabled
+uploadsEnabled
+commentsEnabled
+liveNotificationsEnabled
+
+Frontend should respond to these settings.
+
+==================================================
+19. SECURITY
+==================================================
+
+Implement security-first architecture.
+
+Requirements:
+
+- secure authentication
+- role-based access control
+- server-side authorization
+- input validation
+- output sanitization
+- rate limiting
+- upload validation
+- file size limits
+- MIME validation
+- abuse protection
+- report system
+- block system
+- audit logs
+- secure API architecture
+- no secret API keys in frontend
+- no admin credentials in frontend
+- no sensitive data in localStorage
+- HTTPS
+- secure database rules
+
+Add a Security Center in admin.
+
+==================================================
+20. PERFORMANCE
+==================================================
+
+Optimize for low-end Android phones.
+
+Requirements:
+
+- lazy loading
+- image compression
+- responsive images
+- video poster images
+- pagination/infinite scrolling
+- debounce search
+- caching
+- code splitting where appropriate
+- avoid unnecessary DOM rendering
+- avoid memory leaks
+- cleanup event listeners
+- media cleanup
+- service worker caching
+
+The application must remain responsive.
+
+==================================================
+21. ERROR HANDLING
+==================================================
+
+Every important feature must have:
+
+- loading state
+- empty state
+- error state
+- retry button
+- success message
+- validation message
+
+If an external service fails:
+
+1. catch the error
+2. log safe diagnostic information
+3. show user-friendly error
+4. allow retry
+5. use configured fallback provider where available
+
+Never silently fail.
+
+==================================================
+22. GLOBAL ARCHITECTURE
+==================================================
+
+Do NOT put the entire application into one giant index.html.
+
+Create a clean architecture.
+
+Suggested structure:
+
+/index.html
+/src/
+/src/components/
+/src/pages/
+/src/services/
+/src/api/
+/src/auth/
+/src/store/
+/src/utils/
+/src/config/
+/src/styles/
+/src/admin/
+/src/creator/
+/src/ai/
+/src/marketplace/
+/src/messaging/
+/public/
+/public/icons/
+/public/images/
+/manifest.json
+/service-worker.js
+
+Use reusable components.
+
+Use centralized state management.
+
+Use centralized API service.
+
+Use centralized configuration.
+
+==================================================
+23. DATABASE ARCHITECTURE
+==================================================
+
+Prepare database models for:
+
+users
+profiles
+posts
+comments
+likes
+shares
+follows
+videos
+shortVideos
+messages
+conversations
+notifications
+marketplaceProducts
+orders
+subscriptions
+aiJobs
+aiUsage
+earnings
+payouts
+advertisements
+transactions
+reports
+adminSettings
+featureFlags
+auditLogs
+
+Do not store production database credentials in frontend.
+
+==================================================
+24. ANALYTICS
+==================================================
+
+Creator analytics:
+
+- views
+- watch time
+- likes
+- comments
+- shares
+- followers
+- follower growth
+- earnings
+- top content
+- audience overview
+
+Owner analytics:
+
+- total users
+- active users
+- new users
+- uploads
+- video views
+- short views
+- engagement
+- AI usage
+- subscription revenue
+- advertising revenue
+- marketplace revenue
+- creator payouts
+- platform revenue
+
+==================================================
+25. SEARCH
+==================================================
+
+Global search:
+
+- people
+- creators
+- posts
+- videos
+- shorts
+- products
+- hashtags
+
+Add filters and sorting.
+
+==================================================
+26. CONTENT MODERATION
+==================================================
+
+Add:
+
+- report post
+- report user
+- report comment
+- report video
+- block
+- mute
+- moderation queue
+- admin review
+- content status
+
+Statuses:
+
+ACTIVE
+HIDDEN
+UNDER_REVIEW
+REMOVED
+BANNED
+
+==================================================
+27. SETTINGS
+==================================================
+
+User settings:
+
+Account
+Privacy
+Security
+Notifications
+Appearance
+Language
+Blocked users
+Saved content
+Subscription
+Wallet
+Payout
+Creator settings
+AI settings
+
+Admin settings:
+
+Platform
+Branding
+Features
+Monetization
+Subscriptions
+Ads
+AI
+Payouts
+Security
+Moderation
+Notifications
+Maintenance
+
+==================================================
+28. INTERNATIONALIZATION
+==================================================
+
+Prepare i18n architecture.
+
+Initial languages:
+
+English
+Bangla
+
+Architecture should allow future languages.
+
+Currency should support country-specific configuration.
+
+Timezone should be user-aware.
+
+==================================================
+29. PWA
+==================================================
+
+Create:
+
+manifest.json
+service-worker.js
+app icons
+install prompt
+offline fallback
+cache strategy
+
+The app should be installable on Android browsers that support PWA.
+
+==================================================
+30. FUTURE PLAY STORE
+==================================================
+
+Keep the architecture suitable for later Android packaging.
+
+Do not use features that prevent packaging.
+
+Prepare for:
+
+Trusted Web Activity / Capacitor / Android wrapper
+
+but do not pretend that publishing to Google Play happens automatically.
+
+==================================================
+31. ZERO-COST DEVELOPMENT MODE
+==================================================
+
+Development must be possible using free/open-source tools and free tiers where available.
+
+Create:
+
+DEMO MODE
+
+and
+
+PRODUCTION MODE
+
+Demo mode must not require paid APIs.
+
+Production mode must use environment variables for API keys.
+
+Never commit secrets.
+
+Create:
+
+.env.example
+
+==================================================
+32. TRAFFIC / GROWTH
+==================================================
+
+Do NOT secretly scrape Facebook, YouTube, TikTok, Instagram or other platforms.
+
+Do NOT create fake users.
+
+Do NOT create fake views.
+
+Do NOT create fake revenue.
+
+Instead prepare legal growth tools:
+
+- share links
+- Open Graph metadata
+- social preview cards
+- creator referral links
+- invite system
+- referral analytics
+- SEO
+- sitemap architecture
+- public creator profiles
+- embeddable public content where legally appropriate
+
+==================================================
+33. OWNER CONTROL CENTER
+==================================================
+
+The owner dashboard should have a global control panel.
+
+Owner can configure:
+
+branding
+logo
+app name
+colors
+feature flags
+subscription pricing
+creator monetization rules
+ad settings
+AI providers
+AI limits
+payout rules
+country settings
+tax rules
+notifications
+maintenance mode
+content rules
+storage limits
+
+All settings should be centralized.
+
+==================================================
+34. IMPORTANT UI RULE
+==================================================
+
+Every visible button must have a real action.
+
+If a feature cannot yet connect to a backend:
+
+- build its UI
+- build its service interface
+- provide demo/mock mode
+- clearly indicate demo mode
+- make it easy to connect the real backend later
+
+Never create buttons that appear functional but do nothing.
+
+==================================================
+35. TESTING
+==================================================
+
+Before finishing:
+
+Test:
+
+- signup
+- login
+- logout
+- feed
+- post creation
+- image upload UI
+- video upload UI
+- like
+- unlike
+- comment
+- reply
+- share
+- save
+- follow
+- unfollow
+- profile
+- notifications
+- messaging UI
+- AI Studio
+- marketplace
+- creator dashboard
+- wallet
+- admin dashboard
+- settings
+- PWA install
+- mobile responsiveness
+- dark mode
+- error handling
+
+Fix JavaScript errors.
+
+Fix console errors.
+
+Fix broken selectors.
+
+Fix duplicate event listeners.
+
+Fix duplicate script tags.
+
+Fix undefined functions.
+
+==================================================
+36. CRITICAL DELIVERY RULE
+==================================================
+
+Do NOT give me another tiny patch.
+
+Do NOT tell me to manually modify 20 different lines.
+
+Do NOT leave the existing broken architecture.
+
+Rebuild the project cleanly.
+
+First inspect the existing repository.
+
+Then provide the exact new project structure.
+
+Then generate the complete files required.
+
+For every file, clearly show:
+
+FILE: path/name
+
+Then its complete content.
+
+Do not truncate code with:
+"..."
+"rest of code"
+"same as above"
+or placeholders.
+
+If a backend is required, create the backend architecture and clearly separate:
+
+DEMO IMPLEMENTATION
+PRODUCTION IMPLEMENTATION
+
+==================================================
+37. FIRST DELIVERY PRIORITY
+==================================================
+
+Do NOT attempt to fake the entire production platform in one HTML file.
+
+First create a stable ZYRIVO MVP with:
+
+1. Home feed
+2. Post creation
+3. Like
+4. Comment
+5. Share
+6. Follow
+7. Profiles
+8. Shorts
+9. Videos
+10. Messaging UI
+11. Notifications
+12. AI Studio UI
+13. Marketplace UI
+14. Creator dashboard
+15. Wallet UI
+16. Admin dashboard
+17. Settings
+18. PWA installation
+19. Demo authentication
+20. Feature flag system
+
+Then make the architecture ready for:
+
+real database
+real authentication
+real messaging
+real AI APIs
+real storage
+real payment
+real payouts
+real advertisements
+real moderation
+
+==================================================
+38. FINAL QUALITY STANDARD
+==================================================
+
+ZYRIVO must feel like a serious international technology product.
+
+It must be:
+
+FAST
+MODERN
+ORIGINAL
+PROFESSIONAL
+RESPONSIVE
+SECURE
+SCALABLE
+ACCESSIBLE
+MAINTAINABLE
+
+Do not copy competitors.
+
+Do not use their logos, names, proprietary assets or copied layouts.
+
+Build ZYRIVO as an original product.
+
+START BY INSPECTING THE EXISTING PROJECT AND THEN RESTRUCTURE IT.
