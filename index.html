@@ -1,141 +1,1989 @@
-ZYRIVO *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; } body{ font-family:Arial,Helvetica,sans-serif; background:#f3f5f9; color:#111827; padding-bottom:75px; } button{ border:0; background:none; cursor:pointer; } .topbar{ height:64px; background:#fff; display:flex; align-items:center; justify-content:space-between; padding:0 15px; position:sticky; top:0; z-index:20; box-shadow:0 1px 8px rgba(0,0,0,.08); } .logo{ font-size:27px; font-weight:900; letter-spacing:-1px; color:#2563eb; } .logo span{ color:#111827; } .top-icons{ display:flex; gap:9px; } .icon-btn{ width:42px; height:42px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; font-size:21px; } .page{ max-width:700px; margin:auto; } .composer{ background:#fff; padding:15px; margin-bottom:10px; } .compose-row{ display:flex; align-items:center; gap:10px; } .avatar{ width:45px; height:45px; border-radius:50%; background:linear-gradient(135deg,#2563eb,#7c3aed); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:17px; } .input-box{ flex:1; background:#f1f5f9; border-radius:25px; padding:13px 18px; color:#64748b; font-size:15px; } .quick-actions{ display:grid; grid-template-columns:repeat(3,1fr); margin-top:14px; border-top:1px solid #eee; padding-top:12px; } .quick-actions button{ padding:9px; font-size:14px; font-weight:bold; color:#475569; } .stories{ background:#fff; padding:12px 10px; display:flex; gap:9px; overflow-x:auto; margin-bottom:10px; } .stories::-webkit-scrollbar{ display:none; } .story{ min-width:105px; height:150px; border-radius:13px; overflow:hidden; position:relative; background:linear-gradient(145deg,#1d4ed8,#7c3aed); color:white; display:flex; align-items:flex-end; padding:10px; font-weight:bold; } .story.create{ background:linear-gradient(145deg,#dbeafe,#eff6ff); color:#2563eb; align-items:center; justify-content:center; text-align:center; font-size:15px; } .story .story-avatar{ position:absolute; top:9px; left:9px; width:34px; height:34px; border:3px solid #2563eb; border-radius:50%; background:#fff; } .post{ background:#fff; margin-bottom:10px; padding-top:14px; } .post-head{ display:flex; align-items:center; padding:0 15px 10px; gap:10px; } .user-info{ flex:1; } .user-info strong{ display:block; font-size:15px; } .user-info small{ color:#64748b; } .more{ font-size:23px; } .post-text{ padding:0 15px 12px; line-height:1.5; font-size:15px; } .post-media{ width:100%; min-height:210px; background:linear-gradient(135deg,#172554,#2563eb,#7c3aed); display:flex; align-items:center; justify-content:center; color:#fff; font-size:55px; } .post-stats{ display:flex; justify-content:space-between; padding:10px 15px; color:#64748b; font-size:13px; border-bottom:1px solid #eee; } .post-actions{ display:grid; grid-template-columns:repeat(3,1fr); } .post-actions button{ padding:13px 5px; font-weight:bold; color:#475569; } .post-actions button:active{ background:#eff6ff; color:#2563eb; } .bottom-nav{ position:fixed; bottom:0; left:0; right:0; height:68px; background:#fff; border-top:1px solid #ddd; display:grid; grid-template-columns:repeat(6,1fr); z-index:30; } .nav-btn{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; color:#64748b; font-size:11px; font-weight:bold; } .nav-btn span{ font-size:23px; } .nav-btn.active{ color:#2563eb; } .modal{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:50; align-items:flex-end; justify-content:center; } .modal-box{ background:#fff; width:100%; max-width:700px; max-height:90vh; overflow:auto; border-radius:22px 22px 0 0; padding:20px; } .modal-title{ display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; } .modal-title h2{ font-size:21px; } .close{ font-size:27px; } textarea{ width:100%; height:130px; resize:none; border:1px solid #ddd; border-radius:15px; padding:14px; font-size:16px; outline:none; } .primary{ width:100%; padding:14px; margin-top:12px; background:#2563eb; color:white; border-radius:13px; font-weight:bold; font-size:16px; } .tool-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; } .tool{ padding:20px 12px; border-radius:17px; background:#f1f5f9; text-align:center; font-weight:bold; } .tool-icon{ font-size:35px; display:block; margin-bottom:8px; } .search{ width:100%; padding:14px; border:1px solid #ddd; border-radius:13px; margin-bottom:15px; font-size:15px; } .profile{ background:#fff; text-align:center; padding-bottom:20px; } .cover{ height:150px; background:linear-gradient(135deg,#2563eb,#7c3aed,#db2777); } .profile .big-avatar{ width:90px; height:90px; border-radius:50%; background:#111827; color:#fff; display:flex; align-items:center; justify-content:center; margin:-45px auto 10px; border:5px solid #fff; font-size:30px; font-weight:bold; } .profile h2{ margin-bottom:5px; } .profile p{ color:#64748b; } .profile-stats{ display:flex; justify-content:center; gap:35px; margin-top:15px; } .profile-stats strong{ display:block; } .section{ display:none; } .section.active{ display:block; } .ai-header{ background:linear-gradient(135deg,#111827,#312e81); color:white; padding:25px 18px; border-radius:0 0 20px 20px; } .ai-header h1{ font-size:27px; margin-bottom:7px; } .ai-header p{ opacity:.8; } .ai-box{ margin:15px; background:white; border-radius:18px; padding:15px; } .ai-input{ width:100%; border:1px solid #ddd; border-radius:13px; padding:14px; font-size:15px; } .ai-response{ margin-top:12px; background:#f1f5f9; padding:14px; border-radius:13px; display:none; } .message{ background:#fff; padding:15px; display:flex; gap:12px; border-bottom:1px solid #eee; } .message-content{ flex:1; } .message-content strong{ display:block; } .message-content small{ color:#64748b; } .market-card{ background:#fff; margin:10px; padding:15px; border-radius:16px; } .price{ color:#16a34a; font-size:20px; font-weight:bold; margin-top:8px; } @media(min-width:700px){ body{ background:#eef2f7; } } 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#111827">
+<title>ZYRIVO+</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+:root{
+  --bg:#f3f5f9;
+  --card:#ffffff;
+  --text:#111827;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --primary:#2563eb;
+  --primary2:#1d4ed8;
+  --danger:#ef4444;
+  --radius:18px;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  padding-bottom:78px;
+}
+
+button,
+input,
+textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+  border:0;
+}
+
+.app{
+  max-width:760px;
+  margin:auto;
+}
+
+/* HEADER */
+.header{
+  position:sticky;
+  top:0;
+  z-index:50;
+  height:64px;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 14px;
+}
+
+.logo{
+  font-size:25px;
+  font-weight:900;
+  letter-spacing:-1px;
+}
+
+.logo span{
+  color:var(--primary);
+}
+
+.header-actions{
+  display:flex;
+  gap:8px;
+}
+
+.icon-btn{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:#eef2f7;
+  font-size:19px;
+}
+
+.icon-btn:active{
+  transform:scale(.94);
+}
+
+/* SECTIONS */
+.section{
+  display:none;
+  padding:14px;
+}
+
+.section.active{
+  display:block;
+}
+
+/* CREATE BOX */
+.create-box{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:14px;
+  margin-bottom:14px;
+}
+
+.create-top{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.avatar{
+  width:44px;
+  height:44px;
+  min-width:44px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+}
+
+.mind{
+  flex:1;
+  border:1px solid var(--border);
+  background:#f8fafc;
+  border-radius:25px;
+  padding:12px 15px;
+  text-align:left;
+  color:var(--muted);
+}
+
+.quick-actions{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:12px;
+}
+
+.quick-actions button{
+  background:#f1f5f9;
+  padding:11px 5px;
+  border-radius:12px;
+  font-weight:700;
+}
+
+.quick-actions button:hover{
+  background:#e2e8f0;
+}
+
+/* STORIES */
+.story-wrap{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding-bottom:4px;
+  margin-bottom:14px;
+}
+
+.story-card{
+  min-width:82px;
+  height:112px;
+  border-radius:15px;
+  background:linear-gradient(160deg,#1e3a8a,#7c3aed);
+  color:white;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+  padding:8px;
+  position:relative;
+  overflow:hidden;
+}
+
+.story-card .story-avatar{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:white;
+  color:#2563eb;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-weight:800;
+  margin-bottom:5px;
+}
+
+.story-card.add{
+  background:#fff;
+  color:var(--text);
+  border:1px solid var(--border);
+  justify-content:center;
+}
+
+.story-card.add .story-avatar{
+  background:#eff6ff;
+  font-size:24px;
+}
+
+/* POST */
+.post{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  margin-bottom:14px;
+  overflow:hidden;
+}
+
+.post-head{
+  padding:13px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.post-user{
+  flex:1;
+}
+
+.post-user strong{
+  display:block;
+}
+
+.post-user small{
+  color:var(--muted);
+}
+
+.more{
+  background:none;
+  font-size:20px;
+  padding:8px;
+}
+
+.post-body{
+  padding:0 14px 12px;
+}
+
+.post-text{
+  line-height:1.5;
+  margin-bottom:12px;
+}
+
+.post-media{
+  min-height:180px;
+  background:linear-gradient(135deg,#dbeafe,#ede9fe);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:70px;
+}
+
+.post-stats{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 14px;
+  color:var(--muted);
+  font-size:13px;
+  border-bottom:1px solid var(--border);
+}
+
+.post-actions{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+}
+
+.post-actions button{
+  padding:12px 4px;
+  background:white;
+  color:#475569;
+  font-weight:700;
+}
+
+.post-actions button.liked{
+  color:#2563eb;
+}
+
+.comments{
+  padding:10px 14px;
+  border-top:1px solid var(--border);
+  display:none;
+}
+
+.comments.show{
+  display:block;
+}
+
+.comment-input{
+  display:flex;
+  gap:7px;
+}
+
+.comment-input input{
+  flex:1;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:9px 12px;
+}
+
+.comment-input button{
+  background:var(--primary);
+  color:white;
+  padding:8px 14px;
+  border-radius:20px;
+}
+
+.comment-list{
+  margin-top:9px;
+}
+
+.comment{
+  background:#f1f5f9;
+  padding:8px 10px;
+  border-radius:12px;
+  margin-top:6px;
+  font-size:14px;
+}
+
+/* PAGE TITLE */
+.page-title{
+  margin:5px 0 14px;
+}
+
+.page-title h2{
+  font-size:24px;
+}
+
+.page-title p{
+  color:var(--muted);
+  margin-top:4px;
+}
+
+/* SHORTS */
+.short-card{
+  background:#000;
+  border-radius:20px;
+  overflow:hidden;
+  margin-bottom:14px;
+  color:white;
+  position:relative;
+  min-height:500px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+}
+
+.short-video{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(145deg,#111827,#581c87,#111827);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:75px;
+}
+
+.short-info{
+  position:relative;
+  z-index:2;
+  padding:20px;
+  background:linear-gradient(transparent,rgba(0,0,0,.85));
+  padding-top:100px;
+}
+
+.short-actions{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+
+.short-actions button{
+  background:rgba(255,255,255,.15);
+  color:#fff;
+  padding:9px 13px;
+  border-radius:20px;
+}
+
+/* VIDEO */
+.video-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
+  margin-bottom:14px;
+}
+
+.video-thumb{
+  height:220px;
+  background:linear-gradient(135deg,#0f172a,#1e40af);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:65px;
+}
+
+.video-info{
+  padding:14px;
+}
+
+.video-info h3{
+  margin-bottom:7px;
+}
+
+.video-info p{
+  color:var(--muted);
+}
+
+/* AI */
+.ai-card{
+  background:#111827;
+  color:#fff;
+  border-radius:20px;
+  padding:16px;
+}
+
+.ai-input{
+  width:100%;
+  min-height:110px;
+  margin:14px 0;
+  border-radius:14px;
+  border:1px solid #374151;
+  background:#1f2937;
+  color:#fff;
+  padding:13px;
+  resize:none;
+}
+
+.primary{
+  width:100%;
+  padding:13px;
+  border-radius:13px;
+  background:var(--primary);
+  color:white;
+  font-weight:800;
+}
+
+.primary:active{
+  transform:scale(.98);
+}
+
+.ai-response{
+  margin-top:14px;
+  background:#1f2937;
+  padding:13px;
+  border-radius:13px;
+  line-height:1.5;
+  display:none;
+}
+
+.tool-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-top:14px;
+}
+
+.tool{
+  background:#fff;
+  color:var(--text);
+  border:1px solid var(--border);
+  padding:18px 10px;
+  border-radius:15px;
+  text-align:center;
+  font-weight:700;
+}
+
+.tool span{
+  font-size:30px;
+  display:block;
+  margin-bottom:7px;
+}
+
+/* MESSAGES */
+.message-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:13px;
+  display:flex;
+  gap:10px;
+  margin-bottom:9px;
+}
+
+.message-content{
+  flex:1;
+}
+
+.message-content small{
+  color:var(--muted);
+}
+
+/* MARKET */
+.market-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
+  margin-bottom:12px;
+}
+
+.product-image{
+  height:170px;
+  background:linear-gradient(135deg,#e0e7ff,#fce7f3);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:60px;
+}
+
+.product-info{
+  padding:14px;
+}
+
+.price{
+  font-weight:900;
+  font-size:20px;
+  margin:7px 0 12px;
+}
+
+/* PROFILE */
+.profile-cover{
+  height:150px;
+  border-radius:20px 20px 0 0;
+  background:linear-gradient(135deg,#172554,#7c3aed,#2563eb);
+}
+
+.profile-card{
+  background:#fff;
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid var(--border);
+}
+
+.profile-main{
+  text-align:center;
+  padding:0 15px 20px;
+}
+
+.big-avatar{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  margin:-45px auto 10px;
+  border:5px solid #fff;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:35px;
+  font-weight:900;
+}
+
+.profile-main p{
+  color:var(--muted);
+}
+
+.profile-stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  margin:20px 0;
+}
+
+.profile-stats strong,
+.profile-stats small{
+  display:block;
+}
+
+.profile-stats small{
+  color:var(--muted);
+  margin-top:3px;
+}
+
+/* SEARCH */
+.search-box{
+  display:flex;
+  gap:8px;
+  margin-bottom:14px;
+}
+
+.search-box input{
+  flex:1;
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:12px;
+}
+
+.search-result{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px;
+  margin-top:8px;
+}
+
+/* BOTTOM NAV */
+.bottom-nav{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  height:68px;
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(12px);
+  border-top:1px solid var(--border);
+  z-index:60;
+  display:flex;
+  justify-content:center;
+}
+
+.nav-inner{
+  width:min(760px,100%);
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+}
+
+.nav-btn{
+  background:none;
+  color:#64748b;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:3px;
+  font-size:20px;
+}
+
+.nav-btn span{
+  font-size:10px;
+  font-weight:700;
+}
+
+.nav-btn.active{
+  color:var(--primary);
+}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,.65);
+  z-index:100;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modal-box{
+  width:min(760px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:24px 24px 0 0;
+  padding:18px;
+}
+
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+}
+
+.close{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:#f1f5f9;
+  font-size:22px;
+}
+
+.modal textarea,
+.modal input[type="text"]{
+  width:100%;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:13px;
+  margin-bottom:12px;
+}
+
+.file-input{
+  width:100%;
+  padding:12px;
+  border:1px dashed #94a3b8;
+  border-radius:12px;
+  margin-bottom:12px;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:85px;
+  transform:translateX(-50%) translateY(20px);
+  background:#111827;
+  color:#fff;
+  padding:11px 17px;
+  border-radius:25px;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+  z-index:200;
+  white-space:nowrap;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+/* RESPONSIVE */
+@media(min-width:761px){
+  .bottom-nav{
+    left:50%;
+    right:auto;
+    transform:translateX(-50%);
+    width:760px;
+  }
+}
+
+@media(max-width:420px){
+  .quick-actions button{
+    font-size:12px;
+  }
+
+  .short-card{
+    min-height:450px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">ZYRIVO<span>+</span></div>
+
+  <div class="header-actions">
+    <button class="icon-btn" onclick="showSection('search')">🔍</button>
+    <button class="icon-btn" onclick="showSection('messages')">💬</button>
+    <button class="icon-btn" onclick="showToast('Notifications will appear here')">🔔</button>
+  </div>
+</header>
+
+
+<!-- HOME -->
+<section id="home" class="section active">
+
+  <div class="create-box">
+
+    <div class="create-top">
+      <div class="avatar">Z</div>
+
+      <button class="mind" onclick="openModal('postModal')">
+        What's on your mind?
+      </button>
+    </div>
+
+    <div class="quick-actions">
+      <button onclick="openModal('postModal')">📝 Post</button>
+      <button onclick="openModal('videoModal')">🎬 Video</button>
+      <button onclick="openModal('shortModal')">⚡ Short</button>
+    </div>
+
+  </div>
+
+
+  <!-- STORIES -->
+  <div class="story-wrap">
+
+    <button class="story-card add" onclick="openModal('storyModal')">
+      <div class="story-avatar">＋</div>
+      <b>Create Story</b>
+    </button>
+
+    <div class="story-card">
+      <div class="story-avatar">M</div>
+      <b>Misty</b>
+    </div>
+
+    <div class="story-card">
+      <div class="story-avatar">R</div>
+      <b>Rima</b>
+    </div>
+
+    <div class="story-card">
+      <div class="story-avatar">S</div>
+      <b>Shahin</b>
+    </div>
+
+  </div>
+
+
+  <!-- POSTS -->
+  <div id="feed">
+
+    <article class="post">
+
+      <div class="post-head">
+        <div class="avatar">N</div>
+
+        <div class="post-user">
+          <strong>Nur Islam</strong>
+          <small>1d · 🌎</small>
+        </div>
+
+        <button class="more" onclick="showToast('Post menu')">•••</button>
+      </div>
+
+      <div class="post-body">
+        <div class="post-text">
+          বাবা আর চার ভাই একসাথে ❤️
+        </div>
+      </div>
+
+      <div class="post-media">👨‍👨‍👦‍👦</div>
+
+      <div class="post-stats">
+        <span class="like-count">👍 ❤️ 1.2K</span>
+        <span class="comment-count">86 Comments · 32 Shares</span>
+      </div>
+
+      <div class="post-actions">
+        <button onclick="likePost(this)">👍 Like</button>
+        <button onclick="toggleComments(this)">💬 Comment</button>
+        <button onclick="sharePost()">↗ Share</button>
+      </div>
+
+      <div class="comments">
+        <div class="comment-input">
+          <input type="text" placeholder="Write a comment...">
+          <button onclick="addComment(this)">Send</button>
+        </div>
+
+        <div class="comment-list"></div>
+      </div>
+
+    </article>
+
+
+    <article class="post">
+
+      <div class="post-head">
+        <div class="avatar">Z</div>
+
+        <div class="post-user">
+          <strong>ZYRIVO Creator</strong>
+          <small>Sponsored · 🌎</small>
+        </div>
+
+        <button class="more" onclick="showToast('Post menu')">•••</button>
+      </div>
+
+      <div class="post-body">
+        <div class="post-text">
+          Welcome to the next generation of global creators. 🚀
+        </div>
+      </div>
+
+      <div class="post-media">▶️</div>
+
+      <div class="post-stats">
+        <span class="like-count">👍 ❤️ 5.8K</span>
+        <span class="comment-count">420 Comments · 180 Shares</span>
+      </div>
+
+      <div class="post-actions">
+        <button onclick="likePost(this)">👍 Like</button>
+        <button onclick="toggleComments(this)">💬 Comment</button>
+        <button onclick="sharePost()">↗ Share</button>
+      </div>
+
+      <div class="comments">
+
+        <div class="comment-input">
+          <input type="text" placeholder="Write a comment...">
+          <button onclick="addComment(this)">Send</button>
+        </div>
+
+        <div class="comment-list"></div>
+
+      </div>
+
+    </article>
+
+  </div>
+
+</section>
+
+
+<!-- SHORTS -->
+<section id="shorts" class="section">
+
+  <div class="page-title">
+    <h2>⚡ ZYRIVO Shorts</h2>
+    <p>Discover short videos from creators worldwide.</p>
+  </div>
+
+  <div class="short-card">
+
+    <div class="short-video">▶️</div>
+
+    <div class="short-info">
+      <b>ZYRIVO Creator</b>
+
+      <p style="margin-top:8px;">
+        Amazing short video 🔥
+        #ZYRIVO #Shorts
+      </p>
+
+      <div class="short-actions">
+        <button onclick="shortLike(this)">❤️ 25K</button>
+        <button onclick="showToast('Comments opened')">💬 1.8K</button>
+        <button onclick="sharePost()">↗ Share</button>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- VIDEO -->
+<section id="video" class="section">
+
+  <div class="page-title">
+    <h2>🎬 ZYRIVO Video</h2>
+    <p>Long-form creator videos.</p>
+  </div>
+
+  <div class="video-card">
+
+    <div class="video-thumb">▶️</div>
+
+    <div class="video-info">
+      <h3>The future of global creators starts here</h3>
+      <p>2.8M Views · 3 days ago</p>
+
+      <div class="quick-actions" style="margin-top:12px;">
+        <button onclick="showToast('Liked')">👍 Like</button>
+        <button onclick="showToast('Comments opened')">💬 Comment</button>
+        <button onclick="sharePost()">↗ Share</button>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- AI -->
+<section id="ai" class="section">
+
+  <div class="page-title">
+    <h2>✦ ZYRIVO AI</h2>
+    <p>Your intelligent creative assistant.</p>
+  </div>
+
+  <div class="ai-card">
+
+    <b style="font-size:20px;">ZYRIVO AI</b>
+
+    <textarea
+      id="aiInput"
+      class="ai-input"
+      placeholder="Ask anything or describe what you want..."
+    ></textarea>
+
+    <button class="primary" onclick="askAI()">
+      ✦ Generate Answer
+    </button>
+
+    <div id="aiResponse" class="ai-response"></div>
+
+  </div>
+
+
+  <div class="tool-grid">
+
+    <button class="tool" onclick="aiTool('Text → Image')">
+      <span>🖼️</span>
+      Text → Image
+    </button>
+
+    <button class="tool" onclick="aiTool('Text → Video')">
+      <span>🎥</span>
+      Text → Video
+    </button>
+
+    <button class="tool" onclick="aiTool('Text → Audio')">
+      <span>🗣️</span>
+      Text → Audio
+    </button>
+
+    <button class="tool" onclick="aiTool('Image → Video')">
+      <span>✨</span>
+      Image → Video
+    </button>
+
+    <button class="tool" onclick="aiTool('AI Music')">
+      <span>🎵</span>
+      AI Music
+    </button>
+
+    <button class="tool" onclick="aiTool('AI Writer')">
+      <span>✍️</span>
+      AI Writer
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- MESSAGES -->
+<section id="messages" class="section">
+
+  <div class="page-title">
+    <h2>💬 Messages</h2>
+    <p>Connect privately with people around the world.</p>
+  </div>
+
+  <div class="message-card" onclick="openChat('Alex Creator')">
+    <div class="avatar">A</div>
+
+    <div class="message-content">
+      <b>Alex Creator</b>
+      <p>Hey! Welcome to ZYRIVO 👋</p>
+      <small>2m</small>
+    </div>
+  </div>
+
+  <div class="message-card" onclick="openChat('Rima Das')">
+    <div class="avatar">R</div>
+
+    <div class="message-content">
+      <b>Rima Das</b>
+      <p>Sent a photo 📷</p>
+      <small>10m</small>
+    </div>
+  </div>
+
+  <div class="message-card" onclick="openChat('Misty Moni')">
+    <div class="avatar">M</div>
+
+    <div class="message-content">
+      <b>Misty Moni</b>
+      <p>See you soon!</p>
+      <small>1h</small>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- MARKET -->
+<section id="market" class="section">
+
+  <div class="page-title">
+    <h2>🛍️ ZYRIVO Market</h2>
+    <p>Buy, sell and grow your creator business.</p>
+  </div>
+
+  <div class="market-card">
+
+    <div class="product-image">📦</div>
+
+    <div class="product-info">
+      <h3>Creator Digital Package</h3>
+      <p>Premium creator resources</p>
+      <div class="price">$9.99</div>
+
+      <button class="primary" onclick="showToast('Product page opened')">
+        View Product
+      </button>
+    </div>
+
+  </div>
+
+
+  <div class="market-card">
+
+    <div class="product-image">🛒</div>
+
+    <div class="product-info">
+      <h3>ZYRIVO Creator Store</h3>
+      <p>Sell your own products and services.</p>
+
+      <button
+        class="primary"
+        style="margin-top:12px;"
+        onclick="showToast('Creator Store opened')"
+      >
+        Open Store
+      </button>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- PROFILE -->
+<section id="profile" class="section">
+
+  <div class="profile-card">
+
+    <div class="profile-cover"></div>
+
+    <div class="profile-main">
+
+      <div class="big-avatar">Z</div>
+
+      <h2>ZYRIVO Creator</h2>
+      <p>@zyrivo_creator</p>
+
+      <div class="profile-stats">
+
+        <div>
+          <strong>12.5K</strong>
+          <small>Followers</small>
+        </div>
+
+        <div>
+          <strong>284</strong>
+          <small>Following</small>
+        </div>
+
+        <div>
+          <strong>186</strong>
+          <small>Posts</small>
+        </div>
+
+      </div>
+
+      <button class="primary" onclick="showToast('Profile editor opened')">
+        Edit Profile
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- SEARCH -->
+<section id="search" class="section">
+
+  <div class="page-title">
+    <h2>🔍 Search ZYRIVO</h2>
+    <p>Find people, posts, videos and creators.</p>
+  </div>
+
+  <div class="search-box">
+
+    <input
+      id="searchInput"
+      type="text"
+      placeholder="Search ZYRIVO..."
+      oninput="searchZYRIVO()"
+    >
+
+    <button class="icon-btn" onclick="searchZYRIVO()">🔍</button>
+
+  </div>
+
+  <div id="searchResults"></div>
+
+</section>
+
+</div>
+
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+
+  <div class="nav-inner">
+
+    <button class="nav-btn active" onclick="showSection('home',this)">
+      ⌂
+      <span>Home</span>
+    </button>
+
+    <button class="nav-btn" onclick="showSection('shorts',this)">
+      ⚡
+      <span>Shorts</span>
+    </button>
+
+    <button class="nav-btn" onclick="showSection('video',this)">
+      🎬
+      <span>Video</span>
+    </button>
+
+    <button class="nav-btn" onclick="showSection('ai',this)">
+      ✦
+      <span>AI</span>
+    </button>
+
+    <button class="nav-btn" onclick="showSection('market',this)">
+      🛍
+      <span>Market</span>
+    </button>
+
+    <button class="nav-btn" onclick="showSection('profile',this)">
+      ●
+      <span>Profile</span>
+    </button>
+
+  </div>
+
+</nav>
+
+
+<!-- POST MODAL -->
+<div id="postModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+      <h2>Create Post</h2>
+
+      <button class="close" onclick="closeModal('postModal')">
+        ×
+      </button>
+    </div>
+
+    <textarea
+      id="postText"
+      rows="6"
+      placeholder="What's on your mind?"
+    ></textarea>
+
+    <button class="primary" onclick="createPost()">
+      Publish Post
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- VIDEO MODAL -->
+<div id="videoModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+      <h2>🎬 Upload Video</h2>
+
+      <button class="close" onclick="closeModal('videoModal')">
+        ×
+      </button>
+    </div>
+
+    <p style="color:#64748b;margin-bottom:12px;">
+      Select a video from your phone.
+    </p>
+
+    <input
+      id="videoFile"
+      class="file-input"
+      type="file"
+      accept="video/*"
+      onchange="fileSelected(this,'video')"
+    >
+
+    <button class="primary" onclick="uploadDemo('video')">
+      Upload Video
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- SHORT MODAL -->
+<div id="shortModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+      <h2>⚡ Create Short</h2>
+
+      <button class="close" onclick="closeModal('shortModal')">
+        ×
+      </button>
+    </div>
+
+    <p style="color:#64748b;margin-bottom:12px;">
+      Select a vertical short video.
+    </p>
+
+    <input
+      id="shortFile"
+      class="file-input"
+      type="file"
+      accept="video/*"
+      onchange="fileSelected(this,'short')"
+    >
+
+    <button class="primary" onclick="uploadDemo('short')">
+      Publish Short
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- STORY MODAL -->
+<div id="storyModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+      <h2>📸 Create Story</h2>
+
+      <button class="close" onclick="closeModal('storyModal')">
+        ×
+      </button>
+    </div>
+
+    <input
+      id="storyFile"
+      class="file-input"
+      type="file"
+      accept="image/*,video/*"
+      onchange="fileSelected(this,'story')"
+    >
+
+    <button class="primary" onclick="uploadDemo('story')">
+      Publish Story
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- CHAT MODAL -->
+<div id="chatModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+
+      <h2 id="chatTitle">Message</h2>
+
+      <button class="close" onclick="closeModal('chatModal')">
+        ×
+      </button>
+
+    </div>
+
+    <div
+      id="chatMessages"
+      style="min-height:180px;background:#f8fafc;border-radius:14px;padding:12px;margin-bottom:12px;"
+    >
+      <div class="comment">
+        Welcome to ZYRIVO+ 👋
+      </div>
+    </div>
+
+    <div class="comment-input">
+
+      <input
+        id="chatInput"
+        type="text"
+        placeholder="Write a message..."
+      >
+
+      <button onclick="sendChat()">Send</button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<div id="toast" class="toast"></div>
+
+
+<script>
+"use strict";
+
+/* ================================
+   ZYRIVO+ FRONTEND ENGINE
+================================ */
+
+let toastTimer = null;
+
+
+/* SECTION NAVIGATION */
+function showSection(id,button){
+
+  document.querySelectorAll(".section")
+    .forEach(section=>{
+      section.classList.remove("active");
+    });
+
+  const target=document.getElementById(id);
+
+  if(target){
+    target.classList.add("active");
+  }
+
+  document.querySelectorAll(".nav-btn")
+    .forEach(btn=>{
+      btn.classList.remove("active");
+    });
+
+  if(button){
+    button.classList.add("active");
+  }
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
+
+
+/* MODALS */
+function openModal(id){
+
+  const modal=document.getElementById(id);
+
+  if(modal){
+    modal.classList.add("show");
+  }
+}
+
+
+function closeModal(id){
+
+  const modal=document.getElementById(id);
+
+  if(modal){
+    modal.classList.remove("show");
+  }
+}
+
+
+/* CLOSE MODAL WHEN CLICKING OUTSIDE */
+document.querySelectorAll(".modal").forEach(modal=>{
+
+  modal.addEventListener("click",function(e){
+
+    if(e.target===modal){
+      modal.classList.remove("show");
+    }
+
+  });
+
+});
+
+
+/* TOAST */
+function showToast(message){
+
+  const toast=document.getElementById("toast");
+
+  toast.textContent=message;
+  toast.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer=setTimeout(()=>{
+    toast.classList.remove("show");
+  },2200);
+}
+
+
+/* LIKE */
+function likePost(button){
+
+  const post=button.closest(".post");
+
+  if(!post){
+    return;
+  }
+
+  const count=post.querySelector(".like-count");
+
+  if(button.classList.contains("liked")){
+
+    button.classList.remove("liked");
+    button.innerHTML="👍 Like";
+
+    if(count){
+      count.textContent="👍 ❤️ 1.2K";
+    }
+
+    showToast("Like removed");
+
+  }else{
+
+    button.classList.add("liked");
+    button.innerHTML="❤️ Liked";
+
+    if(count){
+      count.textContent="❤️ 1.2K";
+    }
+
+    showToast("Post liked ❤️");
+  }
+}
+
+
+/* COMMENTS */
+function toggleComments(button){
+
+  const post=button.closest(".post");
+
+  if(!post){
+    return;
+  }
+
+  const comments=post.querySelector(".comments");
+
+  if(comments){
+    comments.classList.toggle("show");
+  }
+}
+
+
+function addComment(button){
+
+  const box=button.closest(".comments");
+
+  if(!box){
+    return;
+  }
+
+  const input=box.querySelector("input");
+  const list=box.querySelector(".comment-list");
+
+  const text=input.value.trim();
+
+  if(!text){
+    showToast("Write something first");
+    return;
+  }
+
+  const comment=document.createElement("div");
+
+  comment.className="comment";
+
+  comment.textContent="You: "+text;
+
+  list.appendChild(comment);
+
+  input.value="";
+
+  showToast("Comment added");
+
+}
+
+
+/* SHARE */
+function sharePost(){
+
+  const shareData={
+    title:"ZYRIVO+",
+    text:"Check this post on ZYRIVO+",
+    url:window.location.href
+  };
+
+  if(navigator.share){
+
+    navigator.share(shareData)
+      .then(()=>{
+        showToast("Shared successfully");
+      })
+      .catch(()=>{
+        showToast("Share cancelled");
+      });
+
+  }else{
+
+    if(navigator.clipboard){
+
+      navigator.clipboard.writeText(window.location.href)
+        .then(()=>{
+          showToast("Link copied");
+        })
+        .catch(()=>{
+          showToast("Share link ready");
+        });
+
+    }else{
+
+      showToast("Share link: "+window.location.href);
+
+    }
 
-ZYRIVO+
+  }
+}
 
-🔍 ＋ 💬 
 
-Z
+/* CREATE POST */
+function createPost(){
 
-What's on your mind? 
+  const input=document.getElementById("postText");
 
-<div class="quick-actions"> <button onclick="openModal('createModal')">📝 Post</button> <button onclick="openModal('videoModal')">🎬 Video</button> <button onclick="openModal('shortModal')">⚡ Short</button> </div> 
+  const text=input.value.trim();
 
-➕
-Create Story
+  if(!text){
 
-<div class="story"> <div class="story-avatar">M</div> Misty Moni </div> <div class="story"> <div class="story-avatar">R</div> Rima Das </div> <div class="story"> <div class="story-avatar">S</div> Shahin </div> 
+    showToast("Please write something first");
 
-N
+    return;
+  }
 
-Nur Islam 1d · 🌎 
+  const feed=document.getElementById("feed");
 
-••• 
+  const post=document.createElement("article");
 
-<div class="post-text"> বাবা আর চার ভাই একসাথে ❤️ </div> <div class="post-media"> 👨‍👨‍👦‍👦 </div> <div class="post-stats"> <span>👍 ❤️ 1.2K</span> <span>86 Comments · 32 Shares</span> </div> <div class="post-actions"> <button onclick="likePost(this)">👍 Like</button> <button onclick="commentPost()">💬 Comment</button> <button onclick="sharePost()">↗ Share</button> </div> 
+  post.className="post";
 
-Z
+  post.innerHTML=`
 
-ZYRIVO Creator Sponsored · 🌎 
+    <div class="post-head">
 
-••• 
+      <div class="avatar">Z</div>
 
-<div class="post-text"> Welcome to the next generation of social media. 🚀 </div> <div class="post-media"> ▶️ </div> <div class="post-stats"> <span>👍 ❤️ 5.8K</span> <span>420 Comments · 180 Shares</span> </div> <div class="post-actions"> <button onclick="likePost(this)">👍 Like</button> <button onclick="commentPost()">💬 Comment</button> <button onclick="sharePost()">↗ Share</button> </div> 
+      <div class="post-user">
+        <strong>ZYRIVO Creator</strong>
+        <small>Just now · 🌎</small>
+      </div>
 
-⚡ ZYRIVO Shorts 
+      <button class="more" onclick="showToast('Post menu')">
+        •••
+      </button>
 
-Discover short videos from creators worldwide.
+    </div>
 
-▶️ 
+    <div class="post-body">
+      <div class="post-text"></div>
+    </div>
 
-A
+    <div class="post-stats">
+      <span class="like-count">👍 0</span>
+      <span class="comment-count">0 Comments · 0 Shares</span>
+    </div>
 
-ZYRIVO Creator 1.4M views 
+    <div class="post-actions">
 
-Amazing short video 🔥 #ZYRIVO #Shorts 
+      <button onclick="likePost(this)">
+        👍 Like
+      </button>
 
-❤️ 25K 💬 1.8K ↗ Share 
+      <button onclick="toggleComments(this)">
+        💬 Comment
+      </button>
 
-🎬 ZYRIVO Video 
+      <button onclick="sharePost()">
+        ↗ Share
+      </button>
 
-Long-form videos and premium creator content.
+    </div>
 
-▶️ 
+    <div class="comments">
 
-The future of global creators starts here. 
+      <div class="comment-input">
 
-2.8M Views 3 days ago 
+        <input
+          type="text"
+          placeholder="Write a comment..."
+        >
 
-👍 Like 💬 Comment ↗ Share 
+        <button onclick="addComment(this)">
+          Send
+        </button>
 
-✦ ZYRIVO AI 
+      </div>
 
-Your intelligent creative assistant.
+      <div class="comment-list"></div>
 
-<input id="aiInput" class="ai-input" placeholder="Ask anything or describe what you want..."> <button class="primary" onclick="askAI()"> ✦ Generate Answer </button> <div id="aiResponse" class="ai-response"> <b>ZYRIVO AI</b><br><br> Your AI assistant is ready. In the full version, multiple AI engines will be connected here for text, image, video, audio and creative tools. </div> 
+    </div>
+  `;
 
-<div class="tool"> <span class="tool-icon">🖼️</span> Text → Image </div> <div class="tool"> <span class="tool-icon">🎥</span> Text → Video </div> <div class="tool"> <span class="tool-icon">🗣️</span> Text → Audio </div> <div class="tool"> <span class="tool-icon">✨</span> Image → Video </div> <div class="tool"> <span class="tool-icon">🎵</span> AI Music </div> <div class="tool"> <span class="tool-icon">✍️</span> AI Writer </div> 
+  post.querySelector(".post-text").textContent=text;
 
-💬 Messages 
+  feed.prepend(post);
 
-Connect privately with people around the world.
+  input.value="";
 
-A
+  closeModal("postModal");
 
-Alex Creator Hey! Welcome to ZYRIVO 👋 
+  showToast("Post published on this device");
 
-2m 
+}
 
-R
 
-Rima Das Sent a photo 📷 
+/* SHORT LIKE */
+function shortLike(button){
 
-10m 
+  button.dataset.liked=
+    button.dataset.liked==="true"
+      ?"false"
+      :"true";
 
-M
+  if(button.dataset.liked==="true"){
 
-Misty Moni See you soon! 
+    button.innerHTML="❤️ Liked";
 
-1h 
+  }else{
 
-🛍️ ZYRIVO Market 
+    button.innerHTML="❤️ 25K";
 
-Buy, sell and grow your creator business.
+  }
+}
 
-Creator Digital Package 
 
-Premium creator resources
+/* FILE SELECTION */
+function fileSelected(input,type){
 
-$9.99
+  if(input.files && input.files.length){
 
-View Product 
+    showToast(
+      type+" selected: "+input.files[0].name
+    );
 
-ZYRIVO Creator Store 
+  }
+}
 
-Sell your own products and services.
 
-Open Store 
+/* UPLOAD DEMO */
+function uploadDemo(type){
 
-<div class="cover"></div> <div class="big-avatar">Z</div> <h2>ZYRIVO Creator</h2> <p>@zyrivo_creator</p> <div class="profile-stats"> <div> <strong>12.5K</strong> <small>Followers</small> </div> <div> <strong>284</strong> <small>Following</small> </div> <div> <strong>186</strong> <small>Posts</small> </div> </div> <button class="primary" style="width:90%;"> Edit Profile </button> 
+  let id="";
 
-⌂ Home ▶ Shorts 🎬 Video ✦ AI 🛍 Market ● Profile 
+  if(type==="video"){
+    id="videoFile";
+  }
 
-<div class="modal-title"> <h2>Create Post</h2> <button class="close" onclick="closeModal('createModal')">×</button> </div> <textarea id="postText" placeholder="What's on your mind?"></textarea> <button class="primary" onclick="createPost()"> Publish Post </button> 
+  if(type==="short"){
+    id="shortFile";
+  }
 
-<div class="modal-title"> <h2>🎬 Upload Video</h2> <button class="close" onclick="closeModal('videoModal')">×</button> </div> <p>Select a video from your phone.</p> <input type="file" accept="video/*" style="margin-top:20px;width:100%;"> <button class="primary"> Upload Video </button> 
+  if(type==="story"){
+    id="storyFile";
+  }
 
-<div class="modal-title"> <h2>⚡ Create Short</h2> <button class="close" onclick="closeModal('shortModal')">×</button> </div> <p>Create a vertical short video.</p> <input type="file" accept="video/*" style="margin-top:20px;width:100%;"> <button class="primary"> Publish Short </button> 
+  const input=document.getElementById(id);
 
-<div class="modal-title"> <h2>📸 Create Story</h2> <button class="close" onclick="closeModal('storyModal')">×</button> </div> <input type="file" accept="image/*,video/*" style="width:100%;"> <button class="primary"> Publish Story </button> 
+  if(!input || !input.files.length){
 
-<div class="modal-title"> <h2>🔍 Search ZYRIVO</h2> <button class="close" onclick="closeModal('searchModal')">×</button> </div> <input class="search" placeholder="Search people, videos, posts..."> <div class="tool-grid"> <div class="tool"> 👤<br>People </div> <div class="tool"> 🎬<br>Videos </div> <div class="tool"> ⚡<br>Shorts </div> <div class="tool"> 🛍️<br>Market </div> </div> 
+    showToast("Please select a file first");
 
-function showSection(id,button){ document.querySelectorAll('.section') .forEach(section=>{ section.classList.remove('active'); }); document.getElementById(id) .classList.add('active'); document.querySelectorAll('.nav-btn') .forEach(btn=>{ btn.classList.remove('active'); }); if(button){ button.classList.add('active'); } window.scrollTo(0,0); } function openModal(id){ document.getElementById(id).style.display='flex'; } function closeModal(id){ document.getElementById(id).style.display='none'; } function createPost(){ const text=document.getElementById('postText').value.trim(); if(!text){ alert('Please write something first.'); return; } const post=document.createElement('article'); post.className='post'; post.innerHTML=` 
+    return;
+  }
 
-Z
+  /*
+    IMPORTANT:
+    এখানে file এখনো server-এ upload হচ্ছে না।
+    Backend/Storage যুক্ত হলে এই জায়গায় real upload হবে।
+  */
 
-ZYRIVO Creator Just now · 🌎 
+  showToast(
+    type.charAt(0).toUpperCase()+type.slice(1)
+    +" selected successfully"
+  );
 
-••• 
+  closeModal(type==="video"
+    ?"videoModal"
+    :type==="short"
+      ?"shortModal"
+      :"storyModal"
+  );
+}
 
-${escapeHTML(text)} 
 
-0 Likes 0 Comments · 0 Shares 
+/* AI DEMO */
+function askAI(){
 
-👍 Like 💬 Comment ↗ Share 
+  const input=document.getElementById("aiInput");
+  const response=document.getElementById("aiResponse");
 
-`; document.getElementById('home') .appendChild(post); document.getElementById('postText').value=''; closeModal('createModal'); showSection('home'); alert('Post published on ZYRIVO!'); } function escapeHTML(text){ const div=document.createElement('div'); div.textContent=text; return div.innerHTML; } function likePost(button){ button.innerHTML='❤️ Liked'; button.style.color='#2563eb'; } function commentPost(){ const comment=prompt('Write your comment:'); if(comment){ alert('Comment added!'); } } function sharePost(){ if(navigator.share){ navigator.share({ title:'ZYRIVO', text:'Check this post on ZYRIVO' }); }else{ alert('Post link copied!'); } } function askAI(){ const input=document .getElementById('aiInput') .value .trim(); if(!input){ alert('Write your question first.'); return; } const response=document .getElementById('aiResponse'); response.style.display='block'; response.innerHTML=` ✦ ZYRIVO AI
+  const question=input.value.trim();
 
-You asked:
-${escapeHTML(input)}
+  if(!question){
 
-Demo response: ZYRIVO AI is ready to help. In the production version, real AI engines will process your request and generate text, images, audio and video. `; } document.querySelectorAll('.modal') .forEach(modal=>{ modal.addEventListener('click',function(e){ if(e.target===modal){ modal.style.display='none'; } }); }); /* ZYRIVO EXTRA FEATURES */ 
+    showToast("Ask ZYRIVO AI something first");
+
+    return;
+  }
+
+  response.style.display="block";
+
+  response.innerHTML=`
+    <b>ZYRIVO AI</b>
+    <br><br>
+    I received your request:
+    <br><br>
+    “${escapeHTML(question)}”
+    <br><br>
+    AI engine connection will be added in the backend phase.
+  `;
+
+}
+
+
+function aiTool(tool){
+
+  showToast(
+    tool+" selected — AI API connection comes next"
+  );
+
+}
+
+
+/* CHAT */
+let activeChat="";
+
+
+function openChat(name){
+
+  activeChat=name;
+
+  document.getElementById("chatTitle")
+    .textContent="💬 "+name;
+
+  document.getElementById("chatMessages")
+    .innerHTML=`
+      <div class="comment">
+        Chat with ${escapeHTML(name)}
+      </div>
+    `;
+
+  openModal("chatModal");
+
+}
+
+
+function sendChat(){
+
+  const input=document.getElementById("chatInput");
+
+  const text=input.value.trim();
+
+  if(!text){
+
+    showToast("Write a message");
+
+    return;
+  }
+
+  const box=document.getElementById("chatMessages");
+
+  const message=document.createElement("div");
+
+  message.className="comment";
+
+  message.textContent="You: "+text;
+
+  box.appendChild(message);
+
+  input.value="";
+
+}
+
+
+/* SEARCH */
+function searchZYRIVO(){
+
+  const input=document.getElementById("searchInput");
+
+  const results=document.getElementById("searchResults");
+
+  const query=input.value.trim().toLowerCase();
+
+  results.innerHTML="";
+
+  if(!query){
+
+    return;
+  }
+
+  const data=[
+    ["ZYRIVO Creator","Creator profile"],
+    ["Nur Islam","Creator profile"],
+    ["Rima Das","Creator profile"],
+    ["ZYRIVO Shorts","Short videos"],
+    ["ZYRIVO Video","Long videos"],
+    ["ZYRIVO Market","Marketplace"]
+  ];
+
+  const matches=data.filter(item=>
+    item[0].toLowerCase().includes(query)
+  );
+
+  if(!matches.length){
+
+    results.innerHTML=`
+      <div class="search-result">
+        No results found.
+      </div>
+    `;
+
+    return;
+  }
+
+  matches.forEach(item=>{
+
+    const div=document.createElement("div");
+
+    div.className="search-result";
+
+    div.innerHTML=`
+      <b>${escapeHTML(item[0])}</b>
+      <br>
+      <small>${escapeHTML(item[1])}</small>
+    `;
+
+    results.appendChild(div);
+
+  });
+
+}
+
+
+/* HTML SAFETY */
+function escapeHTML(value){
+
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+/* ESC KEY */
+document.addEventListener("keydown",function(e){
+
+  if(e.key==="Escape"){
+
+    document.querySelectorAll(".modal.show")
+      .forEach(modal=>{
+        modal.classList.remove("show");
+      });
+
+  }
+
+});
+
+
+/* ENTER TO SEND CHAT */
+document.getElementById("chatInput")
+  .addEventListener("keydown",function(e){
+
+    if(e.key==="Enter"){
+
+      e.preventDefault();
+
+      sendChat();
+
+    }
+
+  });
+
+
+/* START */
+console.log("ZYRIVO+ frontend engine loaded successfully.");
+
+</script>
+
+</body>
+</html>
