@@ -1983,6 +1983,19 @@ document.getElementById("chatInput")
 /* START */
 console.log("ZYRIVO+ frontend engine loaded successfully.");
 
+</script><!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://crtvemwgsxaicvqzxcuq.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_CY0qxVJPMOcbRjNDNDUluw_e91Tiiar";
+
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+console.log("ZYRIVO Supabase connected");
 </script>
 
 </body>
