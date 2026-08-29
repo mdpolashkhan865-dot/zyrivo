@@ -1188,6 +1188,153 @@ document.querySelectorAll('.modal')
   
 
 /* ZYRIVO EXTRA FEATURES */
+
+/* ===== ZYRIVO EXTRA FEATURES ===== */
+
+/* 1. Like system */
+function likePost(button){
+
+  if(button.dataset.liked === "true"){
+    button.dataset.liked = "false";
+    button.innerHTML = "👍 Like";
+    button.style.color = "#475569";
+  }else{
+    button.dataset.liked = "true";
+    button.innerHTML = "❤️ Liked";
+    button.style.color = "#2563eb";
+  }
+
+}
+
+
+/* 2. Comment system */
+function commentPost(){
+
+  const comment = prompt("Write your comment:");
+
+  if(!comment || !comment.trim()){
+    return;
+  }
+
+  alert("Comment added successfully! 💬");
+}
+
+
+/* 3. Share system */
+function sharePost(){
+
+  if(navigator.share){
+
+    navigator.share({
+      title:"ZYRIVO",
+      text:"Check this post on ZYRIVO"
+    }).catch(()=>{});
+
+  }else{
+
+    alert("Post link copied! ↗");
+
+  }
+
+}
+
+
+/* 4. AI quick tools */
+document.querySelectorAll(".tool").forEach(tool=>{
+
+  tool.addEventListener("click",function(){
+
+    const name = this.innerText.trim();
+
+    if(name.includes("Text → Image")){
+      alert("🖼️ Text → Image\n\nThis AI tool will generate images from your text.");
+    }
+
+    else if(name.includes("Text → Video")){
+      alert("🎥 Text → Video\n\nThis AI tool will generate videos from your text.");
+    }
+
+    else if(name.includes("Text → Audio")){
+      alert("🗣️ Text → Audio\n\nThis AI tool will generate audio from your text.");
+    }
+
+    else if(name.includes("Image → Video")){
+      alert("✨ Image → Video\n\nThis AI tool will turn an image into a video.");
+    }
+
+    else if(name.includes("AI Music")){
+      alert("🎵 AI Music\n\nThis AI tool will create music.");
+    }
+
+    else if(name.includes("AI Writer")){
+      alert("✍️ AI Writer\n\nThis AI tool will help create written content.");
+    }
+
+  });
+
+});
+
+
+/* 5. Search */
+const searchInput = document.querySelector("#searchModal .search");
+
+if(searchInput){
+
+  searchInput.addEventListener("input",function(){
+
+    const query = this.value.toLowerCase().trim();
+
+    document.querySelectorAll("#searchModal .tool").forEach(tool=>{
+
+      if(!query){
+        tool.style.display = "";
+        return;
+      }
+
+      tool.style.display =
+        tool.innerText.toLowerCase().includes(query)
+        ? ""
+        : "none";
+
+    });
+
+  });
+
+}
+
+
+/* 6. Close modal with ESC */
+document.addEventListener("keydown",function(e){
+
+  if(e.key === "Escape"){
+
+    document.querySelectorAll(".modal").forEach(modal=>{
+      modal.style.display = "none";
+    });
+
+  }
+
+});
+
+
+/* 7. Prevent empty AI response */
+const aiInput = document.getElementById("aiInput");
+
+if(aiInput){
+
+  aiInput.addEventListener("keydown",function(e){
+
+    if(e.key === "Enter"){
+      e.preventDefault();
+      askAI();
+    }
+
+  });
+
+}
+
+
+/* ===== END ZYRIVO EXTRA FEATURES ===== */
 </script>
 
 </body>
