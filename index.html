@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="theme-color" content="#111827">
-<title>ZYRIVO+ Master Ultimate</title>
+<title>MasterHub Ultimate Platform</title>
 
 <!-- SUPABASE SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -135,11 +135,6 @@ button{cursor:pointer;border:0;}
 .tool{background:#fff;color:var(--text);border:1px solid var(--border);padding:18px 10px;border-radius:15px;text-align:center;font-weight:700;}
 .tool span{font-size:30px;display:block;margin-bottom:7px;}
 
-/* MESSAGES */
-.message-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:13px;display:flex;gap:10px;margin-bottom:9px;}
-.message-content{flex:1;}
-.message-content small{color:var(--muted);}
-
 /* MARKET */
 .market-card{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden;margin-bottom:12px;}
 .product-image{height:170px;background:linear-gradient(135deg,#e0e7ff,#fce7f3);display:flex;align-items:center;justify-content:center;font-size:60px;}
@@ -190,22 +185,22 @@ button{cursor:pointer;border:0;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 /* LIVE SYSTEM */
-#zyrivoLiveButton{
+#masterhubLiveButton{
   position:fixed;right:16px;bottom:80px;z-index:9998;border:0;border-radius:999px;
   padding:12px 16px;background:#ef4444;color:#fff;font-weight:700;font-size:14px;box-shadow:0 8px 25px rgba(0,0,0,.22);
 }
-#zyrivoLivePanel{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.72);padding:18px;overflow:auto;}
-.zyrivoLiveBox{max-width:520px;margin:40px auto;background:#fff;border-radius:22px;padding:18px;}
-.zyrivoLiveBox h2{margin-bottom:14px;}
-#zyrivoLiveTitle,#zyrivoLiveDescription{width:100%;border:1px solid #e2e8f0;border-radius:12px;padding:12px;margin-bottom:10px;font-size:15px;}
-#zyrivoLiveVideo{width:100%;background:#000;border-radius:16px;margin:12px 0;max-height:55vh;}
-.zyrivoLiveActions{display:flex;gap:8px;flex-wrap:wrap;}
-.zyrivoLiveActions button{border:0;border-radius:12px;padding:11px 14px;font-weight:700;}
-#zyrivoStartLive{background:#ef4444;color:#fff;}
-#zyrivoEndLive{background:#111827;color:#fff;display:none;}
-#zyrivoCloseLive{background:#e5e7eb;color:#111827;}
-#zyrivoLiveStatus{margin-top:10px;font-size:14px;color:#64748b;}
-.zyrivoLiveViewer{margin-top:8px;font-size:14px;font-weight:600;}
+#masterhubLivePanel{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.72);padding:18px;overflow:auto;}
+.masterhubLiveBox{max-width:520px;margin:40px auto;background:#fff;border-radius:22px;padding:18px;}
+.masterhubLiveBox h2{margin-bottom:14px;}
+#masterhubLiveTitle,#masterhubLiveDescription{width:100%;border:1px solid #e2e8f0;border-radius:12px;padding:12px;margin-bottom:10px;font-size:15px;}
+#masterhubLiveVideo{width:100%;background:#000;border-radius:16px;margin:12px 0;max-height:55vh;}
+.masterhubLiveActions{display:flex;gap:8px;flex-wrap:wrap;}
+.masterhubLiveActions button{border:0;border-radius:12px;padding:11px 14px;font-weight:700;}
+#masterhubStartLive{background:#ef4444;color:#fff;}
+#masterhubEndLive{background:#111827;color:#fff;display:none;}
+#masterhubCloseLive{background:#e5e7eb;color:#111827;}
+#masterhubLiveStatus{margin-top:10px;font-size:14px;color:#64748b;}
+.masterhubLiveViewer{margin-top:8px;font-size:14px;font-weight:600;}
 
 @media(min-width:761px){.bottom-nav{left:50%;right:auto;transform:translateX(-50%);width:760px;}}
 </style>
@@ -216,7 +211,7 @@ button{cursor:pointer;border:0;}
 
 <!-- HEADER -->
 <header class="header">
-  <div class="logo">ZYRIVO<span>+</span></div>
+  <div class="logo">MasterHub<span>+</span></div>
   <div class="header-actions">
     <button class="icon-btn" onclick="showSection('search')">🔍</button>
     <button class="icon-btn" onclick="showSection('messages')">💬</button>
@@ -258,14 +253,14 @@ button{cursor:pointer;border:0;}
 <!-- SHORTS SECTION -->
 <section id="shorts" class="section">
   <div class="page-title">
-    <h2>⚡ ZYRIVO Shorts</h2>
+    <h2>⚡ MasterHub Shorts</h2>
     <p>Discover short videos from creators worldwide.</p>
   </div>
   <div class="short-card">
     <div class="short-video">▶️</div>
     <div class="short-info">
-      <b>ZYRIVO Creator</b>
-      <p style="margin-top:8px;">Amazing short video 🔥 #ZYRIVO #Shorts</p>
+      <b>MasterHub Creator</b>
+      <p style="margin-top:8px;">Amazing short video 🔥 #MasterHub #Shorts</p>
       <div class="short-actions">
         <button onclick="shortLike(this)">❤️ 25K</button>
         <button onclick="showToast('Comments opened')">💬 1.8K</button>
@@ -278,7 +273,7 @@ button{cursor:pointer;border:0;}
 <!-- VIDEO SECTION -->
 <section id="video" class="section">
   <div class="page-title">
-    <h2>🎬 ZYRIVO Video</h2>
+    <h2>🎬 MasterHub Video</h2>
     <p>Long-form creator videos.</p>
   </div>
   <div class="video-card">
@@ -298,11 +293,11 @@ button{cursor:pointer;border:0;}
 <!-- AI SECTION -->
 <section id="ai" class="section">
   <div class="page-title">
-    <h2>✦ ZYRIVO AI</h2>
+    <h2>✦ MasterHub AI</h2>
     <p>Your intelligent creative assistant.</p>
   </div>
   <div class="ai-card">
-    <b style="font-size:20px;">ZYRIVO AI Studio</b>
+    <b style="font-size:20px;">MasterHub AI Studio</b>
     <textarea id="aiInput" class="ai-input" placeholder="Ask anything or describe what you want..."></textarea>
     <button class="primary" onclick="askAI()">✦ Generate Answer</button>
     <div id="aiResponse" class="ai-response"></div>
@@ -320,7 +315,7 @@ button{cursor:pointer;border:0;}
 <!-- MARKET SECTION -->
 <section id="market" class="section">
   <div class="page-title">
-    <h2>🛍️ ZYRIVO Market</h2>
+    <h2>🛍️ MasterHub Market</h2>
     <p>Buy, sell and grow your creator business.</p>
   </div>
   <div class="market-card">
@@ -362,7 +357,7 @@ button{cursor:pointer;border:0;}
     <div class="avatar">A</div>
     <div class="message-content">
       <b>Alex Creator</b>
-      <p>Hey! Welcome to ZYRIVO 👋</p>
+      <p>Hey! Welcome to MasterHub 👋</p>
       <small>2m</small>
     </div>
   </div>
@@ -371,12 +366,12 @@ button{cursor:pointer;border:0;}
 <!-- SEARCH SECTION -->
 <section id="search" class="section">
   <div class="page-title">
-    <h2>🔍 Search ZYRIVO</h2>
+    <h2>🔍 Search MasterHub</h2>
     <p>Find people, posts, videos and creators.</p>
   </div>
   <div class="search-box">
-    <input id="searchInput" type="text" placeholder="Search ZYRIVO..." oninput="searchZYRIVO()">
-    <button class="icon-btn" onclick="searchZYRIVO()">🔍</button>
+    <input id="searchInput" type="text" placeholder="Search MasterHub..." oninput="searchMasterHub()">
+    <button class="icon-btn" onclick="searchMasterHub()">🔍</button>
   </div>
   <div id="searchResults"></div>
 </section>
@@ -432,7 +427,7 @@ button{cursor:pointer;border:0;}
   <div class="modal-box">
     <div class="modal-head"><h2 id="chatTitle">Message</h2><button class="close" onclick="closeModal('chatModal')">×</button></div>
     <div id="chatMessages" style="min-height:180px;background:#f8fafc;border-radius:14px;padding:12px;margin-bottom:12px;">
-      <div class="comment">Welcome to ZYRIVO+ 👋</div>
+      <div class="comment">Welcome to MasterHub+ 👋</div>
     </div>
     <div class="comment-input">
       <input id="chatInput" type="text" placeholder="Write a message...">
@@ -442,20 +437,20 @@ button{cursor:pointer;border:0;}
 </div>
 
 <!-- LIVE STREAMING BUTTON & PANEL -->
-<button id="zyrivoLiveButton" type="button"><i class="fa-solid fa-tower-broadcast"></i> Go Live</button>
-<div id="zyrivoLivePanel">
-  <div class="zyrivoLiveBox">
-    <h2>🔴 ZYRIVO Live Studio</h2>
-    <input id="zyrivoLiveTitle" type="text" placeholder="Live title">
-    <textarea id="zyrivoLiveDescription" rows="2" placeholder="Description"></textarea>
-    <video id="zyrivoLiveVideo" autoplay muted playsinline></video>
-    <div class="zyrivoLiveActions">
-      <button id="zyrivoStartLive" type="button">🔴 Start Live</button>
-      <button id="zyrivoEndLive" type="button" style="display:none;">⏹ End Live</button>
-      <button id="zyrivoCloseLive" type="button">Close</button>
+<button id="masterhubLiveButton" type="button"><i class="fa-solid fa-tower-broadcast"></i> Go Live</button>
+<div id="masterhubLivePanel">
+  <div class="masterhubLiveBox">
+    <h2>🔴 MasterHub Live Studio</h2>
+    <input id="masterhubLiveTitle" type="text" placeholder="Live title">
+    <textarea id="masterhubLiveDescription" rows="2" placeholder="Description"></textarea>
+    <video id="masterhubLiveVideo" autoplay muted playsinline></video>
+    <div class="masterhubLiveActions">
+      <button id="masterhubStartLive" type="button">🔴 Start Live</button>
+      <button id="masterhubEndLive" type="button" style="display:none;">⏹ End Live</button>
+      <button id="masterhubCloseLive" type="button">Close</button>
     </div>
-    <div id="zyrivoLiveStatus">Ready to start.</div>
-    <div class="zyrivoLiveViewer">👀 Viewers: <span id="zyrivoViewerCount">1,420</span></div>
+    <div id="masterhubLiveStatus">Ready to start.</div>
+    <div class="masterhubLiveViewer">👀 Viewers: <span id="masterhubViewerCount">1,420</span></div>
   </div>
 </div>
 
@@ -586,7 +581,7 @@ function addComment(btn){
 }
 
 function sharePost(){
-  if(navigator.share){ navigator.share({title:"ZYRIVO+", url:window.location.href}); }
+  if(navigator.share){ navigator.share({title:"MasterHub+", url:window.location.href}); }
   else { showToast("Link copied"); }
 }
 
@@ -627,7 +622,7 @@ function sendChat(){
   inp.value = "";
 }
 
-function searchZYRIVO(){
+function searchMasterHub(){
   const query = document.getElementById("searchInput").value.toLowerCase();
   const res = document.getElementById("searchResults");
   res.innerHTML = "";
@@ -641,13 +636,13 @@ function escapeHTML(str){
 
 /* LIVE STREAM SCRIPT */
 let liveStreamObj = null;
-const liveBtn = document.getElementById("zyrivoLiveButton");
-const livePanel = document.getElementById("zyrivoLivePanel");
-const startLiveBtn = document.getElementById("zyrivoStartLive");
-const endLiveBtn = document.getElementById("zyrivoEndLive");
-const closeLiveBtn = document.getElementById("zyrivoCloseLive");
-const liveVideo = document.getElementById("zyrivoLiveVideo");
-const liveStatus = document.getElementById("zyrivoLiveStatus");
+const liveBtn = document.getElementById("masterhubLiveButton");
+const livePanel = document.getElementById("masterhubLivePanel");
+const startLiveBtn = document.getElementById("masterhubStartLive");
+const endLiveBtn = document.getElementById("masterhubEndLive");
+const closeLiveBtn = document.getElementById("masterhubCloseLive");
+const liveVideo = document.getElementById("masterhubLiveVideo");
+const liveStatus = document.getElementById("masterhubLiveStatus");
 
 liveBtn.addEventListener("click", () => livePanel.style.display = "block");
 closeLiveBtn.addEventListener("click", () => {
