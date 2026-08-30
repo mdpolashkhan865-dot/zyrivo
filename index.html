@@ -1,589 +1,154 @@
-<!DOCTYPE html>
-<html lang="bn" class="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="appTitleDisplay">SocialHub AI - Global Creator Platform</title>
-    <!-- PWA Requirements for Android App -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#1877F2">
+/**
+ * ==========================================
+ * MASTER APP ARCHITECTURE & CORE SYSTEM (A to Z)
+ * Includes: Clean Dashboard, Drawer Settings, Owner ID, Wallet, & Live Service
+ * ==========================================
+ */
+
+// --- 1. DATA MODELS & INITIAL STATE ---
+const AppState = {
+  // Owner / Admin Access Profile
+  ownerProfile: {
+    ownerId: "OWNER-998811",
+    ownerName: "Super Admin / System Owner",
+    accessLevel: "MASTER_FULL_CONTROL",
+    isVerified: true
+  },
+
+  // Wallet System Setup
+  wallet: {
+    walletId: "WLT-409923",
+    currentBalance: 5400.00,
+    currency: "BDT",
+    history: [
+      { id: "TXN-101", type: "CREDIT", amount: 1000.00, date: "2026-08-30" },
+      { id: "TXN-102", type: "DEBIT", amount: 200.00, date: "2026-08-31" }
+    ]
+  },
+
+  // Live Status & Stream Feature
+  liveStream: {
+    isLiveActive: true,
+    liveViewerCount: 1420,
+    streamServerUrl: "rtmp://live.system.internal/app-stream"
+  },
+
+  // Dashboard Metrics (Only minimal crucial data shown on main screen)
+  dashboardMetrics: {
+    activeUsers: 850,
+    todayOverview: "System status: Normal"
+  },
+
+  // Dynamic Settings & Rules (Kept hidden inside drawer/modal for Clean UI)
+  settingsAndRules: {
+    rules: [
+      "১. নিয়ম অমান্য করলে অ্যাকাউন্ট সাময়িক স্থগিত করা হবে।",
+      "২. ওয়ালেট লেনদেনের পিন কারো সাথে শেয়ার করা নিষেধ।",
+      "৩. লাইভ চলাকালীন কোনো অবৈধ কনটেন্ট ব্রডকাস্ট করা যাবে না।"
+    ],
+    appPreferences: {
+      theme: "Dark",
+      notificationsEnabled: true,
+      securityPinRequired: true
+    }
+  }
+};
+
+// --- 2. CORE SERVICES & HANDLERS ---
+
+class MasterAppController {
+  constructor(state) {
+    this.state = state;
+  }
+
+  // Live Feature Operations
+  toggleLiveStatus(status) {
+    this.state.liveStream.isLiveActive = status;
+    return `Live Mode is now: ${status ? "ONLINE" : "OFFLINE"}`;
+  }
+
+  // Wallet Feature Operations
+  processWalletTransaction(type, amount) {
+    if (type === "DEBIT" && this.state.wallet.currentBalance < amount) {
+      throw new Error("Insufficient Wallet Balance!");
+    }
     
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        fbBlue: '#1877F2',
-                        fbBg: '#F0F2F5',
-                        fbDarkBg: '#18191A',
-                        fbDarkCard: '#242526',
-                        fbDarkHover: '#3A3B3C',
-                        bkash: '#D12053',
-                        nagad: '#F7931E',
-                        rocket: '#8C3494'
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; }
-        .active-tab { border-bottom: 3px solid #1877F2; color: #1877F2; font-weight: bold; }
-        .dark .active-tab { color: #60A5FA; border-color: #60A5FA; }
-    </style>
-</head>
-<body class="bg-fbBg dark:bg-fbDarkBg text-gray-900 dark:text-gray-100 min-h-screen font-sans transition-colors duration-200 flex flex-col select-none">
+    if (type === "CREDIT") {
+      this.state.wallet.currentBalance += amount;
+    } else if (type === "DEBIT") {
+      this.state.wallet.currentBalance -= amount;
+    }
 
-    <!-- ================= ANNOUNCEMENT BAR (OWNER CONTROLLABLE) ================= -->
-    <div id="announcementBar" class="bg-gradient-to-r from-purple-600 via-fbBlue to-indigo-600 text-white text-[11px] py-1 px-4 text-center font-semibold flex justify-between items-center">
-        <span id="announcementText">🚀 স্বাগতম SocialHub AI-তে! ৫০% ক্রিয়েটর রেভিনিউ শেয়ার ও ইনস্ট্যান্ট পেআউট চালু আছে।</span>
-        <button onclick="document.getElementById('announcementBar').remove()" class="text-white opacity-80 hover:opacity-100">✕</button>
-    </div>
+    const newTxn = {
+      id: `TXN-${Math.floor(1000 + Math.random() * 9000)}`,
+      type: type,
+      amount: amount,
+      date: new Date().toISOString().split('T')[0]
+    };
 
-    <!-- ================= NAVBAR ================= -->
-    <header class="sticky top-0 z-40 bg-white dark:bg-fbDarkCard shadow-md px-3 py-2 flex items-center justify-between">
-        <div class="flex items-center space-x-2">
-            <h1 onclick="switchTab('feed')" class="text-fbBlue font-extrabold text-xl sm:text-2xl tracking-wider cursor-pointer flex items-center gap-1.5">
-                <i class="fa-brands fa-facebook text-2xl sm:text-3xl"></i> 
-                <span id="navAppName" class="hidden sm:inline">SocialHub</span> 
-                <span class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-[10px] px-2 py-0.5 rounded-full">PRO AI</span>
-            </h1>
-        </div>
+    this.state.wallet.history.push(newTxn);
+    return { status: "SUCCESS", newBalance: this.state.wallet.currentBalance, txn: newTxn };
+  }
 
-        <!-- Center Navigation Tabs -->
-        <nav class="flex items-center space-x-1 sm:space-x-2 overflow-x-auto">
-            <button onclick="switchTab('feed')" id="nav-feed" class="active-tab py-2 px-3 text-lg" title="Feed"><i class="fa-solid fa-house"></i></button>
-            <button onclick="switchTab('watch')" id="nav-watch" class="text-gray-500 dark:text-gray-400 py-2 px-3 text-lg" title="Watch"><i class="fa-solid fa-tv"></i></button>
-            <button onclick="switchTab('marketplace')" id="nav-marketplace" class="text-gray-500 dark:text-gray-400 py-2 px-3 text-lg" title="Marketplace"><i class="fa-solid fa-store"></i></button>
-            <button onclick="switchTab('ads')" id="nav-ads" class="text-gray-500 dark:text-gray-400 py-2 px-3 text-lg" title="Ads Manager"><i class="fa-solid fa-rectangle-ad"></i></button>
-            <button onclick="switchTab('ai-studio')" id="nav-ai-studio" class="text-purple-600 dark:text-purple-400 py-2 px-3 text-lg" title="AI Studio"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
-            <button onclick="switchTab('wallet')" id="nav-wallet" class="text-green-600 dark:text-green-400 py-2 px-3 text-lg" title="Wallet"><i class="fa-solid fa-wallet"></i></button>
-        </nav>
+  // Owner Authorization Check
+  getOwnerAccess() {
+    return {
+      id: this.state.ownerProfile.ownerId,
+      name: this.state.ownerProfile.ownerName,
+      level: this.state.ownerProfile.accessLevel
+    };
+  }
 
-        <!-- Right User Controls -->
-        <div class="flex items-center space-x-1.5 sm:space-x-2">
-            <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-gray-100 dark:bg-fbDarkHover text-xs font-semibold px-2 py-1.5 rounded-lg focus:outline-none">
-                <option value="bn">🇧🇩 বাংলা</option>
-                <option value="en">🇺🇸 English</option>
-                <option value="es">🇪🇸 Español</option>
-                <option value="ar">🇸🇦 العربية</option>
-            </select>
+  // Retrieve Hidden Settings (Clean UI Concept)
+  getSettingsAndRules() {
+    return this.state.settingsAndRules;
+  }
+}
 
-            <button onclick="toggleDarkMode()" class="w-8 h-8 rounded-full bg-gray-100 dark:bg-fbDarkHover flex items-center justify-center text-gray-700 dark:text-yellow-400">
-                <i id="themeIcon" class="fa-solid fa-moon"></i>
-            </button>
+// --- 3. UI LAYOUT & COMPONENT RENDER LOGIC ---
 
-            <div onclick="openProfileModal()" class="cursor-pointer p-0.5 rounded-full border-2 border-fbBlue">
-                <img id="navUserAvatar" src="https://i.pravatar.cc/150?img=68" class="w-7 h-7 rounded-full object-cover">
-            </div>
-        </div>
-    </header>
+function RenderApplicationUI() {
+  const controller = new MasterAppController(AppState);
 
-    <!-- ================= MAIN APP WRAPPER ================= -->
-    <div class="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-6 p-2 sm:p-4 flex-1">
+  console.log("==================================================");
+  console.log("             A to Z MASTER APP DASHBOARD          ");
+  console.log("==================================================");
+  
+  // Clean Dashboard UI Output (Only essentials displayed on primary screen)
+  console.log("\n[MAIN SCREEN - CLEAN DASHBOARD]");
+  console.log(`> Today Summary : ${AppState.dashboardMetrics.todayOverview}`);
+  console.log(`> Active Users  : ${AppState.dashboardMetrics.activeUsers}`);
+  
+  // Wallet Widget (Minimal Summary)
+  console.log(`> Wallet Balance: ${AppState.wallet.currentBalance} ${AppState.wallet.currency}`);
+  
+  // Live Status Badge
+  console.log(`> Live Status   : ${AppState.liveStream.isLiveActive ? "🔴 LIVE NOW (" + AppState.liveStream.liveViewerCount + " viewers)" : "⚪ OFFLINE"}`);
 
-        <!-- ================= LEFT SIDEBAR ================= -->
-        <aside class="hidden md:block col-span-1 space-y-1">
-            <div onclick="openProfileModal()" class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover cursor-pointer">
-                <img id="sidebarUserAvatar" src="https://i.pravatar.cc/150?img=68" class="w-10 h-10 rounded-full object-cover border">
-                <div>
-                    <h2 id="sidebarUserName" class="font-bold text-sm">সাকিব হাসান</h2>
-                    <p class="text-[11px] text-gray-500 dark:text-gray-400">প্রোফাইল সম্পাদন</p>
-                </div>
-            </div>
-            
-            <button onclick="switchTab('feed')" class="w-full flex items-center space-x-3 p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover text-fbBlue font-medium text-xs">
-                <i class="fa-solid fa-house text-lg w-6"></i> <span>হোম ফিড</span>
-            </button>
-            <button onclick="switchTab('marketplace')" class="w-full flex items-center space-x-3 p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover text-amber-600 font-medium text-xs">
-                <i class="fa-solid fa-store text-lg w-6"></i> <span>মার্কেটপ্লেস</span>
-            </button>
-            <button onclick="switchTab('ads')" class="w-full flex items-center space-x-3 p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover text-blue-600 font-medium text-xs">
-                <i class="fa-solid fa-rectangle-ad text-lg w-6"></i> <span>বিজ্ঞাপন ম্যানেজার</span>
-            </button>
-            <button onclick="switchTab('ai-studio')" class="w-full flex items-center space-x-3 p-2.5 rounded-xl hover:bg-purple-100 dark:hover:bg-purple-900/30 text-purple-600 font-medium text-xs">
-                <i class="fa-solid fa-wand-magic-sparkles text-lg w-6"></i> <span>Global AI Studio</span>
-            </button>
-            <button onclick="switchTab('wallet')" class="w-full flex items-center space-x-3 p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover text-green-600 font-medium text-xs">
-                <i class="fa-solid fa-wallet text-lg w-6"></i> <span>ওয়ালেট ও পেআউট (৫০/৫০)</span>
-            </button>
-            <button onclick="switchTab('owner-panel')" class="w-full flex items-center space-x-3 p-2.5 rounded-xl hover:bg-amber-100 text-amber-700 font-bold text-xs">
-                <i class="fa-solid fa-crown text-lg w-6"></i> <span>ওনার কন্ট্রোল প্যানেল</span>
-            </button>
-        </aside>
+  console.log("\n--------------------------------------------------");
+  console.log("           HIDDEN/INTERNAL OPTIONS (SUB-MENU)     ");
+  console.log("--------------------------------------------------");
 
-        <!-- ================= DYNAMIC MAIN CONTENT ================= -->
-        <main class="col-span-1 md:col-span-2 space-y-4">
+  // Owner Access Info (Hidden in Admin Drawer)
+  const owner = controller.getOwnerAccess();
+  console.log(`\n⚙️ [OWNER PROFILE MENU]`);
+  console.log(`   ID: ${owner.id} | Name: ${owner.name} | Control: ${owner.level}`);
 
-            <!-- TAB 1: NEWS FEED -->
-            <section id="tab-sec-feed" class="space-y-4">
-                <!-- Create Post Box -->
-                <div class="bg-white dark:bg-fbDarkCard p-4 rounded-xl shadow space-y-3">
-                    <div class="flex items-center space-x-3">
-                        <img id="createPostUserAvatar" src="https://i.pravatar.cc/150?img=68" class="w-9 h-9 rounded-full object-cover">
-                        <input type="text" id="postInput" placeholder="আপনার মনে কি আছে? লিখুন..." class="w-full bg-fbBg dark:bg-fbDarkHover rounded-full px-4 py-2 text-xs focus:outline-none">
-                    </div>
-                    <div id="mediaPreviewContainer" class="hidden relative">
-                        <img id="imagePreview" class="w-full max-h-56 object-cover rounded-lg border hidden">
-                        <video id="videoPreview" controls class="w-full max-h-56 rounded-lg border hidden"></video>
-                        <button onclick="removeMediaPreview()" class="absolute top-2 right-2 bg-gray-800 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">✕</button>
-                    </div>
-                    <hr class="border-gray-200 dark:border-gray-700">
-                    <div class="flex justify-between items-center text-gray-500 text-xs flex-wrap gap-2">
-                        <label class="flex items-center space-x-1 cursor-pointer hover:bg-gray-100 p-1.5 rounded-lg">
-                            <i class="fa-solid fa-images text-green-500 text-base"></i>
-                            <span>ছবি/ভিডিও</span>
-                            <input type="file" id="postMediaInput" accept="image/*,video/*" class="hidden" onchange="handleMediaSelect(event)">
-                        </label>
-                        <button onclick="autoAICaption()" class="flex items-center space-x-1 text-purple-600 hover:bg-gray-100 p-1.5 rounded-lg">
-                            <i class="fa-solid fa-robot"></i> <span>AI রাইটার</span>
-                        </button>
-                        <button onclick="createNewPost()" class="bg-fbBlue text-white font-semibold px-4 py-1.5 rounded-lg hover:bg-blue-600 text-xs">
-                            পোস্ট করুন
-                        </button>
-                    </div>
-                </div>
+  // Wallet Detailed History Drawer
+  console.log(`\n💳 [WALLET FULL DETAILS MENU]`);
+  console.log(`   Wallet ID: ${AppState.wallet.walletId}`);
+  console.log("   Recent Transactions:", controller.state.wallet.history);
 
-                <div id="feedPosts" class="space-y-4"></div>
-            </section>
+  // App Rules & Settings Modal/Screen (Inside Settings Option)
+  const config = controller.getSettingsAndRules();
+  console.log(`\n📜 [RULES & POLICY SECTION]`);
+  config.rules.forEach(rule => console.log(`   ${rule}`));
 
-            <!-- TAB 2: MARKETPLACE -->
-            <section id="tab-sec-marketplace" class="hidden space-y-4">
-                <div class="flex justify-between items-center bg-white dark:bg-fbDarkCard p-4 rounded-xl shadow">
-                    <div>
-                        <h2 class="text-lg font-bold flex items-center gap-2"><i class="fa-solid fa-store text-amber-500"></i> গ্লোবাল মার্কেটপ্লেস</h2>
-                        <p class="text-xs text-gray-500">বিকাশ, নগদ ও রকেট পেমেন্টে কেনাকাটা করুন।</p>
-                    </div>
-                    <button onclick="openSellModal()" class="bg-amber-500 text-white px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-amber-600">
-                        + পণ্য বিক্রি করুন
-                    </button>
-                </div>
-                <div id="marketplaceGrid" class="grid grid-cols-2 gap-3"></div>
-            </section>
+  console.log(`\n🔧 [SETTINGS SYSTEM]`);
+  console.log(`   Theme: ${config.appPreferences.theme}`);
+  console.log(`   Notifications: ${config.appPreferences.notificationsEnabled ? "ON" : "OFF"}`);
+  console.log("==================================================\n");
+}
 
-            <!-- TAB 3: AD MANAGER -->
-            <section id="tab-sec-ads" class="hidden space-y-4">
-                <div class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white p-5 rounded-xl shadow-lg space-y-2">
-                    <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-rectangle-ad text-yellow-300"></i> স্পন্সরড অ্যাড সেন্টার</h2>
-                    <p class="text-xs opacity-90">বিকাশ/নগদ দিয়ে বাজেট পরিশোধ করে পোস্ট প্রমোট করুন।</p>
-                </div>
-                <div class="bg-white dark:bg-fbDarkCard p-4 rounded-xl shadow space-y-3">
-                    <h3 class="font-bold text-sm border-b dark:border-gray-700 pb-2">নতুন ক্যাম্পেইন</h3>
-                    <div class="space-y-2 text-xs">
-                        <input type="text" id="adTitle" placeholder="বিজ্ঞাপনের শিরোনাম" class="w-full bg-fbBg dark:bg-fbDarkHover p-2 rounded-lg border border-gray-300 dark:border-gray-700">
-                        <input type="text" id="adImage" placeholder="ছবি URL" class="w-full bg-fbBg dark:bg-fbDarkHover p-2 rounded-lg border border-gray-300 dark:border-gray-700">
-                        <div class="grid grid-cols-2 gap-2">
-                            <input type="number" id="adBudget" value="500" placeholder="বাজেট (BDT)" class="w-full bg-fbBg dark:bg-fbDarkHover p-2 rounded-lg border border-gray-300 dark:border-gray-700">
-                            <input type="number" id="adDays" value="3" placeholder="মেয়াদ (দিন)" class="w-full bg-fbBg dark:bg-fbDarkHover p-2 rounded-lg border border-gray-300 dark:border-gray-700">
-                        </div>
-                        <button onclick="launchAdCampaign()" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold hover:bg-blue-700">
-                            🚀 অ্যাড রান করুন
-                        </button>
-                    </div>
-                </div>
-                <div id="activeAdsList" class="space-y-2"></div>
-            </section>
-
-            <!-- TAB 4: ADVANCED AI STUDIO (VOICE, TEXT & VIDEO) -->
-            <section id="tab-sec-ai-studio" class="hidden space-y-4">
-                <div class="bg-gradient-to-r from-purple-800 to-indigo-900 text-white p-5 rounded-xl shadow-xl space-y-2">
-                    <h2 class="text-xl font-black flex items-center gap-2">
-                        <i class="fa-solid fa-wand-magic-sparkles text-yellow-300"></i> SocialHub Advanced AI Studio
-                    </h2>
-                    <p class="text-xs opacity-90">ভয়েস স্পিচ, ভিডিও জেনারেশন এবং এআই কন্টেন্ট ক্রিয়েশন।</p>
-                </div>
-
-                <div class="bg-white dark:bg-fbDarkCard p-4 rounded-xl shadow space-y-4">
-                    <div class="flex space-x-2 border-b dark:border-gray-700 pb-2 text-xs font-bold overflow-x-auto">
-                        <button onclick="openAITool('voice')" id="aitab-voice" class="px-3 py-2 bg-purple-600 text-white rounded-lg">১. AI Text-to-Voice</button>
-                        <button onclick="openAITool('txt2vid')" id="aitab-txt2vid" class="px-3 py-2 bg-gray-200 dark:bg-fbDarkHover rounded-lg">২. Text-to-Video</button>
-                        <button onclick="openAITool('research')" id="aitab-research" class="px-3 py-2 bg-gray-200 dark:bg-fbDarkHover rounded-lg">৩. Smart Script AI</button>
-                    </div>
-
-                    <!-- 1. Text to Voice (Speech Synthesis) -->
-                    <div id="aitool-voice" class="space-y-3">
-                        <label class="block text-xs font-semibold">ভয়েসে রূপান্তর করার জন্য বাংলা/ইংরেজি টেক্সট দিন:</label>
-                        <textarea id="aiVoiceInput" rows="3" placeholder="যেমন: স্বাগতম আমাদের অ্যাপে! এটি সম্পূর্ণ AI দ্বারা চালিত..." class="w-full bg-fbBg dark:bg-fbDarkHover p-3 rounded-lg text-xs border focus:outline-none"></textarea>
-                        <button onclick="generateAIVoice()" class="w-full bg-purple-600 text-white py-2.5 rounded-lg font-bold flex items-center justify-center gap-2 text-xs">
-                            <i class="fa-solid fa-volume-high"></i> AI ভয়েস শুনুন
-                        </button>
-                    </div>
-
-                    <!-- 2. Text to Video -->
-                    <div id="aitool-txt2vid" class="hidden space-y-3">
-                        <textarea id="txt2vidPrompt" rows="3" placeholder="ভিডিও প্রম্পট লিখুন..." class="w-full bg-fbBg dark:bg-fbDarkHover p-3 rounded-lg text-xs border focus:outline-none"></textarea>
-                        <button onclick="generateTextToVideo()" class="w-full bg-indigo-600 text-white py-2 rounded-lg font-bold text-xs">
-                            <i class="fa-solid fa-film"></i> AI ভিডিও জেনারেট করুন
-                        </button>
-                        <div id="txt2vidLoader" class="hidden text-center py-4 text-purple-600">
-                            <i class="fa-solid fa-spinner fa-spin text-2xl"></i>
-                            <p class="text-xs">ভিডিও রেন্ডার হচ্ছে...</p>
-                        </div>
-                        <canvas id="aiCanvas" class="hidden w-full h-48 bg-black rounded-lg mt-2"></canvas>
-                    </div>
-
-                    <!-- 3. Smart Script AI -->
-                    <div id="aitool-research" class="hidden space-y-3">
-                        <input type="text" id="aiTopicInput" placeholder="বিষয় লিখুন (যেমন: ভাইরাল রিল বানানোর উপায়)..." class="w-full bg-fbBg dark:bg-fbDarkHover p-3 rounded-lg text-xs border">
-                        <button onclick="generateAIScript()" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-xs">স্ক্রিপ্ট তৈরি করুন</button>
-                        <div id="aiScriptResult" class="hidden bg-gray-100 dark:bg-fbDarkHover p-3 rounded-lg text-xs"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 5: WATCH -->
-            <section id="tab-sec-watch" class="hidden space-y-4">
-                <h2 class="font-bold text-lg"><i class="fa-solid fa-tv text-red-500"></i> ওয়াচ ও ট্রেন্ডিং রিলস</h2>
-                <div id="watchFeedPosts" class="space-y-4"></div>
-            </section>
-
-            <!-- TAB 6: WALLET & 50/50 REVENUE SHARE & AUTO PAYOUT -->
-            <section id="tab-sec-wallet" class="hidden space-y-4">
-                <!-- 50/50 Monetization Banner -->
-                <div class="bg-gradient-to-r from-amber-500 to-orange-600 text-white p-4 rounded-xl shadow space-y-2">
-                    <div class="flex justify-between items-center">
-                        <h3 class="font-black text-sm"><i class="fa-solid fa-handshake"></i> ৫০/৫০ রেভিনিউ শেয়ার পলিসি</h3>
-                        <span class="bg-white text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded-full">অটো পেআউট</span>
-                    </div>
-                    <p class="text-xs">আপনার বিজ্ঞাপনের মোট আয়: ৫০% আপনি পাবেন, ৫০% প্ল্যাটফর্ম। প্রতি মাসের <strong>১ থেকে ৭ তারিখের মধ্যে</strong> স্বয়ংক্রিয়ভাবে সরাসরি আপনার বিকাশ/নগদ/রকেটে টাকা জমা হবে।</p>
-                </div>
-
-                <div class="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-6 rounded-2xl shadow-lg space-y-3">
-                    <p class="text-xs opacity-80 font-bold">আপনার বর্তমান আর্নিং ব্যালেন্স</p>
-                    <h2 id="walletBalanceDisplay" class="text-3xl font-extrabold">৳ ২৫,৮৫০.০০ BDT</h2>
-                    
-                    <div class="flex gap-2 pt-2">
-                        <button onclick="openPaymentModal('withdraw')" class="bg-white text-green-700 font-bold px-4 py-2 rounded-lg shadow text-xs">
-                            <i class="fa-solid fa-money-bill-transfer"></i> উইথড্র (১-৭ তারিখ অটো)
-                        </button>
-                        <button onclick="openPaymentModal('deposit')" class="bg-green-800 text-white font-bold px-4 py-2 rounded-lg border border-green-400 text-xs">
-                            <i class="fa-solid fa-wallet"></i> ডিপোজিট করুন
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 7: OWNER CONTROL PANEL (CMS & DYNAMIC TEXT EDITOR) -->
-            <section id="tab-sec-owner-panel" class="hidden space-y-4">
-                <div class="bg-amber-500 text-white p-4 rounded-xl shadow space-y-1">
-                    <h2 class="text-lg font-black"><i class="fa-solid fa-crown"></i> ওনার লাইভ কন্ট্রোল প্যানেল</h2>
-                    <p class="text-xs">অ্যাপের যেকোনো বাক্য, নাম ও অ্যানাউন্সমেন্ট সাথে সাথে পরিবর্তন করুন!</p>
-                </div>
-
-                <div class="bg-white dark:bg-fbDarkCard p-4 rounded-xl shadow space-y-3 text-xs">
-                    <h3 class="font-bold border-b dark:border-gray-700 pb-2 text-sm">অ্যাপেক্স টেস্ট/বাক্য পরিবর্তন করুন:</h3>
-                    
-                    <div>
-                        <label class="block font-semibold mb-1">অ্যাপের নাম পরিবর্তন:</label>
-                        <input type="text" id="ownerAppNameInput" value="SocialHub" class="w-full border p-2 rounded dark:bg-fbDarkHover">
-                    </div>
-
-                    <div>
-                        <label class="block font-semibold mb-1">অ্যানাউন্সমেন্ট বার পরিবর্তন:</label>
-                        <input type="text" id="ownerAnnouncementInput" value="🚀 স্বাগতম SocialHub AI-তে! ৫০% ক্রিয়েটর রেভিনিউ শেয়ার ও ইনস্ট্যান্ট পেআউট চালু আছে।" class="w-full border p-2 rounded dark:bg-fbDarkHover">
-                    </div>
-
-                    <button onclick="saveOwnerChanges()" class="w-full bg-amber-500 text-white py-2 rounded-lg font-bold hover:bg-amber-600">
-                        💾 পরিবর্তনসমূহ সেভ করুন (লাইভ আপডেট)
-                    </button>
-                </div>
-            </section>
-
-        </main>
-
-        <!-- ================= RIGHT SIDEBAR ================= -->
-        <aside class="hidden md:block col-span-1 space-y-4">
-            <div class="bg-white dark:bg-fbDarkCard p-3 rounded-xl shadow space-y-2">
-                <h3 class="font-bold text-gray-500 text-xs flex justify-between items-center">
-                    <span>স্পন্সরড অ্যাডস</span>
-                    <i class="fa-solid fa-rectangle-ad text-blue-500"></i>
-                </h3>
-                <div id="sidebarSponsoredList" class="space-y-2"></div>
-            </div>
-        </aside>
-
-    </div>
-
-    <!-- ================= LOCAL PAYMENT MODAL (bKash, Nagad, Rocket) ================= -->
-    <div id="paymentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-fbDarkCard rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center border-b pb-2 dark:border-gray-700">
-                <h3 id="paymentModalTitle" class="font-bold text-sm">পেমেন্ট মেথড নির্বাচন করুন</h3>
-                <button onclick="closePaymentModal()"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            
-            <p class="text-xs text-gray-500">বাংলাদেশের সবচেয়ে জনপ্রিয় লোকাল গেটওয়ে সিলেক্ট করুন:</p>
-
-            <div class="grid grid-cols-3 gap-2">
-                <button onclick="selectPaymentGateway('bKash')" class="p-3 rounded-xl bg-pink-50 hover:bg-pink-100 border border-pink-200 text-center space-y-1">
-                    <div class="w-8 h-8 bg-bkash text-white font-bold text-xs rounded-full flex items-center justify-center mx-auto">বিকাশ</div>
-                    <span class="text-[10px] font-bold text-gray-700">bKash</span>
-                </button>
-                <button onclick="selectPaymentGateway('Nagad')" class="p-3 rounded-xl bg-orange-50 hover:bg-orange-100 border border-orange-200 text-center space-y-1">
-                    <div class="w-8 h-8 bg-nagad text-white font-bold text-xs rounded-full flex items-center justify-center mx-auto">নগদ</div>
-                    <span class="text-[10px] font-bold text-gray-700">Nagad</span>
-                </button>
-                <button onclick="selectPaymentGateway('Rocket')" class="p-3 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-200 text-center space-y-1">
-                    <div class="w-8 h-8 bg-rocket text-white font-bold text-xs rounded-full flex items-center justify-center mx-auto">রকেট</div>
-                    <span class="text-[10px] font-bold text-gray-700">Rocket</span>
-                </button>
-            </div>
-
-            <div id="gatewayForm" class="hidden space-y-2 text-xs pt-2">
-                <label class="block font-semibold" id="gatewayLabel">ফোন নম্বর দিন:</label>
-                <input type="text" id="gatewayPhone" placeholder="017XXXXXXXX" class="w-full border p-2 rounded-lg dark:bg-fbDarkHover">
-                <input type="number" id="gatewayAmount" placeholder="টাকার পরিমাণ (BDT)" class="w-full border p-2 rounded-lg dark:bg-fbDarkHover">
-                <button onclick="processGatewayTransaction()" class="w-full bg-green-600 text-white font-bold py-2 rounded-lg">কনফার্ম করুন</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================= PROFILE MODAL ================= -->
-    <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-fbDarkCard rounded-2xl max-w-sm w-full p-4 shadow-xl space-y-3">
-            <div class="flex justify-between items-center border-b pb-2 dark:border-gray-700">
-                <h3 class="font-bold text-sm">প্রোফাইল সম্পাদন</h3>
-                <button onclick="closeProfileModal()"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="space-y-2 text-xs">
-                <input type="text" id="editUserName" class="w-full border p-2 rounded-lg dark:bg-fbDarkHover" placeholder="আপনার নাম">
-                <input type="text" id="editUserAvatar" class="w-full border p-2 rounded-lg dark:bg-fbDarkHover" placeholder="ছবি URL">
-            </div>
-            <div class="flex justify-end space-x-2 pt-2 text-xs font-bold">
-                <button onclick="closeProfileModal()" class="px-3 py-1.5 bg-gray-200 rounded-lg">বাতিল</button>
-                <button onclick="saveUserProfile()" class="px-3 py-1.5 bg-fbBlue text-white rounded-lg">সেভ</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ================= JAVASCRIPT MASTER ENGINE ================= -->
-    <script>
-        let currentUser = JSON.parse(localStorage.getItem('sh_user')) || { name: 'সাকিব হাসান', avatar: 'https://i.pravatar.cc/150?img=68', balance: 25850 };
-        let posts = JSON.parse(localStorage.getItem('sh_posts')) || [
-            { id: 1, author: 'তানভীর ইসলাম', avatar: 'https://i.pravatar.cc/150?img=33', time: '১ ঘণ্টা আগে', content: 'SocialHub AI অ্যাপে ৫০/৫০ রেভিনিউ শেয়ার ও বিকাশ/নগদ পেআউট ব্যবস্থা দুর্দান্ত হয়েছে! 🚀', image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600', video: '', likes: 52, liked: false, comments: [] }
-        ];
-        let products = JSON.parse(localStorage.getItem('sh_products')) || [
-            { id: 101, name: 'Smart Watch', price: 3200, img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400' }
-        ];
-        let adsList = JSON.parse(localStorage.getItem('sh_ads')) || [
-            { id: 501, title: 'ডিজিটাল কোর্স ৫০% ডিসকাউন্ট!', budget: 1500, days: 3, img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400' }
-        ];
-
-        let selectedMediaBase64 = null, selectedMediaType = null, currentGatewayMode = 'deposit';
-
-        function initApp() {
-            updateUserUI();
-            renderPosts();
-            renderMarketplace();
-            renderAdsManager();
-        }
-
-        function updateUserUI() {
-            document.getElementById('navUserAvatar').src = currentUser.avatar;
-            document.getElementById('sidebarUserAvatar').src = currentUser.avatar;
-            document.getElementById('createPostUserAvatar').src = currentUser.avatar;
-            document.getElementById('sidebarUserName').innerText = currentUser.name;
-            document.getElementById('walletBalanceDisplay').innerText = `৳ ${currentUser.balance.toLocaleString()}.০০ BDT`;
-        }
-
-        function saveData() {
-            localStorage.setItem('sh_user', JSON.stringify(currentUser));
-            localStorage.setItem('sh_posts', JSON.stringify(posts));
-            localStorage.setItem('sh_products', JSON.stringify(products));
-            localStorage.setItem('sh_ads', JSON.stringify(adsList));
-        }
-
-        function switchTab(tabName) {
-            const tabs = ['feed', 'watch', 'marketplace', 'ads', 'ai-studio', 'wallet', 'owner-panel'];
-            tabs.forEach(t => {
-                const sec = document.getElementById('tab-sec-' + t);
-                if(sec) sec.classList.add('hidden');
-                const nav = document.getElementById('nav-' + t);
-                if(nav) nav.classList.remove('active-tab');
-            });
-            document.getElementById('tab-sec-' + tabName).classList.remove('hidden');
-            const targetNav = document.getElementById('nav-' + tabName);
-            if(targetNav) targetNav.classList.add('active-tab');
-        }
-
-        // AI Voice Generator Engine (Web Speech API integration)
-        function generateAIVoice() {
-            const txt = document.getElementById('aiVoiceInput').value.trim();
-            if(!txt) return alert('ভয়েস এর জন্য কোন টেক্সট লিখুন!');
-            const utterance = new SpeechSynthesisUtterance(txt);
-            utterance.lang = 'bn-BD';
-            window.speechSynthesis.speak(utterance);
-        }
-
-        function generateAIScript() {
-            const topic = document.getElementById('aiTopicInput').value.trim();
-            if(!topic) return alert('বিষয় লিখুন!');
-            const res = document.getElementById('aiScriptResult');
-            res.classList.remove('hidden');
-            res.innerHTML = `<strong>🤖 AI তৈরি করা স্ক্রিপ্ট (${topic}):</strong><br>১. হুক (০-৩ সেকেন্ড): আপনি কি জানেন ${topic} করার সবচেয়ে সহজ উপায়?<br>২. বডি: আজ আমরা দেখব কিভাবে সোশ্যাল হাব AI দিয়ে দ্রুত কাজ সম্পন্ন করা যায়...`;
-        }
-
-        // Local Payment Gateway Modal Handler (bKash, Nagad, Rocket)
-        function openPaymentModal(mode) {
-            currentGatewayMode = mode;
-            document.getElementById('paymentModalTitle').innerText = mode === 'withdraw' ? 'টাকা তুলুন (Withdraw)' : 'টাকা ডিপোজিট করুন (Deposit)';
-            document.getElementById('paymentModal').classList.remove('hidden');
-        }
-        function closePaymentModal() { document.getElementById('paymentModal').classList.add('hidden'); }
-        
-        function selectPaymentGateway(name) {
-            document.getElementById('gatewayForm').classList.remove('hidden');
-            document.getElementById('gatewayLabel').innerText = `${name} নম্বর এবং টাকার পরিমাণ দিন:`;
-        }
-
-        function processGatewayTransaction() {
-            const phone = document.getElementById('gatewayPhone').value;
-            const amount = parseInt(document.getElementById('gatewayAmount').value);
-            if(!phone || !amount) return alert('সঠিক তথ্য দিন!');
-
-            if(currentGatewayMode === 'deposit') {
-                currentUser.balance += amount;
-                alert(`সফলভাবে ৳${amount} BDT যোগ করা হয়েছে!`);
-            } else {
-                if(currentUser.balance < amount) return alert('পর্যাপ্ত ব্যালেন্স নেই!');
-                currentUser.balance -= amount;
-                alert(`৳${amount} BDT পেআউট রিকোয়েস্ট তৈরি হয়েছে। ১-৭ তারিখের মধ্যে অটো আপনার ট্রানজ্যাকশনে পৌঁছে যাবে!`);
-            }
-            saveData(); updateUserUI(); closePaymentModal();
-        }
-
-        // Owner Dynamic Text Editor Logic
-        function saveOwnerChanges() {
-            const newName = document.getElementById('ownerAppNameInput').value.trim();
-            const newAnnounce = document.getElementById('ownerAnnouncementInput').value.trim();
-
-            if(newName) {
-                document.getElementById('navAppName').innerText = newName;
-                document.getElementById('appTitleDisplay').innerText = newName + " - Global AI Platform";
-            }
-            if(newAnnounce) {
-                document.getElementById('announcementText').innerText = newAnnounce;
-            }
-            alert('ওনার সেটিংস লাইভ আপডেট সম্পন্ন হয়েছে!');
-        }
-
-        // Media and Posts
-        function handleMediaSelect(e) {
-            const file = e.target.files[0];
-            if(!file) return;
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                selectedMediaBase64 = evt.target.result;
-                selectedMediaType = file.type.startsWith('video') ? 'video' : 'image';
-                document.getElementById('mediaPreviewContainer').classList.remove('hidden');
-                const imgPrev = document.getElementById('imagePreview');
-                const vidPrev = document.getElementById('videoPreview');
-                if(selectedMediaType === 'image') {
-                    imgPrev.src = selectedMediaBase64; imgPrev.classList.remove('hidden'); vidPrev.classList.add('hidden');
-                } else {
-                    vidPrev.src = selectedMediaBase64; vidPrev.classList.remove('hidden'); imgPrev.classList.add('hidden');
-                }
-            }
-            reader.readAsDataURL(file);
-        }
-        function removeMediaPreview() {
-            selectedMediaBase64 = null; selectedMediaType = null;
-            document.getElementById('mediaPreviewContainer').classList.add('hidden');
-        }
-        function createNewPost() {
-            const input = document.getElementById('postInput');
-            const txt = input.value.trim();
-            if(!txt && !selectedMediaBase64) return alert('পোস্টে কিছু লিখুন!');
-            posts.unshift({
-                id: Date.now(), author: currentUser.name, avatar: currentUser.avatar, time: 'এখনই',
-                content: txt, image: selectedMediaType === 'image' ? selectedMediaBase64 : '',
-                video: selectedMediaType === 'video' ? selectedMediaBase64 : '', likes: 0, liked: false, comments: []
-            });
-            saveData(); renderPosts(); input.value = ''; removeMediaPreview();
-        }
-        function renderPosts() {
-            const container = document.getElementById('feedPosts');
-            container.innerHTML = posts.map(p => `
-                <div class="bg-white dark:bg-fbDarkCard rounded-xl shadow p-4 space-y-3">
-                    <div class="flex items-center space-x-3">
-                        <img src="${p.avatar}" class="w-9 h-9 rounded-full object-cover">
-                        <div>
-                            <h4 class="font-bold text-xs">${p.author}</h4>
-                            <span class="text-[10px] text-gray-400">${p.time}</span>
-                        </div>
-                    </div>
-                    ${p.content ? `<p class="text-xs leading-relaxed">${p.content}</p>` : ''}
-                    ${p.image ? `<img src="${p.image}" class="w-full rounded-lg max-h-80 object-cover">` : ''}
-                    ${p.video ? `<video src="${p.video}" controls class="w-full rounded-lg max-h-80 bg-black"></video>` : ''}
-                </div>
-            `).join('');
-        }
-        function renderMarketplace() {
-            document.getElementById('marketplaceGrid').innerHTML = products.map(p => `
-                <div class="bg-white dark:bg-fbDarkCard rounded-xl border overflow-hidden shadow">
-                    <img src="${p.img}" class="w-full h-32 object-cover">
-                    <div class="p-2 space-y-1">
-                        <h4 class="font-bold text-xs truncate">${p.name}</h4>
-                        <p class="text-xs font-black text-amber-500">৳ ${p.price} BDT</p>
-                        <button onclick="alert('চ্যাট কানেক্ট করা হচ্ছে...')" class="w-full bg-fbBlue text-white text-[11px] font-bold py-1 rounded">ম্যাসেজ দিন</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-        function renderAdsManager() {
-            document.getElementById('activeAdsList').innerHTML = adsList.map(a => `
-                <div class="flex items-center space-x-3 p-2 border rounded-lg bg-gray-50 dark:bg-fbDarkHover text-xs">
-                    <img src="${a.img}" class="w-12 h-12 rounded object-cover">
-                    <div class="flex-1">
-                        <h4 class="font-bold">${a.title}</h4>
-                        <p class="text-[10px] text-gray-500">বাজেট: ৳${a.budget} | মেয়াাদ: ${a.days} দিন</p>
-                    </div>
-                </div>
-            `).join('');
-        }
-        function launchAdCampaign() {
-            const title = document.getElementById('adTitle').value;
-            const img = document.getElementById('adImage').value || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400';
-            const budget = parseInt(document.getElementById('adBudget').value) || 500;
-            const days = parseInt(document.getElementById('adDays').value) || 3;
-            if(!title) return alert('বিজ্ঞাপনের শিরোনাম দিন!');
-            if(currentUser.balance < budget) return alert('পর্যাপ্ত ব্যালেন্স নেই!');
-            currentUser.balance -= budget;
-            adsList.unshift({ id: Date.now(), title, budget, days, img });
-            saveData(); updateUserUI(); renderAdsManager();
-            alert('বিজ্ঞাপন লাইভ প্রমোট করা শুরু হয়েছে!');
-        }
-        function openAITool(t) {
-            ['voice', 'txt2vid', 'research'].forEach(x => {
-                document.getElementById('aitool-' + x).classList.add('hidden');
-                document.getElementById('aitab-' + x).className = "px-3 py-2 bg-gray-200 dark:bg-fbDarkHover rounded-lg";
-            });
-            document.getElementById('aitool-' + t).classList.remove('hidden');
-            document.getElementById('aitab-' + t).className = "px-3 py-2 bg-purple-600 text-white rounded-lg";
-        }
-        function autoAICaption() {
-            document.getElementById('postInput').value = "🚀 সোশ্যাল হাব AI প্ল্যাটফর্মে বিকাশ/নগদে ৫০% রেভিনিউ শেয়ার পেয়ে খুব ভালো লাগছে!";
-        }
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-        }
-        function openProfileModal() { document.getElementById('profileModal').classList.remove('hidden'); }
-        function closeProfileModal() { document.getElementById('profileModal').classList.add('hidden'); }
-        function saveUserProfile() {
-            currentUser.name = document.getElementById('editUserName').value.trim() || currentUser.name;
-            currentUser.avatar = document.getElementById('editUserAvatar').value.trim() || currentUser.avatar;
-            saveData(); updateUserUI(); closeProfileModal();
-        }
-
-        initApp();
-    </script>
-</body>
-</html>
+// Execute Core Application Architecture
+RenderApplicationUI();
