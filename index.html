@@ -1997,6 +1997,541 @@ const supabase = window.supabase.createClient(
 
 console.log("ZYRIVO Supabase connected");
 </script>
+<!-- ============================= -->
+<!-- ZYRIVO LIVE SYSTEM V1 -->
+<!-- ============================= -->
 
+<style>
+#zyrivoLiveButton{
+  position:fixed;
+  right:16px;
+  bottom:92px;
+  z-index:9998;
+  border:0;
+  border-radius:999px;
+  padding:13px 18px;
+  background:#ef4444;
+  color:#fff;
+  font-weight:700;
+  font-size:14px;
+  box-shadow:0 8px 25px rgba(0,0,0,.22);
+}
+
+#zyrivoLivePanel{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  background:rgba(0,0,0,.72);
+  padding:18px;
+  overflow:auto;
+}
+
+.zyrivoLiveBox{
+  max-width:520px;
+  margin:40px auto;
+  background:#fff;
+  border-radius:22px;
+  padding:18px;
+}
+
+.zyrivoLiveBox h2{
+  margin-bottom:14px;
+}
+
+#zyrivoLiveTitle,
+#zyrivoLiveDescription{
+  width:100%;
+  border:1px solid #e2e8f0;
+  border-radius:12px;
+  padding:12px;
+  margin-bottom:10px;
+  font-size:15px;
+}
+
+#zyrivoLiveVideo{
+  width:100%;
+  background:#000;
+  border-radius:16px;
+  margin:12px 0;
+  max-height:55vh;
+}
+
+.zyrivoLiveActions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.zyrivoLiveActions button{
+  border:0;
+  border-radius:12px;
+  padding:11px 14px;
+  font-weight:700;
+}
+
+#zyrivoStartLive{
+  background:#ef4444;
+  color:#fff;
+}
+
+#zyrivoEndLive{
+  background:#111827;
+  color:#fff;
+  display:none;
+}
+
+#zyrivoCloseLive{
+  background:#e5e7eb;
+  color:#111827;
+}
+
+#zyrivoLiveStatus{
+  margin-top:10px;
+  font-size:14px;
+  color:#64748b;
+}
+
+.zyrivoLiveViewer{
+  margin-top:8px;
+  font-size:14px;
+  font-weight:600;
+}
+</style>
+
+<button id="zyrivoLiveButton" type="button">
+  🔴 Go Live
+</button>
+
+<div id="zyrivoLivePanel">
+
+  <div class="zyrivoLiveBox">
+
+    <h2>🔴 ZYRIVO Live</h2>
+
+    <input
+      id="zyrivoLiveTitle"
+      type="text"
+      maxlength="120"
+      placeholder="Live title"
+    >
+
+    <textarea
+      id="zyrivoLiveDescription"
+      rows="3"
+      maxlength="500"
+      placeholder="Description"
+    ></textarea>
+
+    <video
+      id="zyrivoLiveVideo"
+      autoplay
+      muted
+      playsinline
+    ></video>
+
+    <div class="zyrivoLiveActions">
+
+      <button
+        id="zyrivoStartLive"
+        type="button"
+      >
+        🔴 Start Live
+      </button>
+
+      <button
+        id="zyrivoEndLive"
+        type="button"
+      >
+        ⏹ End Live
+      </button>
+
+      <button
+        id="zyrivoCloseLive"
+        type="button"
+      >
+        Close
+      </button>
+
+    </div>
+
+    <div id="zyrivoLiveStatus">
+      Ready to start.
+    </div>
+
+    <div class="zyrivoLiveViewer">
+      👀 Viewers: <span id="zyrivoViewerCount">0</span>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+(function(){
+
+  let zyrivoLiveStream = null;
+  let zyrivoLiveId = null;
+
+  const liveButton =
+    document.getElementById("zyrivoLiveButton");
+
+  const livePanel =
+    document.getElementById("zyrivoLivePanel");
+
+  const startButton =
+    document.getElementById("zyrivoStartLive");
+
+  const endButton =
+    document.getElementById("zyrivoEndLive");
+
+  const closeButton =
+    document.getElementById("zyrivoCloseLive");
+
+  const video =
+    document.getElementById("zyrivoLiveVideo");
+
+  const titleInput =
+    document.getElementById("zyrivoLiveTitle");
+
+  const descriptionInput =
+    document.getElementById("zyrivoLiveDescription");
+
+  const statusText =
+    document.getElementById("zyrivoLiveStatus");
+
+  const viewerCount =
+    document.getElementById("zyrivoViewerCount");
+
+
+  function setLiveStatus(message){
+    statusText.textContent = message;
+  }
+
+
+  liveButton.addEventListener("click", function(){
+
+    livePanel.style.display = "block";
+
+  });
+
+
+  closeButton.addEventListener("click", function(){
+
+    if(zyrivoLiveStream){
+      setLiveStatus(
+        "Live camera is still active. End Live first."
+      );
+      return;
+    }
+
+    livePanel.style.display = "none";
+
+  });
+
+
+  startButton.addEventListener("click", async function(){
+
+    try{
+
+      if(!window.supabase){
+
+        setLiveStatus(
+          "Supabase is not available."
+        );
+
+        return;
+      }
+
+
+      const {
+        data: { user },
+        error: userError
+      } = await supabase.auth.getUser();
+
+
+      if(userError){
+
+        console.error(userError);
+
+      }
+
+
+      if(!user){
+
+        setLiveStatus(
+          "Please login to start a live stream."
+        );
+
+        alert(
+          "Please login to ZYRIVO first."
+        );
+
+        return;
+      }
+
+
+      const title =
+        titleInput.value.trim() ||
+        "ZYRIVO Live";
+
+
+      const description =
+        descriptionInput.value.trim();
+
+
+      setLiveStatus(
+        "Requesting camera and microphone permission..."
+      );
+
+
+      zyrivoLiveStream =
+        await navigator.mediaDevices.getUserMedia({
+
+          video:{
+            facingMode:"user",
+            width:{
+              ideal:1280
+            },
+            height:{
+              ideal:720
+            }
+          },
+
+          audio:true
+
+        });
+
+
+      video.srcObject =
+        zyrivoLiveStream;
+
+
+      setLiveStatus(
+        "Creating live session..."
+      );
+
+
+      const {
+        data,
+        error
+      } = await supabase
+        .from("live_streams")
+        .insert({
+
+          host_id:user.id,
+
+          title:title,
+
+          description:
+            description || null,
+
+          status:"live",
+
+          stream_status:"live",
+
+          viewer_count:0,
+
+          started_at:
+            new Date().toISOString()
+
+        })
+        .select()
+        .single();
+
+
+      if(error){
+
+        console.error(error);
+
+        zyrivoLiveStream
+          .getTracks()
+          .forEach(track => track.stop());
+
+        zyrivoLiveStream = null;
+
+        video.srcObject = null;
+
+        setLiveStatus(
+          "Could not create the live session: " +
+          error.message
+        );
+
+        return;
+      }
+
+
+      zyrivoLiveId =
+        data.id;
+
+
+      startButton.style.display =
+        "none";
+
+      endButton.style.display =
+        "inline-block";
+
+
+      titleInput.disabled =
+        true;
+
+      descriptionInput.disabled =
+        true;
+
+
+      setLiveStatus(
+        "🔴 LIVE — camera and microphone are active."
+      );
+
+
+      viewerCount.textContent =
+        data.viewer_count || 0;
+
+
+      console.log(
+        "ZYRIVO Live created:",
+        zyrivoLiveId
+      );
+
+
+    }catch(error){
+
+      console.error(error);
+
+      setLiveStatus(
+        "Camera/microphone error: " +
+        error.message
+      );
+
+    }
+
+  });
+
+
+  endButton.addEventListener("click", async function(){
+
+    try{
+
+      if(!zyrivoLiveId){
+
+        return;
+      }
+
+
+      setLiveStatus(
+        "Ending live stream..."
+      );
+
+
+      const {
+        error
+      } = await supabase
+        .from("live_streams")
+        .update({
+
+          status:"ended",
+
+          stream_status:"ended",
+
+          ended_at:
+            new Date().toISOString()
+
+        })
+        .eq("id", zyrivoLiveId);
+
+
+      if(error){
+
+        console.error(error);
+
+        setLiveStatus(
+          "Could not end live: " +
+          error.message
+        );
+
+        return;
+      }
+
+
+      if(zyrivoLiveStream){
+
+        zyrivoLiveStream
+          .getTracks()
+          .forEach(track => track.stop());
+
+      }
+
+
+      zyrivoLiveStream =
+        null;
+
+      video.srcObject =
+        null;
+
+
+      startButton.style.display =
+        "inline-block";
+
+      endButton.style.display =
+        "none";
+
+
+      titleInput.disabled =
+        false;
+
+      descriptionInput.disabled =
+        false;
+
+
+      setLiveStatus(
+        "Live ended successfully."
+      );
+
+
+      console.log(
+        "ZYRIVO Live ended:",
+        zyrivoLiveId
+      );
+
+
+      zyrivoLiveId =
+        null;
+
+
+    }catch(error){
+
+      console.error(error);
+
+      setLiveStatus(
+        "Error ending live."
+      );
+
+    }
+
+  });
+
+
+  window.addEventListener(
+    "beforeunload",
+    function(){
+
+      if(zyrivoLiveStream){
+
+        zyrivoLiveStream
+          .getTracks()
+          .forEach(track => track.stop());
+
+      }
+
+    }
+  );
+
+
+})();
+</script>
+
+<!-- ============================= -->
+<!-- END ZYRIVO LIVE SYSTEM V1 -->
+<!-- ============================= -->
 </body>
 </html>
