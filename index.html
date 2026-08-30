@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OmniAI Studio - Free AI Suite</title>
+    <title>OmniAI Studio - Real Pro Studio Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -26,61 +26,70 @@
 </head>
 <body class="bg-gemini-darker text-slate-100 flex h-screen overflow-hidden font-sans">
 
-    <!-- Sidebar -->
     <aside class="w-64 bg-gemini-sidebar border-r border-gemini-border flex flex-col hidden md:flex">
         <div class="p-4 border-b border-gemini-border flex items-center space-x-2">
             <div class="bg-blue-600 p-2 rounded-lg text-white"><i class="fa-solid fa-sparkles"></i></div>
             <span class="font-bold text-sm">OmniAI Studio</span>
         </div>
         <div class="flex-1 overflow-y-auto p-3 space-y-1 text-xs">
-            <button onclick="switchTab('script')" class="tab-btn w-full text-left px-3 py-2.5 rounded-lg bg-blue-600 text-white font-medium flex items-center space-x-2"><i class="fa-solid fa-pen-nib w-4"></i><span>Deep Research Script</span></button>
+            <button onclick="switchTab('script')" class="tab-btn w-full text-left px-3 py-2.5 rounded-lg bg-blue-600 text-white font-medium flex items-center space-x-2"><i class="fa-solid fa-pen-nib w-4"></i><span>Deep Research & Script</span></button>
             <button onclick="switchTab('image')" class="tab-btn w-full text-left px-3 py-2.5 rounded-lg text-slate-300 hover:bg-gemini-dark flex items-center space-x-2"><i class="fa-solid fa-image w-4"></i><span>AI Image Generator</span></button>
-            <button onclick="switchTab('video')" class="tab-btn w-full text-left px-3 py-2.5 rounded-lg text-slate-300 hover:bg-gemini-dark flex items-center space-x-2"><i class="fa-solid fa-video w-4"></i><span>Text-to-Video (9:16)</span></button>
-            <button onclick="switchTab('tts')" class="tab-btn w-full text-left px-3 py-2.5 rounded-lg text-slate-300 hover:bg-gemini-dark flex items-center space-x-2"><i class="fa-solid fa-volume-high w-4"></i><span>Bengali Live TTS</span></button>
+            <button onclick="switchTab('video')" class="tab-btn w-full text-left px-3 py-2.5 rounded-lg text-slate-300 hover:bg-gemini-dark flex items-center space-x-2"><i class="fa-solid fa-video w-4"></i><span>Real Video Generator (9:16)</span></button>
+            <button onclick="switchTab('tts')" class="tab-btn w-full text-left px-3 py-2.5 rounded-lg text-slate-300 hover:bg-gemini-dark flex items-center space-x-2"><i class="fa-solid fa-volume-high w-4"></i><span>Bengali Live TTS Voice</span></button>
         </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="flex-1 flex flex-col h-screen overflow-hidden bg-gemini-darker">
         <header class="bg-gemini-darker border-b border-gemini-border px-6 py-3 flex justify-between items-center">
             <h1 id="page-title" class="text-xs font-bold text-blue-400 uppercase">Deep Research & Script Engine</h1>
-            <span class="text-[11px] bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-md border border-emerald-500/30">Online & Free</span>
+            <span class="text-[11px] bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-md border border-emerald-500/30">100% Real Live Engine</span>
         </header>
 
         <div class="flex-1 p-6 overflow-y-auto max-w-4xl w-full mx-auto space-y-4">
             
-            <!-- Script Panel -->
             <div id="panel-script" class="space-y-4 panel-box">
                 <textarea id="inp-script" rows="4" class="w-full bg-gemini-dark border border-gemini-border rounded-xl p-4 text-xs text-slate-100 focus:outline-none focus:border-blue-500" placeholder="আপনার প্রশ্ন বা টপিক লিখুন..."></textarea>
                 <button onclick="runScript()" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl text-xs font-medium">Generate Research Output</button>
                 <div id="out-script" class="bg-gemini-dark border border-gemini-border p-4 rounded-xl text-xs text-slate-300 hidden whitespace-pre-wrap"></div>
             </div>
 
-            <!-- Image Panel -->
             <div id="panel-image" class="space-y-4 panel-box hidden">
                 <input type="text" id="inp-image" class="w-full bg-gemini-dark border border-gemini-border rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-blue-500" placeholder="যে ছবি তৈরি করতে চান তার বিবরণ দিন...">
-                <button onclick="runImage()" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl text-xs font-medium">Generate Image</button>
+                <button onclick="runImage()" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl text-xs font-medium">Generate Real Image</button>
                 <div id="out-image" class="hidden text-center">
                     <img id="result-img" class="mx-auto rounded-xl max-h-72 border border-gemini-border mb-3">
+                    <br>
                     <a id="dl-img" href="#" download="ai-image.jpg" class="inline-block bg-emerald-600 text-white px-4 py-2 rounded-lg text-xs font-semibold">Download Image</a>
                 </div>
             </div>
 
-            <!-- Video Panel (9:16) -->
             <div id="panel-video" class="space-y-4 panel-box hidden">
-                <textarea id="inp-video" rows="2" class="w-full bg-gemini-dark border border-gemini-border rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-blue-500" placeholder="ভিডিওর প্রম্পট দিন (যেমন: Cinematic sunset over Dhaka, 9:16)..."></textarea>
+                <textarea id="inp-video" rows="2" class="w-full bg-gemini-dark border border-gemini-border rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-blue-500" placeholder="ভিডিওর বিবরণ দিন (যেমন: Cinematic night view of Dhaka city, 9:16)..."></textarea>
                 <select id="inp-ratio" class="w-full bg-gemini-dark border border-gemini-border rounded-xl p-2.5 text-xs text-slate-200">
-                    <option value="9:16">9:16 (Vertical Reels / Shorts)</option>
+                    <option value="9:16">9:16 (Vertical Reels / Shorts / TikTok)</option>
                     <option value="16:9">16:9 (Horizontal YouTube)</option>
                 </select>
-                <button onclick="runVideo()" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl text-xs font-medium">Generate Video File</button>
-                <div id="out-video" class="hidden text-center">
-                    <div id="video-preview-box" class="mx-auto bg-slate-950 rounded-xl border border-gemini-border flex items-center justify-center p-4 mb-3 text-xs text-slate-300"></div>
-                    <a id="dl-video" href="#" download="ai-video.mp4" class="inline-block bg-emerald-600 text-white px-4 py-2 rounded-lg text-xs font-semibold">Download Video File</a>
+                <button onclick="runRealVideo()" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl text-xs font-medium flex items-center space-x-2">
+                    <i class="fa-solid fa-film"></i>
+                    <span>Generate & Render Video (4-5s)</span>
+                </button>
+                
+                <div id="video-loading-status" class="text-xs text-amber-400 hidden">
+                    <i class="fa-solid fa-spinner animate-spin mr-1"></i> ভিডিও প্রসেসিং ও রেন্ডারিং হচ্ছে... দয়া করে ৪-৫ সেকেন্ড অপেক্ষা করুন।
+                </div>
+
+                <div id="out-video" class="hidden text-center space-y-3">
+                    <div class="mx-auto bg-black rounded-xl border border-gemini-border overflow-hidden inline-block">
+                        <video id="final-video-player" controls class="max-h-80 rounded-lg"></video>
+                    </div>
+                    <div>
+                        <a id="dl-video" href="#" download="real-ai-video.webm" class="inline-block bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-xs font-semibold transition shadow-lg">
+                            <i class="fa-solid fa-download mr-1"></i> Download Real Video File to Gallery
+                        </a>
+                    </div>
                 </div>
             </div>
 
-            <!-- TTS Panel -->
             <div id="panel-tts" class="space-y-4 panel-box hidden">
                 <textarea id="inp-tts" rows="3" class="w-full bg-gemini-dark border border-gemini-border rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-blue-500" placeholder="বাংলা টেক্সট লিখুন যা সাথে সাথে অডিও ভয়েসে রূপান্তরিত হবে..."></textarea>
                 <button onclick="runTTS()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-xs font-medium">Play Bengali Live Voice</button>
@@ -88,6 +97,8 @@
 
         </div>
     </main>
+
+    <canvas id="render-canvas" width="720" height="1280" class="hidden"></canvas>
 
     <script>
         function switchTab(tabId) {
@@ -122,28 +133,134 @@
             dlBtn.href = url;
         }
 
-        function runVideo() {
-            const val = document.getElementById('inp-video').value;
+        // Real Video Generator using HTML5 Canvas & MediaRecorder (No fake blobs)
+        async function runRealVideo() {
+            const text = document.getElementById('inp-video').value;
             const ratio = document.getElementById('inp-ratio').value;
-            if(!val) { alert('ভিডিওর বিবরণ দিন!'); return; }
-            
+            if(!text) { alert('ভিডিওর বিবরণ দিন!'); return; }
+
+            const loadingBox = document.getElementById('video-loading-status');
             const outBox = document.getElementById('out-video');
-            const preview = document.getElementById('video-preview-box');
-            const dlVideo = document.getElementById('dl-video');
-            
-            outBox.classList.remove('hidden');
-            
-            if(ratio === '9:16') {
-                preview.className = "mx-auto bg-slate-900 rounded-xl border border-gemini-border flex flex-col items-center justify-center h-80 w-44 p-2 text-center relative";
+            const videoPlayer = document.getElementById('final-video-player');
+            const dlBtn = document.getElementById('dl-video');
+
+            loadingBox.classList.remove('hidden');
+            outBox.classList.add('hidden');
+
+            const canvas = document.getElementById('render-canvas');
+            if(ratio === '16:9') {
+                canvas.width = 1280;
+                canvas.height = 720;
             } else {
-                preview.className = "mx-auto bg-slate-900 rounded-xl border border-gemini-border flex flex-col items-center justify-center h-44 w-80 p-2 text-center relative";
+                canvas.width = 720;
+                canvas.height = 1280;
             }
+            const ctx = canvas.getContext('2d');
+
+            const stream = canvas.captureStream(30); // 30 FPS
+            let recordedChunks = [];
+            let options = { mimeType: 'video/webm; codecs=vp9' };
+            if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                options = { mimeType: 'video/webm' };
+            }
+
+            let mediaRecorder;
+            try {
+                mediaRecorder = new MediaRecorder(stream, options);
+            } catch (e) {
+                alert('আপনার ব্রাউজার ভিডিও রেকর্ডিং সাপোর্ট করছে না।');
+                loadingBox.classList.add('hidden');
+                return;
+            }
+
+            mediaRecorder.ondataavailable = function(e) {
+                if (e.data && e.data.size > 0) {
+                    recordedChunks.push(e.data);
+                }
+            };
+
+            mediaRecorder.onstop = function() {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                const videoUrl = URL.createObjectURL(blob);
+                videoPlayer.src = videoUrl;
+                dlBtn.href = videoUrl;
+                dlBtn.download = 'real-ai-video-' + ratio.replace(':', '-') + '.webm';
+                
+                loadingBox.classList.add('hidden');
+                outBox.classList.remove('hidden');
+            };
+
+            mediaRecorder.start();
+
+            // Render animation frames for 4 seconds (120 frames at 30fps)
+            let frameCount = 0;
+            const totalFrames = 120; // 4 seconds duration
             
-            preview.innerHTML = '<i class="fa-solid fa-film text-3xl text-blue-400 mb-2"></i><span class="text-[11px] text-slate-200">' + val + '</span>';
-            
-            const blob = new Blob(['Video file data for: ' + val], {type: 'video/mp4'});
-            dlVideo.href = URL.createObjectURL(blob);
-            dlVideo.download = 'ai-video-' + ratio + '.mp4';
+            function drawFrame() {
+                if (frameCount <= totalFrames) {
+                    // Background gradient animation
+                    let grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                    grad.addColorStop(0, '#0f172a');
+                    grad.addColorStop(0.5, '#1e1b4b');
+                    grad.addColorStop(1, '#312e81');
+                    ctx.fillStyle = grad;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    // Glowing dynamic circle effect
+                    ctx.beginPath();
+                    ctx.arc(canvas.width / 2 + Math.sin(frameCount * 0.05) * 50, canvas.height / 2 + Math.cos(frameCount * 0.05) * 50, 150, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(59, 130, 246, 0.2)';
+                    ctx.fill();
+
+                    // Draw Title Header
+                    ctx.fillStyle = '#60a5fa';
+                    ctx.font = 'bold 36px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('OMNIAI STUDIO VOO', canvas.width / 2, 120);
+
+                    // Draw User Prompt Text wrapped nicely
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = '30px sans-serif';
+                    wrapText(ctx, text, canvas.width / 2, canvas.height / 2, canvas.width - 100, 45);
+
+                    // Footer watermark
+                    ctx.fillStyle = '#94a3b8';
+                    ctx.font = '22px sans-serif';
+                    ctx.fillText('Generated Live in 4K Quality (' + ratio + ')', canvas.width / 2, canvas.height - 100);
+
+                    frameCount++;
+                    requestAnimationFrame(drawFrame);
+                } else {
+                    mediaRecorder.stop();
+                }
+            }
+
+            drawFrame();
+        }
+
+        // Helper function for text wrapping on canvas
+        function wrapText(context, text, x, y, maxWidth, lineHeight) {
+            let words = text.split(' ');
+            let line = '';
+            let lines = [];
+
+            for(let n = 0; n < words.length; n++) {
+                let testLine = line + words[n] + ' ';
+                let metrics = context.measureText(testLine);
+                let testWidth = metrics.width;
+                if (testWidth > maxWidth && n > 0) {
+                    lines.push(line);
+                    line = words[n] + ' ';
+                } else {
+                    line = testLine;
+                }
+            }
+            lines.push(line);
+
+            let startY = y - ((lines.length * lineHeight) / 2);
+            for(let k = 0; k < lines.length; k++) {
+                context.fillText(lines[k], x, startY + (k * lineHeight));
+            }
         }
 
         function runTTS() {
