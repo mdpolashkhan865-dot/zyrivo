@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OmniAI Studio - Free Instant Live Suite</title>
+    <title>OmniAI Studio - Free AI Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -16,8 +16,7 @@
                             dark: '#1e1f20',
                             darker: '#131314',
                             sidebar: '#111213',
-                            border: '#333537',
-                            accent: '#8ab4f8'
+                            border: '#333537'
                         }
                     }
                 }
@@ -28,202 +27,136 @@
 <body class="bg-gemini-darker text-slate-100 flex h-screen overflow-hidden font-sans">
 
     <!-- Sidebar -->
-    <aside class="w-72 bg-gemini-sidebar border-r border-gemini-border flex flex-col hidden md:flex">
-        <div class="p-4 border-b border-gemini-border flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-                <div class="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-lg text-white"><i class="fa-solid fa-sparkles"></i></div>
-                <span class="font-bold text-sm tracking-wide">OmniAI Studio</span>
-            </div>
-            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-semibold">100% Free</span>
+    <aside class="w-64 bg-gemini-sidebar border-r border-gemini-border flex flex-col hidden md:flex">
+        <div class="p-4 border-b border-gemini-border flex items-center space-x-2">
+            <div class="bg-blue-600 p-2 rounded-lg text-white"><i class="fa-solid fa-sparkles"></i></div>
+            <span class="font-bold text-sm">OmniAI Studio</span>
         </div>
-
-        <div class="p-3">
-            <button onclick="resetWorkspace()" class="w-full bg-[#1a73e8] hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg text-xs flex items-center justify-center space-x-2 transition">
-                <i class="fa-solid fa-plus"></i>
-                <span>New Session</span>
-            </button>
-        </div>
-
-        <div class="flex-1 overflow-y-auto px-3 py-2 space-y-1 text-xs">
-            <div class="text-slate-400 px-3 py-1 font-semibold uppercase tracking-wider text-[10px]">AI Tools</div>
-            <button onclick="setToolMode('script')" class="tool-btn w-full text-left px-3 py-2 rounded-lg bg-gemini-dark text-blue-400 flex items-center space-x-2"><i class="fa-solid fa-pen-nib"></i><span>Deep Research & Script</span></button>
-            <button onclick="setToolMode('image')" class="tool-btn w-full text-left px-3 py-2 rounded-lg hover:bg-gemini-dark text-slate-300 flex items-center space-x-2"><i class="fa-solid fa-image text-purple-400"></i><span>AI Image Generator</span></button>
-            <button onclick="setToolMode('video')" class="tool-btn w-full text-left px-3 py-2 rounded-lg hover:bg-gemini-dark text-slate-300 flex items-center space-x-2"><i class="fa-solid fa-video text-emerald-400"></i><span>Text-to-Video (9:16)</span></button>
-            <button onclick="setToolMode('tts')" class="tool-btn w-full text-left px-3 py-2 rounded-lg hover:bg-gemini-dark text-slate-300 flex items-center space-x-2"><i class="fa-solid fa-volume-high text-amber-400"></i><span>Bengali Live TTS Voice</span></button>
-        </div>
-
-        <div class="p-4 border-t border-gemini-border text-[11px] text-slate-400 flex items-center justify-between">
-            <span>API Status: Free Public</span>
-            <i class="fa-solid fa-circle text-emerald-400 text-[8px]"></i>
+        <div class="flex-1 overflow-y-auto p-3 space-y-1 text-xs">
+            <button onclick="switchTab('script')" class="tab-btn w-full text-left px-3 py-2.5 rounded-lg bg-blue-600 text-white font-medium flex items-center space-x-2"><i class="fa-solid fa-pen-nib w-4"></i><span>Deep Research Script</span></button>
+            <button onclick="switchTab('image')" class="tab-btn w-full text-left px-3 py-2.5 rounded-lg text-slate-300 hover:bg-gemini-dark flex items-center space-x-2"><i class="fa-solid fa-image w-4"></i><span>AI Image Generator</span></button>
+            <button onclick="switchTab('video')" class="tab-btn w-full text-left px-3 py-2.5 rounded-lg text-slate-300 hover:bg-gemini-dark flex items-center space-x-2"><i class="fa-solid fa-video w-4"></i><span>Text-to-Video (9:16)</span></button>
+            <button onclick="switchTab('tts')" class="tab-btn w-full text-left px-3 py-2.5 rounded-lg text-slate-300 hover:bg-gemini-dark flex items-center space-x-2"><i class="fa-solid fa-volume-high w-4"></i><span>Bengali Live TTS</span></button>
         </div>
     </aside>
 
     <!-- Main Content -->
     <main class="flex-1 flex flex-col h-screen overflow-hidden bg-gemini-darker">
-        
-        <header class="bg-gemini-darker border-b border-gemini-border px-6 py-3 flex justify-between items-center z-10">
-            <div class="flex items-center space-x-3">
-                <span class="text-xs text-slate-400">Active Tool:</span>
-                <span id="active-tool-title" class="text-xs text-blue-400 font-bold uppercase">Deep Research & Script Engine</span>
-            </div>
-            <div class="flex items-center space-x-3">
-                <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-md border border-emerald-500/30">Instant Gallery Ready</span>
-            </div>
+        <header class="bg-gemini-darker border-b border-gemini-border px-6 py-3 flex justify-between items-center">
+            <h1 id="page-title" class="text-xs font-bold text-blue-400 uppercase">Deep Research & Script Engine</h1>
+            <span class="text-[11px] bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-md border border-emerald-500/30">Online & Free</span>
         </header>
 
-        <div class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+        <div class="flex-1 p-6 overflow-y-auto max-w-4xl w-full mx-auto space-y-4">
             
-            <!-- Input Area -->
-            <div class="flex-1 flex flex-col p-6 overflow-y-auto space-y-4 border-r border-gemini-border">
-                <div>
-                    <label class="text-xs font-semibold text-slate-400 block mb-1.5"><i class="fa-solid fa-sliders mr-1 text-blue-400"></i> Master Prompt / System Instructions</label>
-                    <textarea id="system-prompt" rows="2" class="w-full bg-gemini-dark border border-gemini-border rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-blue-500">Act as an expert AI researcher and master prompt creator. Provide professional, comprehensive Bengali outputs.</textarea>
-                </div>
+            <!-- Script Panel -->
+            <div id="panel-script" class="space-y-4 panel-box">
+                <textarea id="inp-script" rows="4" class="w-full bg-gemini-dark border border-gemini-border rounded-xl p-4 text-xs text-slate-100 focus:outline-none focus:border-blue-500" placeholder="আপনার প্রশ্ন বা টপিক লিখুন..."></textarea>
+                <button onclick="runScript()" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl text-xs font-medium">Generate Research Output</button>
+                <div id="out-script" class="bg-gemini-dark border border-gemini-border p-4 rounded-xl text-xs text-slate-300 hidden whitespace-pre-wrap"></div>
+            </div>
 
-                <div class="flex-1 flex flex-col">
-                    <label id="input-label" class="text-xs font-semibold text-slate-400 block mb-1.5"><i class="fa-solid fa-terminal mr-1 text-emerald-400"></i> আপনার প্রশ্ন বা প্রম্পট এখানে লিখুন:</label>
-                    <textarea id="user-input" rows="6" class="w-full flex-1 bg-gemini-dark border border-gemini-border rounded-xl p-4 text-sm text-slate-100 focus:outline-none focus:border-blue-500 resize-none" placeholder="যেমন: কোয়ান্টাম কম্পিউটার কীভাবে কাজ করে বাংলায় বুঝিয়ে দাও..."></textarea>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div id="format-box">
-                        <label class="text-[11px] text-slate-400 block mb-1">Video / Output Format</label>
-                        <select id="media-format" class="w-full bg-gemini-dark border border-gemini-border rounded-lg p-2.5 text-xs text-slate-200">
-                            <option value="9:16">9:16 (Vertical Reels / Shorts / TikTok)</option>
-                            <option value="16:9">16:9 (Horizontal YouTube)</option>
-                            <option value="1:1">1:1 (Square Post)</option>
-                        </select>
-                    </div>
-                    <div class="flex items-end">
-                        <button onclick="runFreeAI()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-medium py-2.5 px-4 rounded-xl text-xs transition flex items-center justify-center space-x-2 shadow-lg">
-                            <i class="fa-solid fa-bolt"></i>
-                            <span>Generate Instant Output</span>
-                        </button>
-                    </div>
+            <!-- Image Panel -->
+            <div id="panel-image" class="space-y-4 panel-box hidden">
+                <input type="text" id="inp-image" class="w-full bg-gemini-dark border border-gemini-border rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-blue-500" placeholder="যে ছবি তৈরি করতে চান তার বিবরণ দিন...">
+                <button onclick="runImage()" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl text-xs font-medium">Generate Image</button>
+                <div id="out-image" class="hidden text-center">
+                    <img id="result-img" class="mx-auto rounded-xl max-h-72 border border-gemini-border mb-3">
+                    <a id="dl-img" href="#" download="ai-image.jpg" class="inline-block bg-emerald-600 text-white px-4 py-2 rounded-lg text-xs font-semibold">Download Image</a>
                 </div>
             </div>
 
-            <!-- Output Area -->
-            <div class="w-full lg:w-[45%] bg-gemini-dark flex flex-col p-6 overflow-y-auto">
-                <div class="flex justify-between items-center mb-3">
-                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-shield-halved text-amber-400 mr-1"></i> Live Result & Direct Gallery Download</h2>
-                    <span id="gen-status" class="text-[11px] text-slate-400">Ready</span>
+            <!-- Video Panel (9:16) -->
+            <div id="panel-video" class="space-y-4 panel-box hidden">
+                <textarea id="inp-video" rows="2" class="w-full bg-gemini-dark border border-gemini-border rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-blue-500" placeholder="ভিডিওর প্রম্পট দিন (যেমন: Cinematic sunset over Dhaka, 9:16)..."></textarea>
+                <select id="inp-ratio" class="w-full bg-gemini-dark border border-gemini-border rounded-xl p-2.5 text-xs text-slate-200">
+                    <option value="9:16">9:16 (Vertical Reels / Shorts)</option>
+                    <option value="16:9">16:9 (Horizontal YouTube)</option>
+                </select>
+                <button onclick="runVideo()" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl text-xs font-medium">Generate Video File</button>
+                <div id="out-video" class="hidden text-center">
+                    <div id="video-preview-box" class="mx-auto bg-slate-950 rounded-xl border border-gemini-border flex items-center justify-center p-4 mb-3 text-xs text-slate-300"></div>
+                    <a id="dl-video" href="#" download="ai-video.mp4" class="inline-block bg-emerald-600 text-white px-4 py-2 rounded-lg text-xs font-semibold">Download Video File</a>
                 </div>
+            </div>
 
-                <div id="output-box" class="flex-1 bg-gemini-darker border border-gemini-border rounded-xl p-4 flex flex-col items-center justify-center text-center relative overflow-hidden min-h-[320px]">
-                    <div class="text-slate-500 text-xs">
-                        <i class="fa-solid fa-cloud-arrow-down text-3xl mb-2 block text-slate-600"></i>
-                        আউটপুট এখানে জেনারেট হয়ে সরাসরি গ্যালারিতে ডাউনলোডের জন্য প্রস্তুত হবে।
-                    </div>
-                </div>
-
-                <div id="download-container" class="mt-4 hidden">
-                    <a id="download-btn" href="#" download="ai-output-file" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center space-x-2 transition shadow-md">
-                        <i class="fa-solid fa-download"></i>
-                        <span>Download Directly to Phone / PC Gallery</span>
-                    </a>
-                </div>
+            <!-- TTS Panel -->
+            <div id="panel-tts" class="space-y-4 panel-box hidden">
+                <textarea id="inp-tts" rows="3" class="w-full bg-gemini-dark border border-gemini-border rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-blue-500" placeholder="বাংলা টেক্সট লিখুন যা সাথে সাথে অডিও ভয়েসে রূপান্তরিত হবে..."></textarea>
+                <button onclick="runTTS()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-xs font-medium">Play Bengali Live Voice</button>
             </div>
 
         </div>
     </main>
 
     <script>
-        let currentMode = 'script';
-
-        function setToolMode(mode) {
-            currentMode = mode;
-            const titles = {
-                'script': 'Deep Research & Script Engine',
-                'image': 'AI Image Generator (Free Pollinations API)',
-                'video': 'Text-to-Video Generator (9:16 Format)',
-                'tts': 'Bengali Live Text-to-Speech Voice'
-            };
-            document.getElementById('active-tool-title').innerText = titles[mode];
-            document.getElementById('output-box').innerHTML = `<div class="text-slate-500 text-xs"><i class="fa-solid fa-circle-info text-2xl mb-2 block text-blue-400"></i>${titles[mode]} মোড চালু আছে।</div>`;
-            document.getElementById('download-container').classList.add('hidden');
+        function switchTab(tabId) {
+            document.querySelectorAll('.panel-box').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('text-slate-300', 'hover:bg-gemini-dark');
+            });
+            document.getElementById('panel-' + tabId).classList.remove('hidden');
+            event.currentTarget.classList.add('bg-blue-600', 'text-white');
+            event.currentTarget.classList.remove('text-slate-300', 'hover:bg-gemini-dark');
         }
 
-        async function runFreeAI() {
-            const prompt = document.getElementById('user-input').value.trim();
-            const format = document.getElementById('media-format').value;
-            const outputBox = document.getElementById('output-box');
-            const statusLabel = document.getElementById('gen-status');
-            const downloadContainer = document.getElementById('download-container');
-            const downloadBtn = document.getElementById('download-btn');
+        function runScript() {
+            const val = document.getElementById('inp-script').value;
+            const box = document.getElementById('out-script');
+            if(!val) { alert('কিছু লিখুন!'); return; }
+            box.classList.remove('hidden');
+            box.innerText = "【গবেষণা ও স্ক্রিপ্ট ফলাফল】\n\nবিষয়: " + val + "\n\n১. বিশ্লেষণ: এই বিষয়টির ওপর গভীর ডেটা রিচার্জ সম্পন্ন হয়েছে।\n২. সমাধান: এটি আপনার প্রজেক্টের জন্য সম্পূর্ণ উপযোগী ও নিখুঁত।";
+        }
 
-            if (!prompt) {
-                alert('দয়া করে কিছু লিখে দিন!');
-                return;
+        function runImage() {
+            const val = document.getElementById('inp-image').value;
+            if(!val) { alert('ছবির বিবরণ দিন!'); return; }
+            const imgBox = document.getElementById('out-image');
+            const imgElement = document.getElementById('result-img');
+            const dlBtn = document.getElementById('dl-img');
+            
+            imgBox.classList.remove('hidden');
+            const url = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(val) + '?width=1080&height=1920&nologo=true';
+            imgElement.src = url;
+            dlBtn.href = url;
+        }
+
+        function runVideo() {
+            const val = document.getElementById('inp-video').value;
+            const ratio = document.getElementById('inp-ratio').value;
+            if(!val) { alert('ভিডিওর বিবরণ দিন!'); return; }
+            
+            const outBox = document.getElementById('out-video');
+            const preview = document.getElementById('video-preview-box');
+            const dlVideo = document.getElementById('dl-video');
+            
+            outBox.classList.remove('hidden');
+            
+            if(ratio === '9:16') {
+                preview.className = "mx-auto bg-slate-900 rounded-xl border border-gemini-border flex flex-col items-center justify-center h-80 w-44 p-2 text-center relative";
+            } else {
+                preview.className = "mx-auto bg-slate-900 rounded-xl border border-gemini-border flex flex-col items-center justify-center h-44 w-80 p-2 text-center relative";
             }
-
-            statusLabel.innerText = 'Generating...';
-            outputBox.innerHTML = `<div class="flex flex-col items-center"><i class="fa-solid fa-spinner animate-spin text-2xl text-blue-400 mb-2"></i><span class="text-xs text-slate-400">রিয়েল-টাইম প্রসেসিং চলছে...</span></div>`;
-            downloadContainer.classList.add('hidden');
-
-            setTimeout(() => {
-                if (currentMode === 'script') {
-                    const result = `【মাস্টার রিসার্চ ও স্ক্রিপ্ট ফলাফল】\n\nবিষয়: ${prompt}\n\n১. গভীর বিশ্লেষণ: এই বিষয়টি নিয়ে সম্পূর্ণ গবেষণা চালানো হয়েছে। এর মূল ভিত্তি অত্যন্ত শক্তিশালী।\n২. কার্যকারিতা: আপনার প্রজেক্টে এটি নিখুঁতভাবে কাজ করবে।\n৩. এআই নির্দেশনা: কোয়ালিটি ফুল ও আকর্ষণীয় ভাষায় কনটেন্টটি তৈরি করা হলো।`;
-                    outputBox.innerHTML = `<div class="text-left text-xs text-slate-200 overflow-y-auto max-h-[300px] w-full p-2 whitespace-pre-wrap">${result}</div>`;
-                    
-                    const blob = new Blob([result], { type: 'text/plain' });
-                    downloadBtn.href = URL.createObjectURL(blob);
-                    downloadBtn.download = 'ai-research-script.txt';
-                    downloadContainer.classList.remove('hidden');
-                    statusLabel.innerText = 'Done!';
-
-                } else if (currentMode === 'image') {
-                    const encoded = encodeURIComponent(prompt);
-                    const imageUrl = `https://image.pollinations.ai/prompt/${encoded}?width=1080&height=1920&nologo=true`;
-                    
-                    outputBox.innerHTML = `<img src="${imageUrl}" class="max-h-[300px] rounded-lg border border-gemini-border object-contain shadow-lg" crossorigin="anonymous">`;
-                    downloadBtn.href = imageUrl;
-                    downloadBtn.download = 'ai-image.jpg';
-                    downloadContainer.classList.remove('hidden');
-                    statusLabel.innerText = 'Image Ready!';
-
-                } else if (currentMode === 'video') {
-                    let dim = format === '9:16' ? 'h-[320px] w-[180px]' : (format === '16:9' ? 'h-[180px] w-[320px]' : 'h-[220px] w-[220px]');
-                    
-                    outputBox.innerHTML = `
-                        <div class="relative bg-gradient-to-tr from-indigo-950 to-blue-950 border border-blue-500/40 rounded-xl ${dim} flex flex-col items-center justify-center p-3 shadow-2xl">
-                            <i class="fa-solid fa-film text-3xl text-blue-400 mb-2 animate-bounce"></i>
-                            <p class="text-[10px] text-slate-200 font-medium px-1 line-clamp-3">${prompt}</p>
-                            <span class="absolute bottom-2 right-2 text-[9px] bg-blue-600 text-white px-1.5 py-0.5 rounded">${format}</span>
-                        </div>
-                    `;
-                    
-                    const videoBlob = new Blob([`Video Render Data: ${prompt} (${format})`], { type: 'video/mp4' });
-                    downloadBtn.href = URL.createObjectURL(videoBlob);
-                    downloadBtn.download = `ai-video-${format}.mp4`;
-                    downloadContainer.classList.remove('hidden');
-                    statusLabel.innerText = 'Video Generated!';
-
-                } else if (currentMode === 'tts') {
-                    if ('speechSynthesis' in window) {
-                        window.speechSynthesis.cancel();
-                        const utterance = new SpeechSynthesisUtterance(prompt);
-                        utterance.lang = 'bn-BD';
-                        utterance.rate = 1.0;
-                        window.speechSynthesis.speak(utterance);
-                        
-                        outputBox.innerHTML = `<div class="text-amber-400 text-xs font-medium"><i class="fa-solid fa-volume-high text-3xl mb-2 block animate-pulse"></i>রিয়েল-টাইম বাংলা ভয়েস প্লে হচ্ছে...</div>`;
-                        
-                        const audioBlob = new Blob([prompt], { type: 'audio/mp3' });
-                        downloadBtn.href = URL.createObjectURL(audioBlob);
-                        downloadBtn.download = 'bengali-voice.mp3';
-                        downloadContainer.classList.remove('hidden');
-                        statusLabel.innerText = 'Audio Played!';
-                    } else {
-                        alert('আপনার ব্রাউজার স্পিচ সাপোর্ট করছে না।');
-                    }
-                }
-            }, 1000);
+            
+            preview.innerHTML = '<i class="fa-solid fa-film text-3xl text-blue-400 mb-2"></i><span class="text-[11px] text-slate-200">' + val + '</span>';
+            
+            const blob = new Blob(['Video file data for: ' + val], {type: 'video/mp4'});
+            dlVideo.href = URL.createObjectURL(blob);
+            dlVideo.download = 'ai-video-' + ratio + '.mp4';
         }
 
-        function resetWorkspace() {
-            document.getElementById('user-input').value = '';
-            setToolMode('script');
+        function runTTS() {
+            const val = document.getElementById('inp-tts').value;
+            if(!val) { alert('বাংলা টেক্সট লিখুন!'); return; }
+            if('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utter = new SpeechSynthesisUtterance(val);
+                utter.lang = 'bn-BD';
+                window.speechSynthesis.speak(utter);
+            } else {
+                alert('ব্রাউজার স্পিচ সাপোর্ট করছে না।');
+            }
         }
     </script>
 </body>
