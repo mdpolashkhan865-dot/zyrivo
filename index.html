@@ -1,154 +1,97 @@
-/**
- * ==========================================
- * MASTER APP ARCHITECTURE & CORE SYSTEM (A to Z)
- * Includes: Clean Dashboard, Drawer Settings, Owner ID, Wallet, & Live Service
- * ==========================================
- */
+<!DOCTYPE html>
+<html lang="bn" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialHub AI - Master Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; }
+        .active-tab { border-bottom: 3px solid #1877F2; color: #1877F2; font-weight: bold; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
 
-// --- 1. DATA MODELS & INITIAL STATE ---
-const AppState = {
-  // Owner / Admin Access Profile
-  ownerProfile: {
-    ownerId: "OWNER-998811",
-    ownerName: "Super Admin / System Owner",
-    accessLevel: "MASTER_FULL_CONTROL",
-    isVerified: true
-  },
+    <!-- Top Navbar -->
+    <header class="bg-white shadow px-4 py-2 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center space-x-2">
+            <i class="fa-brands fa-facebook text-blue-600 text-3xl"></i>
+            <span class="font-bold text-xl text-blue-600">SocialHub</span>
+        </div>
+        <div class="flex space-x-4">
+            <button onclick="switchTab('feed')" class="active-tab py-2 px-3 text-lg"><i class="fa-solid fa-house"></i></button>
+            <button onclick="switchTab('wallet')" class="py-2 px-3 text-lg text-gray-500"><i class="fa-solid fa-wallet"></i></button>
+            <button onclick="switchTab('settings')" class="py-2 px-3 text-lg text-gray-500"><i class="fa-solid fa-gear"></i></button>
+        </div>
+        <div class="flex items-center space-x-2">
+            <span class="bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded-full"><i class="fa-solid fa-crown"></i> VIP</span>
+        </div>
+    </header>
 
-  // Wallet System Setup
-  wallet: {
-    walletId: "WLT-409923",
-    currentBalance: 5400.00,
-    currency: "BDT",
-    history: [
-      { id: "TXN-101", type: "CREDIT", amount: 1000.00, date: "2026-08-30" },
-      { id: "TXN-102", type: "DEBIT", amount: 200.00, date: "2026-08-31" }
-    ]
-  },
+    <!-- Main Container -->
+    <div class="max-w-xl mx-auto w-full p-4 flex-1 space-y-4">
 
-  // Live Status & Stream Feature
-  liveStream: {
-    isLiveActive: true,
-    liveViewerCount: 1420,
-    streamServerUrl: "rtmp://live.system.internal/app-stream"
-  },
+        <!-- Feed Section -->
+        <section id="sec-feed" class="space-y-4">
+            <div class="bg-white p-4 rounded-2xl shadow space-y-3">
+                <div class="flex items-center space-x-3">
+                    <img src="https://i.pravatar.cc/150?img=68" class="w-10 h-10 rounded-full">
+                    <input type="text" id="postText" placeholder="আপনার মনে কি আছে?" class="w-full bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none">
+                </div>
+                <button onclick="createPost()" class="w-full bg-blue-600 text-white py-2 rounded-xl font-bold text-sm">পোস্ট করুন</button>
+            </div>
+            <div id="postContainer" class="space-y-3">
+                <div class="bg-white p-4 rounded-2xl shadow space-y-2">
+                    <h4 class="font-bold text-sm">সাকিব হাসান</h4>
+                    <p class="text-xs text-gray-600">সোশ্যাল হাব মাস্টার অ্যাপ সফলভাবে লাইভ হয়েছে!</p>
+                </div>
+            </div>
+        </section>
 
-  // Dashboard Metrics (Only minimal crucial data shown on main screen)
-  dashboardMetrics: {
-    activeUsers: 850,
-    todayOverview: "System status: Normal"
-  },
+        <!-- Wallet Section -->
+        <section id="sec-wallet" class="hidden space-y-4">
+            <div class="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-5 rounded-2xl shadow space-y-2">
+                <p class="text-xs">ওয়ালেট ব্যালেন্স</p>
+                <h2 class="text-2xl font-black">৳ ২৫,৮৫০.০০ BDT</h2>
+                <button onclick="alert('উইথড্র রিকোয়েস্ট সফল! ১-৭ তারিখের মধ্যে পেমেন্ট পাবেন।')" class="bg-white text-green-700 font-bold px-4 py-2 rounded-xl text-xs">ক্যাশআউট করুন</button>
+            </div>
+        </section>
 
-  // Dynamic Settings & Rules (Kept hidden inside drawer/modal for Clean UI)
-  settingsAndRules: {
-    rules: [
-      "১. নিয়ম অমান্য করলে অ্যাকাউন্ট সাময়িক স্থগিত করা হবে।",
-      "২. ওয়ালেট লেনদেনের পিন কারো সাথে শেয়ার করা নিষেধ।",
-      "৩. লাইভ চলাকালীন কোনো অবৈধ কনটেন্ট ব্রডকাস্ট করা যাবে না।"
-    ],
-    appPreferences: {
-      theme: "Dark",
-      notificationsEnabled: true,
-      securityPinRequired: true
-    }
-  }
-};
+        <!-- Settings Section -->
+        <section id="sec-settings" class="hidden space-y-4">
+            <div class="bg-white p-5 rounded-2xl shadow space-y-3 text-xs">
+                <h3 class="font-bold text-sm border-b pb-2">অ্যাপ সেটিংস ও নিয়মাবলী</h3>
+                <div>
+                    <label class="font-semibold block mb-1">প্রোফাইল নাম:</label>
+                    <input type="text" value="সাকিব হাসান" class="w-full border p-2 rounded-lg">
+                </div>
+                <div class="bg-gray-50 p-3 rounded-lg space-y-1">
+                    <p class="font-bold">নিয়মাবলী:</p>
+                    <p>১. ৫০% ক্রিয়েটর রেভিনিউ শেয়ার প্রতি ১-৭ তারিখ অটো ট্রান্সফার হয়।</p>
+                    <p>২. সব ব্যক্তিগত তথ্য সুরক্ষিত থাকে।</p>
+                </div>
+            </div>
+        </section>
 
-// --- 2. CORE SERVICES & HANDLERS ---
+    </div>
 
-class MasterAppController {
-  constructor(state) {
-    this.state = state;
-  }
+    <script>
+        function switchTab(tab) {
+            ['feed', 'wallet', 'settings'].forEach(t => {
+                document.getElementById('sec-' + t).classList.add('hidden');
+            });
+            document.getElementById('sec-' + tab).classList.remove('hidden');
+        }
 
-  // Live Feature Operations
-  toggleLiveStatus(status) {
-    this.state.liveStream.isLiveActive = status;
-    return `Live Mode is now: ${status ? "ONLINE" : "OFFLINE"}`;
-  }
-
-  // Wallet Feature Operations
-  processWalletTransaction(type, amount) {
-    if (type === "DEBIT" && this.state.wallet.currentBalance < amount) {
-      throw new Error("Insufficient Wallet Balance!");
-    }
-    
-    if (type === "CREDIT") {
-      this.state.wallet.currentBalance += amount;
-    } else if (type === "DEBIT") {
-      this.state.wallet.currentBalance -= amount;
-    }
-
-    const newTxn = {
-      id: `TXN-${Math.floor(1000 + Math.random() * 9000)}`,
-      type: type,
-      amount: amount,
-      date: new Date().toISOString().split('T')[0]
-    };
-
-    this.state.wallet.history.push(newTxn);
-    return { status: "SUCCESS", newBalance: this.state.wallet.currentBalance, txn: newTxn };
-  }
-
-  // Owner Authorization Check
-  getOwnerAccess() {
-    return {
-      id: this.state.ownerProfile.ownerId,
-      name: this.state.ownerProfile.ownerName,
-      level: this.state.ownerProfile.accessLevel
-    };
-  }
-
-  // Retrieve Hidden Settings (Clean UI Concept)
-  getSettingsAndRules() {
-    return this.state.settingsAndRules;
-  }
-}
-
-// --- 3. UI LAYOUT & COMPONENT RENDER LOGIC ---
-
-function RenderApplicationUI() {
-  const controller = new MasterAppController(AppState);
-
-  console.log("==================================================");
-  console.log("             A to Z MASTER APP DASHBOARD          ");
-  console.log("==================================================");
-  
-  // Clean Dashboard UI Output (Only essentials displayed on primary screen)
-  console.log("\n[MAIN SCREEN - CLEAN DASHBOARD]");
-  console.log(`> Today Summary : ${AppState.dashboardMetrics.todayOverview}`);
-  console.log(`> Active Users  : ${AppState.dashboardMetrics.activeUsers}`);
-  
-  // Wallet Widget (Minimal Summary)
-  console.log(`> Wallet Balance: ${AppState.wallet.currentBalance} ${AppState.wallet.currency}`);
-  
-  // Live Status Badge
-  console.log(`> Live Status   : ${AppState.liveStream.isLiveActive ? "🔴 LIVE NOW (" + AppState.liveStream.liveViewerCount + " viewers)" : "⚪ OFFLINE"}`);
-
-  console.log("\n--------------------------------------------------");
-  console.log("           HIDDEN/INTERNAL OPTIONS (SUB-MENU)     ");
-  console.log("--------------------------------------------------");
-
-  // Owner Access Info (Hidden in Admin Drawer)
-  const owner = controller.getOwnerAccess();
-  console.log(`\n⚙️ [OWNER PROFILE MENU]`);
-  console.log(`   ID: ${owner.id} | Name: ${owner.name} | Control: ${owner.level}`);
-
-  // Wallet Detailed History Drawer
-  console.log(`\n💳 [WALLET FULL DETAILS MENU]`);
-  console.log(`   Wallet ID: ${AppState.wallet.walletId}`);
-  console.log("   Recent Transactions:", controller.state.wallet.history);
-
-  // App Rules & Settings Modal/Screen (Inside Settings Option)
-  const config = controller.getSettingsAndRules();
-  console.log(`\n📜 [RULES & POLICY SECTION]`);
-  config.rules.forEach(rule => console.log(`   ${rule}`));
-
-  console.log(`\n🔧 [SETTINGS SYSTEM]`);
-  console.log(`   Theme: ${config.appPreferences.theme}`);
-  console.log(`   Notifications: ${config.appPreferences.notificationsEnabled ? "ON" : "OFF"}`);
-  console.log("==================================================\n");
-}
-
-// Execute Core Application Architecture
-RenderApplicationUI();
+        function createPost() {
+            const txt = document.getElementById('postText').value;
+            if(!txt) return alert('কিছু লিখুন!');
+            const container = document.getElementById('postContainer');
+            container.innerHTML = `<div class="bg-white p-4 rounded-2xl shadow space-y-2"><h4 class="font-bold text-sm">সাকিব হাসান</h4><p class="text-xs text-gray-600">${txt}</p></div>` + container.innerHTML;
+            document.getElementById('postText').value = '';
+        }
+    </script>
+</body>
+</html>
