@@ -1,2537 +1,609 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn" class="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<meta name="theme-color" content="#111827">
-<title>ZYRIVO+</title>
-
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-:root{
-  --bg:#f3f5f9;
-  --card:#ffffff;
-  --text:#111827;
-  --muted:#64748b;
-  --border:#e2e8f0;
-  --primary:#2563eb;
-  --primary2:#1d4ed8;
-  --danger:#ef4444;
-  --radius:18px;
-}
-
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  padding-bottom:78px;
-}
-
-button,
-input,
-textarea{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-  border:0;
-}
-
-.app{
-  max-width:760px;
-  margin:auto;
-}
-
-/* HEADER */
-.header{
-  position:sticky;
-  top:0;
-  z-index:50;
-  height:64px;
-  background:rgba(255,255,255,.96);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 14px;
-}
-
-.logo{
-  font-size:25px;
-  font-weight:900;
-  letter-spacing:-1px;
-}
-
-.logo span{
-  color:var(--primary);
-}
-
-.header-actions{
-  display:flex;
-  gap:8px;
-}
-
-.icon-btn{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  background:#eef2f7;
-  font-size:19px;
-}
-
-.icon-btn:active{
-  transform:scale(.94);
-}
-
-/* SECTIONS */
-.section{
-  display:none;
-  padding:14px;
-}
-
-.section.active{
-  display:block;
-}
-
-/* CREATE BOX */
-.create-box{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:14px;
-  margin-bottom:14px;
-}
-
-.create-top{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.avatar{
-  width:44px;
-  height:44px;
-  min-width:44px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#2563eb,#7c3aed);
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:800;
-}
-
-.mind{
-  flex:1;
-  border:1px solid var(--border);
-  background:#f8fafc;
-  border-radius:25px;
-  padding:12px 15px;
-  text-align:left;
-  color:var(--muted);
-}
-
-.quick-actions{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  margin-top:12px;
-}
-
-.quick-actions button{
-  background:#f1f5f9;
-  padding:11px 5px;
-  border-radius:12px;
-  font-weight:700;
-}
-
-.quick-actions button:hover{
-  background:#e2e8f0;
-}
-
-/* STORIES */
-.story-wrap{
-  display:flex;
-  gap:10px;
-  overflow-x:auto;
-  padding-bottom:4px;
-  margin-bottom:14px;
-}
-
-.story-card{
-  min-width:82px;
-  height:112px;
-  border-radius:15px;
-  background:linear-gradient(160deg,#1e3a8a,#7c3aed);
-  color:white;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
-  align-items:center;
-  padding:8px;
-  position:relative;
-  overflow:hidden;
-}
-
-.story-card .story-avatar{
-  width:44px;
-  height:44px;
-  border-radius:50%;
-  background:white;
-  color:#2563eb;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-weight:800;
-  margin-bottom:5px;
-}
-
-.story-card.add{
-  background:#fff;
-  color:var(--text);
-  border:1px solid var(--border);
-  justify-content:center;
-}
-
-.story-card.add .story-avatar{
-  background:#eff6ff;
-  font-size:24px;
-}
-
-/* POST */
-.post{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  margin-bottom:14px;
-  overflow:hidden;
-}
-
-.post-head{
-  padding:13px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.post-user{
-  flex:1;
-}
-
-.post-user strong{
-  display:block;
-}
-
-.post-user small{
-  color:var(--muted);
-}
-
-.more{
-  background:none;
-  font-size:20px;
-  padding:8px;
-}
-
-.post-body{
-  padding:0 14px 12px;
-}
-
-.post-text{
-  line-height:1.5;
-  margin-bottom:12px;
-}
-
-.post-media{
-  min-height:180px;
-  background:linear-gradient(135deg,#dbeafe,#ede9fe);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:70px;
-}
-
-.post-stats{
-  display:flex;
-  justify-content:space-between;
-  padding:10px 14px;
-  color:var(--muted);
-  font-size:13px;
-  border-bottom:1px solid var(--border);
-}
-
-.post-actions{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-}
-
-.post-actions button{
-  padding:12px 4px;
-  background:white;
-  color:#475569;
-  font-weight:700;
-}
-
-.post-actions button.liked{
-  color:#2563eb;
-}
-
-.comments{
-  padding:10px 14px;
-  border-top:1px solid var(--border);
-  display:none;
-}
-
-.comments.show{
-  display:block;
-}
-
-.comment-input{
-  display:flex;
-  gap:7px;
-}
-
-.comment-input input{
-  flex:1;
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:9px 12px;
-}
-
-.comment-input button{
-  background:var(--primary);
-  color:white;
-  padding:8px 14px;
-  border-radius:20px;
-}
-
-.comment-list{
-  margin-top:9px;
-}
-
-.comment{
-  background:#f1f5f9;
-  padding:8px 10px;
-  border-radius:12px;
-  margin-top:6px;
-  font-size:14px;
-}
-
-/* PAGE TITLE */
-.page-title{
-  margin:5px 0 14px;
-}
-
-.page-title h2{
-  font-size:24px;
-}
-
-.page-title p{
-  color:var(--muted);
-  margin-top:4px;
-}
-
-/* SHORTS */
-.short-card{
-  background:#000;
-  border-radius:20px;
-  overflow:hidden;
-  margin-bottom:14px;
-  color:white;
-  position:relative;
-  min-height:500px;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
-}
-
-.short-video{
-  position:absolute;
-  inset:0;
-  background:linear-gradient(145deg,#111827,#581c87,#111827);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:75px;
-}
-
-.short-info{
-  position:relative;
-  z-index:2;
-  padding:20px;
-  background:linear-gradient(transparent,rgba(0,0,0,.85));
-  padding-top:100px;
-}
-
-.short-actions{
-  display:flex;
-  gap:8px;
-  margin-top:12px;
-}
-
-.short-actions button{
-  background:rgba(255,255,255,.15);
-  color:#fff;
-  padding:9px 13px;
-  border-radius:20px;
-}
-
-/* VIDEO */
-.video-card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:18px;
-  overflow:hidden;
-  margin-bottom:14px;
-}
-
-.video-thumb{
-  height:220px;
-  background:linear-gradient(135deg,#0f172a,#1e40af);
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:65px;
-}
-
-.video-info{
-  padding:14px;
-}
-
-.video-info h3{
-  margin-bottom:7px;
-}
-
-.video-info p{
-  color:var(--muted);
-}
-
-/* AI */
-.ai-card{
-  background:#111827;
-  color:#fff;
-  border-radius:20px;
-  padding:16px;
-}
-
-.ai-input{
-  width:100%;
-  min-height:110px;
-  margin:14px 0;
-  border-radius:14px;
-  border:1px solid #374151;
-  background:#1f2937;
-  color:#fff;
-  padding:13px;
-  resize:none;
-}
-
-.primary{
-  width:100%;
-  padding:13px;
-  border-radius:13px;
-  background:var(--primary);
-  color:white;
-  font-weight:800;
-}
-
-.primary:active{
-  transform:scale(.98);
-}
-
-.ai-response{
-  margin-top:14px;
-  background:#1f2937;
-  padding:13px;
-  border-radius:13px;
-  line-height:1.5;
-  display:none;
-}
-
-.tool-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-  margin-top:14px;
-}
-
-.tool{
-  background:#fff;
-  color:var(--text);
-  border:1px solid var(--border);
-  padding:18px 10px;
-  border-radius:15px;
-  text-align:center;
-  font-weight:700;
-}
-
-.tool span{
-  font-size:30px;
-  display:block;
-  margin-bottom:7px;
-}
-
-/* MESSAGES */
-.message-card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:13px;
-  display:flex;
-  gap:10px;
-  margin-bottom:9px;
-}
-
-.message-content{
-  flex:1;
-}
-
-.message-content small{
-  color:var(--muted);
-}
-
-/* MARKET */
-.market-card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:18px;
-  overflow:hidden;
-  margin-bottom:12px;
-}
-
-.product-image{
-  height:170px;
-  background:linear-gradient(135deg,#e0e7ff,#fce7f3);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:60px;
-}
-
-.product-info{
-  padding:14px;
-}
-
-.price{
-  font-weight:900;
-  font-size:20px;
-  margin:7px 0 12px;
-}
-
-/* PROFILE */
-.profile-cover{
-  height:150px;
-  border-radius:20px 20px 0 0;
-  background:linear-gradient(135deg,#172554,#7c3aed,#2563eb);
-}
-
-.profile-card{
-  background:#fff;
-  border-radius:20px;
-  overflow:hidden;
-  border:1px solid var(--border);
-}
-
-.profile-main{
-  text-align:center;
-  padding:0 15px 20px;
-}
-
-.big-avatar{
-  width:90px;
-  height:90px;
-  border-radius:50%;
-  margin:-45px auto 10px;
-  border:5px solid #fff;
-  background:linear-gradient(135deg,#2563eb,#7c3aed);
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:35px;
-  font-weight:900;
-}
-
-.profile-main p{
-  color:var(--muted);
-}
-
-.profile-stats{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  margin:20px 0;
-}
-
-.profile-stats strong,
-.profile-stats small{
-  display:block;
-}
-
-.profile-stats small{
-  color:var(--muted);
-  margin-top:3px;
-}
-
-/* SEARCH */
-.search-box{
-  display:flex;
-  gap:8px;
-  margin-bottom:14px;
-}
-
-.search-box input{
-  flex:1;
-  border:1px solid var(--border);
-  border-radius:13px;
-  padding:12px;
-}
-
-.search-result{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:12px;
-  margin-top:8px;
-}
-
-/* BOTTOM NAV */
-.bottom-nav{
-  position:fixed;
-  left:0;
-  right:0;
-  bottom:0;
-  height:68px;
-  background:rgba(255,255,255,.97);
-  backdrop-filter:blur(12px);
-  border-top:1px solid var(--border);
-  z-index:60;
-  display:flex;
-  justify-content:center;
-}
-
-.nav-inner{
-  width:min(760px,100%);
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-}
-
-.nav-btn{
-  background:none;
-  color:#64748b;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  gap:3px;
-  font-size:20px;
-}
-
-.nav-btn span{
-  font-size:10px;
-  font-weight:700;
-}
-
-.nav-btn.active{
-  color:var(--primary);
-}
-
-/* MODAL */
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(15,23,42,.65);
-  z-index:100;
-  display:none;
-  align-items:flex-end;
-  justify-content:center;
-}
-
-.modal.show{
-  display:flex;
-}
-
-.modal-box{
-  width:min(760px,100%);
-  max-height:90vh;
-  overflow:auto;
-  background:#fff;
-  border-radius:24px 24px 0 0;
-  padding:18px;
-}
-
-.modal-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:14px;
-}
-
-.close{
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  background:#f1f5f9;
-  font-size:22px;
-}
-
-.modal textarea,
-.modal input[type="text"]{
-  width:100%;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:13px;
-  margin-bottom:12px;
-}
-
-.file-input{
-  width:100%;
-  padding:12px;
-  border:1px dashed #94a3b8;
-  border-radius:12px;
-  margin-bottom:12px;
-}
-
-/* TOAST */
-.toast{
-  position:fixed;
-  left:50%;
-  bottom:85px;
-  transform:translateX(-50%) translateY(20px);
-  background:#111827;
-  color:#fff;
-  padding:11px 17px;
-  border-radius:25px;
-  opacity:0;
-  pointer-events:none;
-  transition:.25s;
-  z-index:200;
-  white-space:nowrap;
-}
-
-.toast.show{
-  opacity:1;
-  transform:translateX(-50%) translateY(0);
-}
-
-/* RESPONSIVE */
-@media(min-width:761px){
-  .bottom-nav{
-    left:50%;
-    right:auto;
-    transform:translateX(-50%);
-    width:760px;
-  }
-}
-
-@media(max-width:420px){
-  .quick-actions button{
-    font-size:12px;
-  }
-
-  .short-card{
-    min-height:450px;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<div class="app">
-
-<!-- HEADER -->
-<header class="header">
-  <div class="logo">ZYRIVO<span>+</span></div>
-
-  <div class="header-actions">
-    <button class="icon-btn" onclick="showSection('search')">🔍</button>
-    <button class="icon-btn" onclick="showSection('messages')">💬</button>
-    <button class="icon-btn" onclick="showToast('Notifications will appear here')">🔔</button>
-  </div>
-</header>
-
-
-<!-- HOME -->
-<section id="home" class="section active">
-
-  <div class="create-box">
-
-    <div class="create-top">
-      <div class="avatar">Z</div>
-
-      <button class="mind" onclick="openModal('postModal')">
-        What's on your mind?
-      </button>
-    </div>
-
-    <div class="quick-actions">
-      <button onclick="openModal('postModal')">📝 Post</button>
-      <button onclick="openModal('videoModal')">🎬 Video</button>
-      <button onclick="openModal('shortModal')">⚡ Short</button>
-    </div>
-
-  </div>
-
-
-  <!-- STORIES -->
-  <div class="story-wrap">
-
-    <button class="story-card add" onclick="openModal('storyModal')">
-      <div class="story-avatar">＋</div>
-      <b>Create Story</b>
-    </button>
-
-    <div class="story-card">
-      <div class="story-avatar">M</div>
-      <b>Misty</b>
-    </div>
-
-    <div class="story-card">
-      <div class="story-avatar">R</div>
-      <b>Rima</b>
-    </div>
-
-    <div class="story-card">
-      <div class="story-avatar">S</div>
-      <b>Shahin</b>
-    </div>
-
-  </div>
-
-
-  <!-- POSTS -->
-  <div id="feed">
-
-    <article class="post">
-
-      <div class="post-head">
-        <div class="avatar">N</div>
-
-        <div class="post-user">
-          <strong>Nur Islam</strong>
-          <small>1d · 🌎</small>
-        </div>
-
-        <button class="more" onclick="showToast('Post menu')">•••</button>
-      </div>
-
-      <div class="post-body">
-        <div class="post-text">
-          বাবা আর চার ভাই একসাথে ❤️
-        </div>
-      </div>
-
-      <div class="post-media">👨‍👨‍👦‍👦</div>
-
-      <div class="post-stats">
-        <span class="like-count">👍 ❤️ 1.2K</span>
-        <span class="comment-count">86 Comments · 32 Shares</span>
-      </div>
-
-      <div class="post-actions">
-        <button onclick="likePost(this)">👍 Like</button>
-        <button onclick="toggleComments(this)">💬 Comment</button>
-        <button onclick="sharePost()">↗ Share</button>
-      </div>
-
-      <div class="comments">
-        <div class="comment-input">
-          <input type="text" placeholder="Write a comment...">
-          <button onclick="addComment(this)">Send</button>
-        </div>
-
-        <div class="comment-list"></div>
-      </div>
-
-    </article>
-
-
-    <article class="post">
-
-      <div class="post-head">
-        <div class="avatar">Z</div>
-
-        <div class="post-user">
-          <strong>ZYRIVO Creator</strong>
-          <small>Sponsored · 🌎</small>
-        </div>
-
-        <button class="more" onclick="showToast('Post menu')">•••</button>
-      </div>
-
-      <div class="post-body">
-        <div class="post-text">
-          Welcome to the next generation of global creators. 🚀
-        </div>
-      </div>
-
-      <div class="post-media">▶️</div>
-
-      <div class="post-stats">
-        <span class="like-count">👍 ❤️ 5.8K</span>
-        <span class="comment-count">420 Comments · 180 Shares</span>
-      </div>
-
-      <div class="post-actions">
-        <button onclick="likePost(this)">👍 Like</button>
-        <button onclick="toggleComments(this)">💬 Comment</button>
-        <button onclick="sharePost()">↗ Share</button>
-      </div>
-
-      <div class="comments">
-
-        <div class="comment-input">
-          <input type="text" placeholder="Write a comment...">
-          <button onclick="addComment(this)">Send</button>
-        </div>
-
-        <div class="comment-list"></div>
-
-      </div>
-
-    </article>
-
-  </div>
-
-</section>
-
-
-<!-- SHORTS -->
-<section id="shorts" class="section">
-
-  <div class="page-title">
-    <h2>⚡ ZYRIVO Shorts</h2>
-    <p>Discover short videos from creators worldwide.</p>
-  </div>
-
-  <div class="short-card">
-
-    <div class="short-video">▶️</div>
-
-    <div class="short-info">
-      <b>ZYRIVO Creator</b>
-
-      <p style="margin-top:8px;">
-        Amazing short video 🔥
-        #ZYRIVO #Shorts
-      </p>
-
-      <div class="short-actions">
-        <button onclick="shortLike(this)">❤️ 25K</button>
-        <button onclick="showToast('Comments opened')">💬 1.8K</button>
-        <button onclick="sharePost()">↗ Share</button>
-      </div>
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- VIDEO -->
-<section id="video" class="section">
-
-  <div class="page-title">
-    <h2>🎬 ZYRIVO Video</h2>
-    <p>Long-form creator videos.</p>
-  </div>
-
-  <div class="video-card">
-
-    <div class="video-thumb">▶️</div>
-
-    <div class="video-info">
-      <h3>The future of global creators starts here</h3>
-      <p>2.8M Views · 3 days ago</p>
-
-      <div class="quick-actions" style="margin-top:12px;">
-        <button onclick="showToast('Liked')">👍 Like</button>
-        <button onclick="showToast('Comments opened')">💬 Comment</button>
-        <button onclick="sharePost()">↗ Share</button>
-      </div>
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- AI -->
-<section id="ai" class="section">
-
-  <div class="page-title">
-    <h2>✦ ZYRIVO AI</h2>
-    <p>Your intelligent creative assistant.</p>
-  </div>
-
-  <div class="ai-card">
-
-    <b style="font-size:20px;">ZYRIVO AI</b>
-
-    <textarea
-      id="aiInput"
-      class="ai-input"
-      placeholder="Ask anything or describe what you want..."
-    ></textarea>
-
-    <button class="primary" onclick="askAI()">
-      ✦ Generate Answer
-    </button>
-
-    <div id="aiResponse" class="ai-response"></div>
-
-  </div>
-
-
-  <div class="tool-grid">
-
-    <button class="tool" onclick="aiTool('Text → Image')">
-      <span>🖼️</span>
-      Text → Image
-    </button>
-
-    <button class="tool" onclick="aiTool('Text → Video')">
-      <span>🎥</span>
-      Text → Video
-    </button>
-
-    <button class="tool" onclick="aiTool('Text → Audio')">
-      <span>🗣️</span>
-      Text → Audio
-    </button>
-
-    <button class="tool" onclick="aiTool('Image → Video')">
-      <span>✨</span>
-      Image → Video
-    </button>
-
-    <button class="tool" onclick="aiTool('AI Music')">
-      <span>🎵</span>
-      AI Music
-    </button>
-
-    <button class="tool" onclick="aiTool('AI Writer')">
-      <span>✍️</span>
-      AI Writer
-    </button>
-
-  </div>
-
-</section>
-
-
-<!-- MESSAGES -->
-<section id="messages" class="section">
-
-  <div class="page-title">
-    <h2>💬 Messages</h2>
-    <p>Connect privately with people around the world.</p>
-  </div>
-
-  <div class="message-card" onclick="openChat('Alex Creator')">
-    <div class="avatar">A</div>
-
-    <div class="message-content">
-      <b>Alex Creator</b>
-      <p>Hey! Welcome to ZYRIVO 👋</p>
-      <small>2m</small>
-    </div>
-  </div>
-
-  <div class="message-card" onclick="openChat('Rima Das')">
-    <div class="avatar">R</div>
-
-    <div class="message-content">
-      <b>Rima Das</b>
-      <p>Sent a photo 📷</p>
-      <small>10m</small>
-    </div>
-  </div>
-
-  <div class="message-card" onclick="openChat('Misty Moni')">
-    <div class="avatar">M</div>
-
-    <div class="message-content">
-      <b>Misty Moni</b>
-      <p>See you soon!</p>
-      <small>1h</small>
-    </div>
-  </div>
-
-</section>
-
-
-<!-- MARKET -->
-<section id="market" class="section">
-
-  <div class="page-title">
-    <h2>🛍️ ZYRIVO Market</h2>
-    <p>Buy, sell and grow your creator business.</p>
-  </div>
-
-  <div class="market-card">
-
-    <div class="product-image">📦</div>
-
-    <div class="product-info">
-      <h3>Creator Digital Package</h3>
-      <p>Premium creator resources</p>
-      <div class="price">$9.99</div>
-
-      <button class="primary" onclick="showToast('Product page opened')">
-        View Product
-      </button>
-    </div>
-
-  </div>
-
-
-  <div class="market-card">
-
-    <div class="product-image">🛒</div>
-
-    <div class="product-info">
-      <h3>ZYRIVO Creator Store</h3>
-      <p>Sell your own products and services.</p>
-
-      <button
-        class="primary"
-        style="margin-top:12px;"
-        onclick="showToast('Creator Store opened')"
-      >
-        Open Store
-      </button>
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- PROFILE -->
-<section id="profile" class="section">
-
-  <div class="profile-card">
-
-    <div class="profile-cover"></div>
-
-    <div class="profile-main">
-
-      <div class="big-avatar">Z</div>
-
-      <h2>ZYRIVO Creator</h2>
-      <p>@zyrivo_creator</p>
-
-      <div class="profile-stats">
-
-        <div>
-          <strong>12.5K</strong>
-          <small>Followers</small>
-        </div>
-
-        <div>
-          <strong>284</strong>
-          <small>Following</small>
-        </div>
-
-        <div>
-          <strong>186</strong>
-          <small>Posts</small>
-        </div>
-
-      </div>
-
-      <button class="primary" onclick="showToast('Profile editor opened')">
-        Edit Profile
-      </button>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- SEARCH -->
-<section id="search" class="section">
-
-  <div class="page-title">
-    <h2>🔍 Search ZYRIVO</h2>
-    <p>Find people, posts, videos and creators.</p>
-  </div>
-
-  <div class="search-box">
-
-    <input
-      id="searchInput"
-      type="text"
-      placeholder="Search ZYRIVO..."
-      oninput="searchZYRIVO()"
-    >
-
-    <button class="icon-btn" onclick="searchZYRIVO()">🔍</button>
-
-  </div>
-
-  <div id="searchResults"></div>
-
-</section>
-
-</div>
-
-
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-
-  <div class="nav-inner">
-
-    <button class="nav-btn active" onclick="showSection('home',this)">
-      ⌂
-      <span>Home</span>
-    </button>
-
-    <button class="nav-btn" onclick="showSection('shorts',this)">
-      ⚡
-      <span>Shorts</span>
-    </button>
-
-    <button class="nav-btn" onclick="showSection('video',this)">
-      🎬
-      <span>Video</span>
-    </button>
-
-    <button class="nav-btn" onclick="showSection('ai',this)">
-      ✦
-      <span>AI</span>
-    </button>
-
-    <button class="nav-btn" onclick="showSection('market',this)">
-      🛍
-      <span>Market</span>
-    </button>
-
-    <button class="nav-btn" onclick="showSection('profile',this)">
-      ●
-      <span>Profile</span>
-    </button>
-
-  </div>
-
-</nav>
-
-
-<!-- POST MODAL -->
-<div id="postModal" class="modal">
-
-  <div class="modal-box">
-
-    <div class="modal-head">
-      <h2>Create Post</h2>
-
-      <button class="close" onclick="closeModal('postModal')">
-        ×
-      </button>
-    </div>
-
-    <textarea
-      id="postText"
-      rows="6"
-      placeholder="What's on your mind?"
-    ></textarea>
-
-    <button class="primary" onclick="createPost()">
-      Publish Post
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- VIDEO MODAL -->
-<div id="videoModal" class="modal">
-
-  <div class="modal-box">
-
-    <div class="modal-head">
-      <h2>🎬 Upload Video</h2>
-
-      <button class="close" onclick="closeModal('videoModal')">
-        ×
-      </button>
-    </div>
-
-    <p style="color:#64748b;margin-bottom:12px;">
-      Select a video from your phone.
-    </p>
-
-    <input
-      id="videoFile"
-      class="file-input"
-      type="file"
-      accept="video/*"
-      onchange="fileSelected(this,'video')"
-    >
-
-    <button class="primary" onclick="uploadDemo('video')">
-      Upload Video
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- SHORT MODAL -->
-<div id="shortModal" class="modal">
-
-  <div class="modal-box">
-
-    <div class="modal-head">
-      <h2>⚡ Create Short</h2>
-
-      <button class="close" onclick="closeModal('shortModal')">
-        ×
-      </button>
-    </div>
-
-    <p style="color:#64748b;margin-bottom:12px;">
-      Select a vertical short video.
-    </p>
-
-    <input
-      id="shortFile"
-      class="file-input"
-      type="file"
-      accept="video/*"
-      onchange="fileSelected(this,'short')"
-    >
-
-    <button class="primary" onclick="uploadDemo('short')">
-      Publish Short
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- STORY MODAL -->
-<div id="storyModal" class="modal">
-
-  <div class="modal-box">
-
-    <div class="modal-head">
-      <h2>📸 Create Story</h2>
-
-      <button class="close" onclick="closeModal('storyModal')">
-        ×
-      </button>
-    </div>
-
-    <input
-      id="storyFile"
-      class="file-input"
-      type="file"
-      accept="image/*,video/*"
-      onchange="fileSelected(this,'story')"
-    >
-
-    <button class="primary" onclick="uploadDemo('story')">
-      Publish Story
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- CHAT MODAL -->
-<div id="chatModal" class="modal">
-
-  <div class="modal-box">
-
-    <div class="modal-head">
-
-      <h2 id="chatTitle">Message</h2>
-
-      <button class="close" onclick="closeModal('chatModal')">
-        ×
-      </button>
-
-    </div>
-
-    <div
-      id="chatMessages"
-      style="min-height:180px;background:#f8fafc;border-radius:14px;padding:12px;margin-bottom:12px;"
-    >
-      <div class="comment">
-        Welcome to ZYRIVO+ 👋
-      </div>
-    </div>
-
-    <div class="comment-input">
-
-      <input
-        id="chatInput"
-        type="text"
-        placeholder="Write a message..."
-      >
-
-      <button onclick="sendChat()">Send</button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<div id="toast" class="toast"></div>
-
-
-<script>
-"use strict";
-
-/* ================================
-   ZYRIVO+ FRONTEND ENGINE
-================================ */
-
-let toastTimer = null;
-
-
-/* SECTION NAVIGATION */
-function showSection(id,button){
-
-  document.querySelectorAll(".section")
-    .forEach(section=>{
-      section.classList.remove("active");
-    });
-
-  const target=document.getElementById(id);
-
-  if(target){
-    target.classList.add("active");
-  }
-
-  document.querySelectorAll(".nav-btn")
-    .forEach(btn=>{
-      btn.classList.remove("active");
-    });
-
-  if(button){
-    button.classList.add("active");
-  }
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-}
-
-
-/* MODALS */
-function openModal(id){
-
-  const modal=document.getElementById(id);
-
-  if(modal){
-    modal.classList.add("show");
-  }
-}
-
-
-function closeModal(id){
-
-  const modal=document.getElementById(id);
-
-  if(modal){
-    modal.classList.remove("show");
-  }
-}
-
-
-/* CLOSE MODAL WHEN CLICKING OUTSIDE */
-document.querySelectorAll(".modal").forEach(modal=>{
-
-  modal.addEventListener("click",function(e){
-
-    if(e.target===modal){
-      modal.classList.remove("show");
-    }
-
-  });
-
-});
-
-
-/* TOAST */
-function showToast(message){
-
-  const toast=document.getElementById("toast");
-
-  toast.textContent=message;
-  toast.classList.add("show");
-
-  clearTimeout(toastTimer);
-
-  toastTimer=setTimeout(()=>{
-    toast.classList.remove("show");
-  },2200);
-}
-
-
-/* LIKE */
-function likePost(button){
-
-  const post=button.closest(".post");
-
-  if(!post){
-    return;
-  }
-
-  const count=post.querySelector(".like-count");
-
-  if(button.classList.contains("liked")){
-
-    button.classList.remove("liked");
-    button.innerHTML="👍 Like";
-
-    if(count){
-      count.textContent="👍 ❤️ 1.2K";
-    }
-
-    showToast("Like removed");
-
-  }else{
-
-    button.classList.add("liked");
-    button.innerHTML="❤️ Liked";
-
-    if(count){
-      count.textContent="❤️ 1.2K";
-    }
-
-    showToast("Post liked ❤️");
-  }
-}
-
-
-/* COMMENTS */
-function toggleComments(button){
-
-  const post=button.closest(".post");
-
-  if(!post){
-    return;
-  }
-
-  const comments=post.querySelector(".comments");
-
-  if(comments){
-    comments.classList.toggle("show");
-  }
-}
-
-
-function addComment(button){
-
-  const box=button.closest(".comments");
-
-  if(!box){
-    return;
-  }
-
-  const input=box.querySelector("input");
-  const list=box.querySelector(".comment-list");
-
-  const text=input.value.trim();
-
-  if(!text){
-    showToast("Write something first");
-    return;
-  }
-
-  const comment=document.createElement("div");
-
-  comment.className="comment";
-
-  comment.textContent="You: "+text;
-
-  list.appendChild(comment);
-
-  input.value="";
-
-  showToast("Comment added");
-
-}
-
-
-/* SHARE */
-function sharePost(){
-
-  const shareData={
-    title:"ZYRIVO+",
-    text:"Check this post on ZYRIVO+",
-    url:window.location.href
-  };
-
-  if(navigator.share){
-
-    navigator.share(shareData)
-      .then(()=>{
-        showToast("Shared successfully");
-      })
-      .catch(()=>{
-        showToast("Share cancelled");
-      });
-
-  }else{
-
-    if(navigator.clipboard){
-
-      navigator.clipboard.writeText(window.location.href)
-        .then(()=>{
-          showToast("Link copied");
-        })
-        .catch(()=>{
-          showToast("Share link ready");
-        });
-
-    }else{
-
-      showToast("Share link: "+window.location.href);
-
-    }
-
-  }
-}
-
-
-/* CREATE POST */
-function createPost(){
-
-  const input=document.getElementById("postText");
-
-  const text=input.value.trim();
-
-  if(!text){
-
-    showToast("Please write something first");
-
-    return;
-  }
-
-  const feed=document.getElementById("feed");
-
-  const post=document.createElement("article");
-
-  post.className="post";
-
-  post.innerHTML=`
-
-    <div class="post-head">
-
-      <div class="avatar">Z</div>
-
-      <div class="post-user">
-        <strong>ZYRIVO Creator</strong>
-        <small>Just now · 🌎</small>
-      </div>
-
-      <button class="more" onclick="showToast('Post menu')">
-        •••
-      </button>
-
-    </div>
-
-    <div class="post-body">
-      <div class="post-text"></div>
-    </div>
-
-    <div class="post-stats">
-      <span class="like-count">👍 0</span>
-      <span class="comment-count">0 Comments · 0 Shares</span>
-    </div>
-
-    <div class="post-actions">
-
-      <button onclick="likePost(this)">
-        👍 Like
-      </button>
-
-      <button onclick="toggleComments(this)">
-        💬 Comment
-      </button>
-
-      <button onclick="sharePost()">
-        ↗ Share
-      </button>
-
-    </div>
-
-    <div class="comments">
-
-      <div class="comment-input">
-
-        <input
-          type="text"
-          placeholder="Write a comment..."
-        >
-
-        <button onclick="addComment(this)">
-          Send
-        </button>
-
-      </div>
-
-      <div class="comment-list"></div>
-
-    </div>
-  `;
-
-  post.querySelector(".post-text").textContent=text;
-
-  feed.prepend(post);
-
-  input.value="";
-
-  closeModal("postModal");
-
-  showToast("Post published on this device");
-
-}
-
-
-/* SHORT LIKE */
-function shortLike(button){
-
-  button.dataset.liked=
-    button.dataset.liked==="true"
-      ?"false"
-      :"true";
-
-  if(button.dataset.liked==="true"){
-
-    button.innerHTML="❤️ Liked";
-
-  }else{
-
-    button.innerHTML="❤️ 25K";
-
-  }
-}
-
-
-/* FILE SELECTION */
-function fileSelected(input,type){
-
-  if(input.files && input.files.length){
-
-    showToast(
-      type+" selected: "+input.files[0].name
-    );
-
-  }
-}
-
-
-/* UPLOAD DEMO */
-function uploadDemo(type){
-
-  let id="";
-
-  if(type==="video"){
-    id="videoFile";
-  }
-
-  if(type==="short"){
-    id="shortFile";
-  }
-
-  if(type==="story"){
-    id="storyFile";
-  }
-
-  const input=document.getElementById(id);
-
-  if(!input || !input.files.length){
-
-    showToast("Please select a file first");
-
-    return;
-  }
-
-  /*
-    IMPORTANT:
-    এখানে file এখনো server-এ upload হচ্ছে না।
-    Backend/Storage যুক্ত হলে এই জায়গায় real upload হবে।
-  */
-
-  showToast(
-    type.charAt(0).toUpperCase()+type.slice(1)
-    +" selected successfully"
-  );
-
-  closeModal(type==="video"
-    ?"videoModal"
-    :type==="short"
-      ?"shortModal"
-      :"storyModal"
-  );
-}
-
-
-/* AI DEMO */
-function askAI(){
-
-  const input=document.getElementById("aiInput");
-  const response=document.getElementById("aiResponse");
-
-  const question=input.value.trim();
-
-  if(!question){
-
-    showToast("Ask ZYRIVO AI something first");
-
-    return;
-  }
-
-  response.style.display="block";
-
-  response.innerHTML=`
-    <b>ZYRIVO AI</b>
-    <br><br>
-    I received your request:
-    <br><br>
-    “${escapeHTML(question)}”
-    <br><br>
-    AI engine connection will be added in the backend phase.
-  `;
-
-}
-
-
-function aiTool(tool){
-
-  showToast(
-    tool+" selected — AI API connection comes next"
-  );
-
-}
-
-
-/* CHAT */
-let activeChat="";
-
-
-function openChat(name){
-
-  activeChat=name;
-
-  document.getElementById("chatTitle")
-    .textContent="💬 "+name;
-
-  document.getElementById("chatMessages")
-    .innerHTML=`
-      <div class="comment">
-        Chat with ${escapeHTML(name)}
-      </div>
-    `;
-
-  openModal("chatModal");
-
-}
-
-
-function sendChat(){
-
-  const input=document.getElementById("chatInput");
-
-  const text=input.value.trim();
-
-  if(!text){
-
-    showToast("Write a message");
-
-    return;
-  }
-
-  const box=document.getElementById("chatMessages");
-
-  const message=document.createElement("div");
-
-  message.className="comment";
-
-  message.textContent="You: "+text;
-
-  box.appendChild(message);
-
-  input.value="";
-
-}
-
-
-/* SEARCH */
-function searchZYRIVO(){
-
-  const input=document.getElementById("searchInput");
-
-  const results=document.getElementById("searchResults");
-
-  const query=input.value.trim().toLowerCase();
-
-  results.innerHTML="";
-
-  if(!query){
-
-    return;
-  }
-
-  const data=[
-    ["ZYRIVO Creator","Creator profile"],
-    ["Nur Islam","Creator profile"],
-    ["Rima Das","Creator profile"],
-    ["ZYRIVO Shorts","Short videos"],
-    ["ZYRIVO Video","Long videos"],
-    ["ZYRIVO Market","Marketplace"]
-  ];
-
-  const matches=data.filter(item=>
-    item[0].toLowerCase().includes(query)
-  );
-
-  if(!matches.length){
-
-    results.innerHTML=`
-      <div class="search-result">
-        No results found.
-      </div>
-    `;
-
-    return;
-  }
-
-  matches.forEach(item=>{
-
-    const div=document.createElement("div");
-
-    div.className="search-result";
-
-    div.innerHTML=`
-      <b>${escapeHTML(item[0])}</b>
-      <br>
-      <small>${escapeHTML(item[1])}</small>
-    `;
-
-    results.appendChild(div);
-
-  });
-
-}
-
-
-/* HTML SAFETY */
-function escapeHTML(value){
-
-  return String(value)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-}
-
-
-/* ESC KEY */
-document.addEventListener("keydown",function(e){
-
-  if(e.key==="Escape"){
-
-    document.querySelectorAll(".modal.show")
-      .forEach(modal=>{
-        modal.classList.remove("show");
-      });
-
-  }
-
-});
-
-
-/* ENTER TO SEND CHAT */
-document.getElementById("chatInput")
-  .addEventListener("keydown",function(e){
-
-    if(e.key==="Enter"){
-
-      e.preventDefault();
-
-      sendChat();
-
-    }
-
-  });
-
-
-/* START */
-console.log("ZYRIVO+ frontend engine loaded successfully.");
-
-</script><!-- SUPABASE -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-const SUPABASE_URL = "https://crtvemwgsxaicvqzxcuq.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_CY0qxVJPMOcbRjNDNDUluw_e91Tiiar";
-
-const supabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
-
-console.log("ZYRIVO Supabase connected");
-</script>
-<!-- ============================= -->
-<!-- ZYRIVO LIVE SYSTEM V1 -->
-<!-- ============================= -->
-
-<style>
-#zyrivoLiveButton{
-  position:fixed;
-  right:16px;
-  bottom:92px;
-  z-index:9998;
-  border:0;
-  border-radius:999px;
-  padding:13px 18px;
-  background:#ef4444;
-  color:#fff;
-  font-weight:700;
-  font-size:14px;
-  box-shadow:0 8px 25px rgba(0,0,0,.22);
-}
-
-#zyrivoLivePanel{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:9999;
-  background:rgba(0,0,0,.72);
-  padding:18px;
-  overflow:auto;
-}
-
-.zyrivoLiveBox{
-  max-width:520px;
-  margin:40px auto;
-  background:#fff;
-  border-radius:22px;
-  padding:18px;
-}
-
-.zyrivoLiveBox h2{
-  margin-bottom:14px;
-}
-
-#zyrivoLiveTitle,
-#zyrivoLiveDescription{
-  width:100%;
-  border:1px solid #e2e8f0;
-  border-radius:12px;
-  padding:12px;
-  margin-bottom:10px;
-  font-size:15px;
-}
-
-#zyrivoLiveVideo{
-  width:100%;
-  background:#000;
-  border-radius:16px;
-  margin:12px 0;
-  max-height:55vh;
-}
-
-.zyrivoLiveActions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-.zyrivoLiveActions button{
-  border:0;
-  border-radius:12px;
-  padding:11px 14px;
-  font-weight:700;
-}
-
-#zyrivoStartLive{
-  background:#ef4444;
-  color:#fff;
-}
-
-#zyrivoEndLive{
-  background:#111827;
-  color:#fff;
-  display:none;
-}
-
-#zyrivoCloseLive{
-  background:#e5e7eb;
-  color:#111827;
-}
-
-#zyrivoLiveStatus{
-  margin-top:10px;
-  font-size:14px;
-  color:#64748b;
-}
-
-.zyrivoLiveViewer{
-  margin-top:8px;
-  font-size:14px;
-  font-weight:600;
-}
-</style>
-
-<button id="zyrivoLiveButton" type="button">
-  🔴 Go Live
-</button>
-
-<div id="zyrivoLivePanel">
-
-  <div class="zyrivoLiveBox">
-
-    <h2>🔴 ZYRIVO Live</h2>
-
-    <input
-      id="zyrivoLiveTitle"
-      type="text"
-      maxlength="120"
-      placeholder="Live title"
-    >
-
-    <textarea
-      id="zyrivoLiveDescription"
-      rows="3"
-      maxlength="500"
-      placeholder="Description"
-    ></textarea>
-
-    <video
-      id="zyrivoLiveVideo"
-      autoplay
-      muted
-      playsinline
-    ></video>
-
-    <div class="zyrivoLiveActions">
-
-      <button
-        id="zyrivoStartLive"
-        type="button"
-      >
-        🔴 Start Live
-      </button>
-
-      <button
-        id="zyrivoEndLive"
-        type="button"
-      >
-        ⏹ End Live
-      </button>
-
-      <button
-        id="zyrivoCloseLive"
-        type="button"
-      >
-        Close
-      </button>
-
-    </div>
-
-    <div id="zyrivoLiveStatus">
-      Ready to start.
-    </div>
-
-    <div class="zyrivoLiveViewer">
-      👀 Viewers: <span id="zyrivoViewerCount">0</span>
-    </div>
-
-  </div>
-
-</div>
-
-<script>
-(function(){
-
-  let zyrivoLiveStream = null;
-  let zyrivoLiveId = null;
-
-  const liveButton =
-    document.getElementById("zyrivoLiveButton");
-
-  const livePanel =
-    document.getElementById("zyrivoLivePanel");
-
-  const startButton =
-    document.getElementById("zyrivoStartLive");
-
-  const endButton =
-    document.getElementById("zyrivoEndLive");
-
-  const closeButton =
-    document.getElementById("zyrivoCloseLive");
-
-  const video =
-    document.getElementById("zyrivoLiveVideo");
-
-  const titleInput =
-    document.getElementById("zyrivoLiveTitle");
-
-  const descriptionInput =
-    document.getElementById("zyrivoLiveDescription");
-
-  const statusText =
-    document.getElementById("zyrivoLiveStatus");
-
-  const viewerCount =
-    document.getElementById("zyrivoViewerCount");
-
-
-  function setLiveStatus(message){
-    statusText.textContent = message;
-  }
-
-
-  liveButton.addEventListener("click", function(){
-
-    livePanel.style.display = "block";
-
-  });
-
-
-  closeButton.addEventListener("click", function(){
-
-    if(zyrivoLiveStream){
-      setLiveStatus(
-        "Live camera is still active. End Live first."
-      );
-      return;
-    }
-
-    livePanel.style.display = "none";
-
-  });
-
-
-  startButton.addEventListener("click", async function(){
-
-    try{
-
-      if(!window.supabase){
-
-        setLiveStatus(
-          "Supabase is not available."
-        );
-
-        return;
-      }
-
-
-      const {
-        data: { user },
-        error: userError
-      } = await supabase.auth.getUser();
-
-
-      if(userError){
-
-        console.error(userError);
-
-      }
-
-
-      if(!user){
-
-        setLiveStatus(
-          "Please login to start a live stream."
-        );
-
-        alert(
-          "Please login to ZYRIVO first."
-        );
-
-        return;
-      }
-
-
-      const title =
-        titleInput.value.trim() ||
-        "ZYRIVO Live";
-
-
-      const description =
-        descriptionInput.value.trim();
-
-
-      setLiveStatus(
-        "Requesting camera and microphone permission..."
-      );
-
-
-      zyrivoLiveStream =
-        await navigator.mediaDevices.getUserMedia({
-
-          video:{
-            facingMode:"user",
-            width:{
-              ideal:1280
-            },
-            height:{
-              ideal:720
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialHub - Live Social Network</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        fbBlue: '#1877F2',
+                        fbBg: '#F0F2F5',
+                        fbDarkBg: '#18191A',
+                        fbDarkCard: '#242526',
+                        fbDarkHover: '#3A3B3C'
+                    }
+                }
             }
-          },
-
-          audio:true
-
-        });
-
-
-      video.srcObject =
-        zyrivoLiveStream;
-
-
-      setLiveStatus(
-        "Creating live session..."
-      );
-
-
-      const {
-        data,
-        error
-      } = await supabase
-        .from("live_streams")
-        .insert({
-
-          host_id:user.id,
-
-          title:title,
-
-          description:
-            description || null,
-
-          status:"live",
-
-          stream_status:"live",
-
-          viewer_count:0,
-
-          started_at:
-            new Date().toISOString()
-
-        })
-        .select()
-        .single();
-
-
-      if(error){
-
-        console.error(error);
-
-        zyrivoLiveStream
-          .getTracks()
-          .forEach(track => track.stop());
-
-        zyrivoLiveStream = null;
-
-        video.srcObject = null;
-
-        setLiveStatus(
-          "Could not create the live session: " +
-          error.message
-        );
-
-        return;
-      }
-
-
-      zyrivoLiveId =
-        data.id;
-
-
-      startButton.style.display =
-        "none";
-
-      endButton.style.display =
-        "inline-block";
-
-
-      titleInput.disabled =
-        true;
-
-      descriptionInput.disabled =
-        true;
-
-
-      setLiveStatus(
-        "🔴 LIVE — camera and microphone are active."
-      );
-
-
-      viewerCount.textContent =
-        data.viewer_count || 0;
-
-
-      console.log(
-        "ZYRIVO Live created:",
-        zyrivoLiveId
-      );
-
-
-    }catch(error){
-
-      console.error(error);
-
-      setLiveStatus(
-        "Camera/microphone error: " +
-        error.message
-      );
-
-    }
-
-  });
-
-
-  endButton.addEventListener("click", async function(){
-
-    try{
-
-      if(!zyrivoLiveId){
-
-        return;
-      }
-
-
-      setLiveStatus(
-        "Ending live stream..."
-      );
-
-
-      const {
-        error
-      } = await supabase
-        .from("live_streams")
-        .update({
-
-          status:"ended",
-
-          stream_status:"ended",
-
-          ended_at:
-            new Date().toISOString()
-
-        })
-        .eq("id", zyrivoLiveId);
-
-
-      if(error){
-
-        console.error(error);
-
-        setLiveStatus(
-          "Could not end live: " +
-          error.message
-        );
-
-        return;
-      }
-
-
-      if(zyrivoLiveStream){
-
-        zyrivoLiveStream
-          .getTracks()
-          .forEach(track => track.stop());
-
-      }
-
-
-      zyrivoLiveStream =
-        null;
-
-      video.srcObject =
-        null;
-
-
-      startButton.style.display =
-        "inline-block";
-
-      endButton.style.display =
-        "none";
-
-
-      titleInput.disabled =
-        false;
-
-      descriptionInput.disabled =
-        false;
-
-
-      setLiveStatus(
-        "Live ended successfully."
-      );
-
-
-      console.log(
-        "ZYRIVO Live ended:",
-        zyrivoLiveId
-      );
-
-
-      zyrivoLiveId =
-        null;
-
-
-    }catch(error){
-
-      console.error(error);
-
-      setLiveStatus(
-        "Error ending live."
-      );
-
-    }
-
-  });
-
-
-  window.addEventListener(
-    "beforeunload",
-    function(){
-
-      if(zyrivoLiveStream){
-
-        zyrivoLiveStream
-          .getTracks()
-          .forEach(track => track.stop());
-
-      }
-
-    }
-  );
-
-
-})();
-</script>
-
-<!-- ============================= -->
-<!-- END ZYRIVO LIVE SYSTEM V1 -->
-<!-- ============================= -->
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 10px;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #475569;
+        }
+    </style>
+</head>
+<body class="bg-fbBg dark:bg-fbDarkBg text-gray-900 dark:text-gray-100 min-h-screen font-sans transition-colors duration-200">
+
+    <!-- ================= NAVBAR ================= -->
+    <header class="sticky top-0 z-40 bg-white dark:bg-fbDarkCard shadow-sm px-4 py-2 flex items-center justify-between">
+        <!-- Left: Logo & Search -->
+        <div class="flex items-center space-x-3">
+            <h1 class="text-fbBlue font-extrabold text-2xl tracking-wider cursor-pointer flex items-center gap-1">
+                <i class="fa-brands fa-facebook text-3xl"></i> SocialHub
+            </h1>
+            <div class="relative hidden sm:block">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400"></i>
+                <input type="text" id="searchInput" onkeyup="filterPosts()" placeholder="SocialHub এ খুঁজুন..." 
+                       class="bg-gray-100 dark:bg-fbDarkHover pl-9 pr-4 py-2 rounded-full text-sm focus:outline-none w-48 focus:w-64 transition-all">
+            </div>
+        </div>
+
+        <!-- Center: Navigation Icons -->
+        <nav class="hidden md:flex items-center space-x-1 lg:space-x-4">
+            <button class="text-fbBlue border-b-4 border-fbBlue py-2 px-6 text-xl">
+                <i class="fa-solid fa-house"></i>
+            </button>
+            <button class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-fbDarkHover rounded-lg py-2 px-6 text-xl">
+                <i class="fa-solid fa-user-group"></i>
+            </button>
+            <button class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-fbDarkHover rounded-lg py-2 px-6 text-xl">
+                <i class="fa-solid fa-tv"></i>
+            </button>
+            <button class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-fbDarkHover rounded-lg py-2 px-6 text-xl">
+                <i class="fa-solid fa-[#1877F2] fa-store"></i>
+            </button>
+        </nav>
+
+        <!-- Right: Controls & Profile -->
+        <div class="flex items-center space-x-2">
+            <!-- Dark Mode Toggle -->
+            <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-full bg-gray-200 dark:bg-fbDarkHover flex items-center justify-center text-gray-700 dark:text-yellow-400 hover:opacity-90">
+                <i id="themeIcon" class="fa-solid fa-moon"></i>
+            </button>
+            <!-- Messenger Icon -->
+            <button onclick="toggleChatWindow('রহিম আহমেদ')" class="w-10 h-10 rounded-full bg-gray-200 dark:bg-fbDarkHover flex items-center justify-center text-gray-700 dark:text-gray-200 hover:opacity-90 relative">
+                <i class="fa-brands fa-facebook-messenger"></i>
+                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">3</span>
+            </button>
+            <!-- Notifications -->
+            <button onclick="alert('আপনার কোনো নতুন নোটিফিকেশন নেই।')" class="w-10 h-10 rounded-full bg-gray-200 dark:bg-fbDarkHover flex items-center justify-center text-gray-700 dark:text-gray-200 hover:opacity-90">
+                <i class="fa-solid fa-bell"></i>
+            </button>
+            <!-- Profile Avatar Button -->
+            <div onclick="openProfileModal()" class="flex items-center space-x-2 cursor-pointer p-1 rounded-full hover:bg-gray-100 dark:hover:bg-fbDarkHover">
+                <img id="navUserAvatar" src="https://i.pravatar.cc/150?img=68" alt="User Avatar" class="w-9 h-9 rounded-full object-cover border border-fbBlue">
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= MAIN CONTAINER ================= -->
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 p-4">
+
+        <!-- ================= LEFT SIDEBAR ================= -->
+        <aside class="hidden md:block col-span-1 space-y-2">
+            <div onclick="openProfileModal()" class="flex items-center space-x-3 p-2 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover cursor-pointer">
+                <img id="sidebarUserAvatar" src="https://i.pravatar.cc/150?img=68" class="w-10 h-10 rounded-full object-cover">
+                <div>
+                    <h2 id="sidebarUserName" class="font-bold text-sm">সাকিব হাসান</h2>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">প্রোফাইল দেখুন</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover cursor-pointer text-fbBlue">
+                <i class="fa-solid fa-user-group text-xl w-6"></i>
+                <span class="font-medium text-gray-800 dark:text-gray-200 text-sm">বন্ধুরা (Friends)</span>
+            </div>
+            <div class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover cursor-pointer text-purple-600">
+                <i class="fa-solid fa-bookmark text-xl w-6"></i>
+                <span class="font-medium text-gray-800 dark:text-gray-200 text-sm">সংরক্ষিত (Saved)</span>
+            </div>
+            <div class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover cursor-pointer text-green-500">
+                <i class="fa-solid fa-users text-xl w-6"></i>
+                <span class="font-medium text-gray-800 dark:text-gray-200 text-sm">গ্রুপ (Groups)</span>
+            </div>
+            <div class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover cursor-pointer text-red-500">
+                <i class="fa-solid fa-clock-rotate-left text-xl w-6"></i>
+                <span class="font-medium text-gray-800 dark:text-gray-200 text-sm">স্মৃতি (Memories)</span>
+            </div>
+            <hr class="my-2 border-gray-300 dark:border-gray-700">
+            <button onclick="resetAppData()" class="w-full text-left flex items-center space-x-3 p-3 rounded-xl hover:bg-red-100 text-red-600 transition">
+                <i class="fa-solid fa-trash-can text-xl w-6"></i>
+                <span class="font-medium text-sm">অ্যাপ ডাটা রিসেট করুন</span>
+            </button>
+        </aside>
+
+        <!-- ================= CENTER FEED ================= -->
+        <main class="col-span-1 md:col-span-2 space-y-4">
+
+            <!-- Stories Container -->
+            <div class="flex space-x-2 overflow-x-auto custom-scrollbar pb-2">
+                <!-- Add Story Card -->
+                <div onclick="addStory()" class="relative min-w-[110px] h-40 rounded-xl bg-white dark:bg-fbDarkCard shadow cursor-pointer overflow-hidden group flex-shrink-0">
+                    <img id="storyUserAvatar" src="https://i.pravatar.cc/150?img=68" class="h-28 w-full object-cover group-hover:scale-105 transition">
+                    <div class="absolute bottom-0 inset-x-0 h-12 bg-white dark:bg-fbDarkCard flex flex-col items-center justify-end pb-1">
+                        <div class="w-7 h-7 bg-fbBlue text-white rounded-full flex items-center justify-center -top-3 absolute border-2 border-white dark:border-fbDarkCard">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                        </div>
+                        <span class="text-xs font-semibold">স্টোরি দিন</span>
+                    </div>
+                </div>
+                <!-- Dynamic Stories Holder -->
+                <div id="storiesList" class="flex space-x-2"></div>
+            </div>
+
+            <!-- Create Post Box -->
+            <div class="bg-white dark:bg-fbDarkCard p-4 rounded-xl shadow space-y-3">
+                <div class="flex items-center space-x-3">
+                    <img id="createPostUserAvatar" src="https://i.pravatar.cc/150?img=68" class="w-10 h-10 rounded-full object-cover">
+                    <input type="text" id="postInput" placeholder="আপনার মনে কি আছে?" 
+                           class="w-full bg-fbBg dark:bg-fbDarkHover rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-fbBlue">
+                </div>
+                <!-- Image Preview Area -->
+                <div id="imagePreviewContainer" class="hidden relative">
+                    <img id="imagePreview" class="w-full max-h-60 object-cover rounded-lg border">
+                    <button onclick="removeImagePreview()" class="absolute top-2 right-2 bg-gray-800 bg-opacity-70 text-white rounded-full w-7 h-7 flex items-center justify-center">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <hr class="border-gray-200 dark:border-gray-700">
+                <div class="flex justify-between items-center text-gray-500 dark:text-gray-400 text-sm">
+                    <label class="flex items-center space-x-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-fbDarkHover p-2 rounded-lg flex-1 justify-center">
+                        <i class="fa-solid fa-images text-green-500 text-lg"></i>
+                        <span class="font-medium text-xs sm:text-sm">ছবি/ভিডিও</span>
+                        <input type="file" id="postImageInput" accept="image/*" class="hidden" onchange="previewSelectedImage(event)">
+                    </label>
+                    <button onclick="triggerEmoji()" class="flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-fbDarkHover p-2 rounded-lg flex-1 justify-center">
+                        <i class="fa-solid fa-face-smile text-yellow-500 text-lg"></i>
+                        <span class="font-medium text-xs sm:text-sm">অনুভূতি</span>
+                    </button>
+                    <button onclick="createNewPost()" class="bg-fbBlue text-white font-semibold px-5 py-1.5 rounded-lg hover:bg-blue-600 transition text-sm">
+                        পোস্ট করুন
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dynamic Feed Posts Holder -->
+            <div id="feedPosts" class="space-y-4"></div>
+
+        </main>
+
+        <!-- ================= RIGHT SIDEBAR (Online Friends) ================= -->
+        <aside class="hidden md:block col-span-1 space-y-4">
+            <div class="bg-white dark:bg-fbDarkCard p-3 rounded-xl shadow">
+                <h3 class="font-bold text-gray-500 dark:text-gray-400 text-sm mb-3">অনলাইন বন্ধুরা (Contacts)</h3>
+                <div class="space-y-2">
+                    <div onclick="toggleChatWindow('রহিম আহমেদ')" class="flex items-center space-x-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-fbDarkHover cursor-pointer">
+                        <div class="relative">
+                            <img src="https://i.pravatar.cc/150?img=12" class="w-9 h-9 rounded-full">
+                            <span class="w-3 h-3 bg-green-500 border-2 border-white dark:border-fbDarkCard rounded-full absolute bottom-0 right-0"></span>
+                        </div>
+                        <span class="font-medium text-sm">রহিম আহমেদ</span>
+                    </div>
+                    <div onclick="toggleChatWindow('সুমি আক্তার')" class="flex items-center space-x-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-fbDarkHover cursor-pointer">
+                        <div class="relative">
+                            <img src="https://i.pravatar.cc/150?img=47" class="w-9 h-9 rounded-full">
+                            <span class="w-3 h-3 bg-green-500 border-2 border-white dark:border-fbDarkCard rounded-full absolute bottom-0 right-0"></span>
+                        </div>
+                        <span class="font-medium text-sm">সুমি আক্তার</span>
+                    </div>
+                    <div onclick="toggleChatWindow('তানভীর ইসলাম')" class="flex items-center space-x-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-fbDarkHover cursor-pointer">
+                        <div class="relative">
+                            <img src="https://i.pravatar.cc/150?img=33" class="w-9 h-9 rounded-full">
+                            <span class="w-3 h-3 bg-green-500 border-2 border-white dark:border-fbDarkCard rounded-full absolute bottom-0 right-0"></span>
+                        </div>
+                        <span class="font-medium text-sm">তানভীর ইসলাম</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- ================= FLOATING MESSENGER CHAT BOX ================= -->
+    <div id="chatBox" class="fixed bottom-0 right-4 w-72 bg-white dark:bg-fbDarkCard rounded-t-xl shadow-2xl border border-gray-200 dark:border-gray-700 hidden z-50">
+        <div class="bg-fbBlue text-white px-3 py-2 rounded-t-xl flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <span id="chatFriendName" class="font-bold text-sm">রহিম আহমেদ</span>
+            </div>
+            <button onclick="closeChatWindow()" class="hover:text-gray-200"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="chatMessages" class="h-60 p-3 overflow-y-auto space-y-2 text-xs custom-scrollbar">
+            <div class="bg-gray-100 dark:bg-fbDarkHover p-2 rounded-lg max-w-[80%] text-gray-800 dark:text-gray-200">
+                হ্যালো! কেমন আছেন?
+            </div>
+        </div>
+        <div class="p-2 border-t border-gray-200 dark:border-gray-700 flex items-center space-x-2">
+            <input type="text" id="chatInput" placeholder="মেসেজ লিখুন..." onkeypress="handleChatKeyPress(event)"
+                   class="w-full bg-fbBg dark:bg-fbDarkHover rounded-full px-3 py-1.5 text-xs focus:outline-none">
+            <button onclick="sendChatMessage()" class="text-fbBlue p-1"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- ================= PROFILE EDIT MODAL ================= -->
+    <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-fbDarkCard rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4">
+            <div class="flex justify-between items-center border-b pb-3 dark:border-gray-700">
+                <h3 class="font-bold text-lg">প্রোফাইল এডিট করুন</h3>
+                <button onclick="closeProfileModal()" class="text-gray-500 hover:text-black dark:hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold mb-1">আপনার নাম</label>
+                    <input type="text" id="editUserName" class="w-full border dark:border-gray-700 dark:bg-fbDarkHover rounded-lg px-3 py-2 text-sm focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold mb-1">প্রোফাইল পিকচার ইউআরএল (Image URL)</label>
+                    <input type="text" id="editUserAvatar" class="w-full border dark:border-gray-700 dark:bg-fbDarkHover rounded-lg px-3 py-2 text-sm focus:outline-none">
+                </div>
+            </div>
+            <div class="flex justify-end space-x-2 pt-2">
+                <button onclick="closeProfileModal()" class="px-4 py-2 bg-gray-200 dark:bg-fbDarkHover rounded-lg text-sm font-semibold">বাতিল</button>
+                <button onclick="saveUserProfile()" class="px-4 py-2 bg-fbBlue text-white rounded-lg text-sm font-semibold hover:bg-blue-600">সেভ করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script>
+        // Default State & LocalStorage Management
+        let currentUser = JSON.parse(localStorage.getItem('socialhub_user')) || {
+            name: 'সাকিব হাসান',
+            avatar: 'https://i.pravatar.cc/150?img=68'
+        };
+
+        let posts = JSON.parse(localStorage.getItem('socialhub_posts')) || [
+            {
+                id: 1,
+                author: 'তানভীর ইসলাম',
+                avatar: 'https://i.pravatar.cc/150?img=33',
+                time: '২ ঘণ্টা আগে',
+                content: 'আজকের আবহাওয়া অসাধারণ! নতুন অ্যাপস প্রজেক্টের কাজ শেষ করলাম। 🚀🔥',
+                image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600',
+                likes: 12,
+                liked: false,
+                comments: [
+                    { author: 'সুমি আক্তার', text: 'অনেক শুভকামনা ভাইয়া!' }
+                ]
+            }
+        ];
+
+        let stories = JSON.parse(localStorage.getItem('socialhub_stories')) || [
+            { id: 1, name: 'সুমি আক্তার', img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300' },
+            { id: 2, name: 'রহিম আহমেদ', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300' }
+        ];
+
+        let selectedPostImageBase64 = null;
+
+        // Save State to LocalStorage
+        function saveData() {
+            localStorage.setItem('socialhub_user', JSON.stringify(currentUser));
+            localStorage.setItem('socialhub_posts', JSON.stringify(posts));
+            localStorage.setItem('socialhub_stories', JSON.stringify(stories));
+        }
+
+        // Initialize UI
+        function initApp() {
+            updateUserUI();
+            renderStories();
+            renderPosts();
+
+            // Dark Mode check
+            if (localStorage.getItem('socialhub_theme') === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('themeIcon').classList.replace('fa-moon', 'fa-sun');
+            }
+        }
+
+        function updateUserUI() {
+            document.getElementById('navUserAvatar').src = currentUser.avatar;
+            document.getElementById('sidebarUserAvatar').src = currentUser.avatar;
+            document.getElementById('createPostUserAvatar').src = currentUser.avatar;
+            document.getElementById('storyUserAvatar').src = currentUser.avatar;
+            document.getElementById('sidebarUserName').innerText = currentUser.name;
+        }
+
+        // Render Stories
+        function renderStories() {
+            const list = document.getElementById('storiesList');
+            list.innerHTML = stories.map(s => `
+                <div class="relative min-w-[110px] h-40 rounded-xl overflow-hidden cursor-pointer flex-shrink-0 group">
+                    <img src="${s.img}" class="w-full h-full object-cover group-hover:scale-105 transition">
+                    <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60"></div>
+                    <span class="absolute bottom-2 left-2 text-white font-bold text-xs z-10">${s.name}</span>
+                </div>
+            `).join('');
+        }
+
+        function addStory() {
+            const imgUrl = prompt('স্টোরির জন্য ছবির URL দিন:');
+            if (imgUrl) {
+                stories.unshift({ id: Date.now(), name: currentUser.name, img: imgUrl });
+                saveData();
+                renderStories();
+            }
+        }
+
+        // Handle Image Upload Preview
+        function previewSelectedImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    selectedPostImageBase64 = e.target.result;
+                    document.getElementById('imagePreview').src = selectedPostImageBase64;
+                    document.getElementById('imagePreviewContainer').classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeImagePreview() {
+            selectedPostImageBase64 = null;
+            document.getElementById('postImageInput').value = '';
+            document.getElementById('imagePreviewContainer').classList.add('hidden');
+        }
+
+        // Create New Post
+        function createNewPost() {
+            const input = document.getElementById('postInput');
+            const content = input.value.trim();
+
+            if (!content && !selectedPostImageBase64) {
+                alert('পোস্টে লিখুন বা একটি ছবি যুক্ত করুন!');
+                return;
+            }
+
+            const newPost = {
+                id: Date.now(),
+                author: currentUser.name,
+                avatar: currentUser.avatar,
+                time: 'এখনই',
+                content: content,
+                image: selectedPostImageBase64,
+                likes: 0,
+                liked: false,
+                comments: []
+            };
+
+            posts.unshift(newPost);
+            saveData();
+            renderPosts();
+
+            // Reset Form
+            input.value = '';
+            removeImagePreview();
+        }
+
+        // Render All Posts
+        function renderPosts(filteredPosts = null) {
+            const container = document.getElementById('feedPosts');
+            const targetPosts = filteredPosts || posts;
+
+            if (targetPosts.length === 0) {
+                container.innerHTML = `<div class="bg-white dark:bg-fbDarkCard p-6 rounded-xl text-center text-gray-500">কোনো পোস্ট পাওয়া যায়নি।</div>`;
+                return;
+            }
+
+            container.innerHTML = targetPosts.map(post => `
+                <div class="bg-white dark:bg-fbDarkCard rounded-xl shadow p-4 space-y-3">
+                    <!-- Post Header -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <img src="${post.avatar}" class="w-10 h-10 rounded-full object-cover">
+                            <div>
+                                <h4 class="font-bold text-sm">${post.author}</h4>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">${post.time} · <i class="fa-solid fa-earth-americas"></i></span>
+                            </div>
+                        </div>
+                        ${post.author === currentUser.name ? `
+                            <button onclick="deletePost(${post.id})" class="text-gray-400 hover:text-red-500 p-2">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+
+                    <!-- Post Content -->
+                    ${post.content ? `<p class="text-sm leading-relaxed">${escapeHtml(post.content)}</p>` : ''}
+
+                    <!-- Post Image -->
+                    ${post.image ? `<img src="${post.image}" class="w-full rounded-lg max-h-96 object-cover">` : ''}
+
+                    <!-- Post Stats -->
+                    <div class="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 pt-1">
+                        <div class="flex items-center space-x-1">
+                            <span class="bg-fbBlue text-white p-1 rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
+                                <i class="fa-solid fa-thumbs-up"></i>
+                            </span>
+                            <span>${post.likes}</span>
+                        </div>
+                        <div>
+                            <span>${post.comments.length} কমেন্ট</span>
+                        </div>
+                    </div>
+
+                    <hr class="border-gray-200 dark:border-gray-700">
+
+                    <!-- Like / Comment / Share Buttons -->
+                    <div class="flex justify-around items-center text-gray-500 dark:text-gray-400 text-sm font-semibold">
+                        <button onclick="toggleLike(${post.id})" class="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-fbDarkHover rounded-lg flex-1 justify-center transition ${post.liked ? 'text-fbBlue' : ''}">
+                            <i class="fa-solid fa-thumbs-up"></i>
+                            <span>লাইক</span>
+                        </button>
+                        <button onclick="focusCommentInput(${post.id})" class="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-fbDarkHover rounded-lg flex-1 justify-center transition">
+                            <i class="fa-solid fa-comment"></i>
+                            <span>কমেন্ট</span>
+                        </button>
+                        <button onclick="sharePost()" class="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-fbDarkHover rounded-lg flex-1 justify-center transition">
+                            <i class="fa-solid fa-share"></i>
+                            <span>শেয়ার</span>
+                        </button>
+                    </div>
+
+                    <!-- Comments Section -->
+                    <div class="space-y-2 pt-2 border-t border-gray-100 dark:border-gray-800">
+                        ${post.comments.map(c => `
+                            <div class="flex items-start space-x-2 text-xs">
+                                <img src="https://i.pravatar.cc/150?u=${c.author}" class="w-7 h-7 rounded-full">
+                                <div class="bg-fbBg dark:bg-fbDarkHover p-2 rounded-xl max-w-[85%]">
+                                    <span class="font-bold block">${c.author}</span>
+                                    <span>${escapeHtml(c.text)}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+
+                        <!-- Add Comment Input -->
+                        <div class="flex items-center space-x-2 pt-2">
+                            <img src="${currentUser.avatar}" class="w-7 h-7 rounded-full">
+                            <input type="text" id="comment-input-${post.id}" placeholder="একটি কমেন্ট লিখুন..." 
+                                   onkeypress="handleCommentKeyPress(event, ${post.id})"
+                                   class="w-full bg-fbBg dark:bg-fbDarkHover rounded-full px-3 py-1 text-xs focus:outline-none">
+                            <button onclick="addComment(${post.id})" class="text-fbBlue p-1 text-sm"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+
+                </div>
+            `).join('');
+        }
+
+        // Post Actions
+        function toggleLike(postId) {
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                post.liked = !post.liked;
+                post.likes += post.liked ? 1 : -1;
+                saveData();
+                renderPosts();
+            }
+        }
+
+        function addComment(postId) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            const text = input.value.trim();
+            if (text) {
+                const post = posts.find(p => p.id === postId);
+                post.comments.push({ author: currentUser.name, text: text });
+                saveData();
+                renderPosts();
+            }
+        }
+
+        function handleCommentKeyPress(e, postId) {
+            if (e.key === 'Enter') addComment(postId);
+        }
+
+        function deletePost(postId) {
+            if (confirm('আপনি কি এই পোস্টটি মুছে ফেলতে চান?')) {
+                posts = posts.filter(p => p.id !== postId);
+                saveData();
+                renderPosts();
+            }
+        }
+
+        function sharePost() {
+            alert('পোস্টের লিংক কপি করা হয়েছে!');
+        }
+
+        function filterPosts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = posts.filter(p => p.content.toLowerCase().includes(query) || p.author.toLowerCase().includes(query));
+            renderPosts(filtered);
+        }
+
+        // Profile Modal Logic
+        function openProfileModal() {
+            document.getElementById('editUserName').value = currentUser.name;
+            document.getElementById('editUserAvatar').value = currentUser.avatar;
+            document.getElementById('profileModal').classList.remove('hidden');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.add('hidden');
+        }
+
+        function saveUserProfile() {
+            const name = document.getElementById('editUserName').value.trim();
+            const avatar = document.getElementById('editUserAvatar').value.trim();
+            if (name) currentUser.name = name;
+            if (avatar) currentUser.avatar = avatar;
+            saveData();
+            updateUserUI();
+            closeProfileModal();
+        }
+
+        // Dark Mode Logic
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('socialhub_theme', isDark ? 'dark' : 'light');
+            document.getElementById('themeIcon').classList.toggle('fa-sun', isDark);
+            document.getElementById('themeIcon').classList.toggle('fa-moon', !isDark);
+        }
+
+        // Live Chat Messenger Window
+        let activeChatFriend = 'রহিম আহমেদ';
+        function toggleChatWindow(friendName) {
+            activeChatFriend = friendName;
+            document.getElementById('chatFriendName').innerText = friendName;
+            document.getElementById('chatBox').classList.remove('hidden');
+        }
+
+        function closeChatWindow() {
+            document.getElementById('chatBox').classList.add('hidden');
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if (msg) {
+                const chatArea = document.getElementById('chatMessages');
+                chatArea.innerHTML += `
+                    <div class="bg-fbBlue text-white p-2 rounded-lg max-w-[80%] ml-auto text-right">
+                        ${escapeHtml(msg)}
+                    </div>
+                `;
+                input.value = '';
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+        }
+
+        function handleChatKeyPress(e) {
+            if (e.key === 'Enter') sendChatMessage();
+        }
+
+        // Reset App Data
+        function resetAppData() {
+            if (confirm('আপনি কি অ্যাপের সমস্ত ডাটা মুছে প্রথম অবস্থায় ফিরিয়ে নিতে চান?')) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        function triggerEmoji() {
+            const emojis = ['😊', '❤️', '🔥', '👍', '😍', '🎉'];
+            const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+            document.getElementById('postInput').value += ' ' + randomEmoji;
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        // App Launch
+        initApp();
+    </script>
 </body>
 </html>
