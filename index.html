@@ -1,360 +1,682 @@
 <!DOCTYPE html>
-<html lang="bn" class="light">
+<html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MasterHub Ultimate Platform + ZYRIVO Engine</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- SUPABASE SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; }
-        .active-tab { border-bottom: 3px solid #2563eb; color: #2563eb; font-weight: bold; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#111827">
+<title>ZYRIVO+ Master Ultimate</title>
+
+<!-- SUPABASE SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- FONT AWESOME -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f3f5f9;
+  --card:#ffffff;
+  --text:#111827;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --primary:#2563eb;
+  --primary2:#1d4ed8;
+  --danger:#ef4444;
+  --radius:18px;
+}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  padding-bottom:88px;
+}
+button,input,textarea{font:inherit;}
+button{cursor:pointer;border:0;}
+.app{max-width:760px;margin:auto;}
+
+/* HEADER */
+.header{
+  position:sticky;top:0;z-index:50;height:64px;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 14px;
+}
+.logo{font-size:25px;font-weight:900;letter-spacing:-1px;}
+.logo span{color:var(--primary);}
+.header-actions{display:flex;gap:8px;}
+.icon-btn{width:42px;height:42px;border-radius:50%;background:#eef2f7;font-size:19px;}
+.icon-btn:active{transform:scale(.94);}
+
+/* SECTIONS */
+.section{display:none;padding:14px;}
+.section.active{display:block;}
+
+/* CREATE BOX */
+.create-box{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px;margin-bottom:14px;
+}
+.create-top{display:flex;align-items:center;gap:10px;}
+.avatar{
+  width:44px;height:44px;min-width:44px;border-radius:50%;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:800;
+}
+.mind{
+  flex:1;border:1px solid var(--border);background:#f8fafc;
+  border-radius:25px;padding:12px 15px;text-align:left;color:var(--muted);
+}
+.quick-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
+.quick-actions button{background:#f1f5f9;padding:11px 5px;border-radius:12px;font-weight:700;}
+.quick-actions button:hover{background:#e2e8f0;}
+
+/* STORIES */
+.story-wrap{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;}
+.story-card{
+  min-width:82px;height:112px;border-radius:15px;
+  background:linear-gradient(160deg,#1e3a8a,#7c3aed);color:white;
+  display:flex;flex-direction:column;justify-content:flex-end;align-items:center;
+  padding:8px;position:relative;overflow:hidden;
+}
+.story-card .story-avatar{
+  width:44px;height:44px;border-radius:50%;background:white;color:#2563eb;
+  display:flex;justify-content:center;align-items:center;font-weight:800;margin-bottom:5px;
+}
+.story-card.add{background:#fff;color:var(--text);border:1px solid var(--border);justify-content:center;}
+.story-card.add .story-avatar{background:#eff6ff;font-size:24px;}
+
+/* POST */
+.post{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;overflow:hidden;}
+.post-head{padding:13px;display:flex;align-items:center;gap:10px;}
+.post-user{flex:1;}
+.post-user strong{display:block;}
+.post-user small{color:var(--muted);}
+.more{background:none;font-size:20px;padding:8px;}
+.post-body{padding:0 14px 12px;}
+.post-text{line-height:1.5;margin-bottom:12px;}
+.post-stats{display:flex;justify-content:space-between;padding:10px 14px;color:var(--muted);font-size:13px;border-bottom:1px solid var(--border);}
+.post-actions{display:grid;grid-template-columns:repeat(3,1fr);}
+.post-actions button{padding:12px 4px;background:white;color:#475569;font-weight:700;}
+.post-actions button.liked{color:#2563eb;}
+.comments{padding:10px 14px;border-top:1px solid var(--border);display:none;}
+.comments.show{display:block;}
+.comment-input{display:flex;gap:7px;}
+.comment-input input{flex:1;border:1px solid var(--border);border-radius:20px;padding:9px 12px;}
+.comment-input button{background:var(--primary);color:white;padding:8px 14px;border-radius:20px;}
+.comment-list{margin-top:9px;}
+.comment{background:#f1f5f9;padding:8px 10px;border-radius:12px;margin-top:6px;font-size:14px;}
+
+/* PAGE TITLE */
+.page-title{margin:5px 0 14px;}
+.page-title h2{font-size:24px;}
+.page-title p{color:var(--muted);margin-top:4px;}
+
+/* SHORTS */
+.short-card{background:#000;border-radius:20px;overflow:hidden;margin-bottom:14px;color:white;position:relative;min-height:500px;display:flex;flex-direction:column;justify-content:flex-end;}
+.short-video{position:absolute;inset:0;background:linear-gradient(145deg,#111827,#581c87,#111827);display:flex;align-items:center;justify-content:center;font-size:75px;}
+.short-info{position:relative;z-index:2;padding:20px;background:linear-gradient(transparent,rgba(0,0,0,.85));padding-top:100px;}
+.short-actions{display:flex;gap:8px;margin-top:12px;}
+.short-actions button{background:rgba(255,255,255,.15);color:#fff;padding:9px 13px;border-radius:20px;}
+
+/* VIDEO */
+.video-card{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden;margin-bottom:14px;}
+.video-thumb{height:220px;background:linear-gradient(135deg,#0f172a,#1e40af);color:white;display:flex;align-items:center;justify-content:center;font-size:65px;}
+.video-info{padding:14px;}
+.video-info h3{margin-bottom:7px;}
+.video-info p{color:var(--muted);}
+
+/* AI */
+.ai-card{background:#111827;color:#fff;border-radius:20px;padding:16px;}
+.ai-input{width:100%;min-height:110px;margin:14px 0;border-radius:14px;border:1px solid #374151;background:#1f2937;color:#fff;padding:13px;resize:none;}
+.primary{width:100%;padding:13px;border-radius:13px;background:var(--primary);color:white;font-weight:800;}
+.primary:active{transform:scale(.98);}
+.ai-response{margin-top:14px;background:#1f2937;padding:13px;border-radius:13px;line-height:1.5;display:none;}
+.tool-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px;}
+.tool{background:#fff;color:var(--text);border:1px solid var(--border);padding:18px 10px;border-radius:15px;text-align:center;font-weight:700;}
+.tool span{font-size:30px;display:block;margin-bottom:7px;}
+
+/* MESSAGES */
+.message-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:13px;display:flex;gap:10px;margin-bottom:9px;}
+.message-content{flex:1;}
+.message-content small{color:var(--muted);}
+
+/* MARKET */
+.market-card{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden;margin-bottom:12px;}
+.product-image{height:170px;background:linear-gradient(135deg,#e0e7ff,#fce7f3);display:flex;align-items:center;justify-content:center;font-size:60px;}
+.product-info{padding:14px;}
+.price{font-weight:900;font-size:20px;margin:7px 0 12px;}
+
+/* PROFILE */
+.profile-cover{height:150px;border-radius:20px 20px 0 0;background:linear-gradient(135deg,#172554,#7c3aed,#2563eb);}
+.profile-card{background:#fff;border-radius:20px;overflow:hidden;border:1px solid var(--border);}
+.profile-main{text-align:center;padding:0 15px 20px;}
+.big-avatar{width:90px;height:90px;border-radius:50%;margin:-45px auto 10px;border:5px solid #fff;background:linear-gradient(135deg,#2563eb,#7c3aed);color:white;display:flex;align-items:center;justify-content:center;font-size:35px;font-weight:900;}
+.profile-main p{color:var(--muted);}
+.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);margin:20px 0;}
+.profile-stats strong,.profile-stats small{display:block;}
+.profile-stats small{color:var(--muted);margin-top:3px;}
+
+/* SEARCH */
+.search-box{display:flex;gap:8px;margin-bottom:14px;}
+.search-box input{flex:1;border:1px solid var(--border);border-radius:13px;padding:12px;}
+.search-result{background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;margin-top:8px;}
+
+/* BOTTOM NAV */
+.bottom-nav{
+  position:fixed;left:0;right:0;bottom:0;height:68px;
+  background:rgba(255,255,255,.97);backdrop-filter:blur(12px);
+  border-top:1px solid var(--border);z-index:60;display:flex;justify-content:center;
+}
+.nav-inner{width:min(760px,100%);display:grid;grid-template-columns:repeat(6,1fr);}
+.nav-btn{background:none;color:#64748b;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;font-size:20px;}
+.nav-btn span{font-size:10px;font-weight:700;}
+.nav-btn.active{color:var(--primary);}
+
+/* MODAL */
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:100;display:none;align-items:flex-end;justify-content:center;}
+.modal.show{display:flex;}
+.modal-box{width:min(760px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:24px 24px 0 0;padding:18px;}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.close{width:38px;height:38px;border-radius:50%;background:#f1f5f9;font-size:22px;}
+.modal textarea,.modal input[type="text"]{width:100%;border:1px solid var(--border);border-radius:14px;padding:13px;margin-bottom:12px;}
+.file-input{width:100%;padding:12px;border:1px dashed #94a3b8;border-radius:12px;margin-bottom:12px;}
+
+/* TOAST */
+.toast{
+  position:fixed;left:50%;bottom:85px;transform:translateX(-50%) translateY(20px);
+  background:#111827;color:#fff;padding:11px 17px;border-radius:25px;
+  opacity:0;pointer-events:none;transition:.25s;z-index:200;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* LIVE SYSTEM */
+#zyrivoLiveButton{
+  position:fixed;right:16px;bottom:80px;z-index:9998;border:0;border-radius:999px;
+  padding:12px 16px;background:#ef4444;color:#fff;font-weight:700;font-size:14px;box-shadow:0 8px 25px rgba(0,0,0,.22);
+}
+#zyrivoLivePanel{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.72);padding:18px;overflow:auto;}
+.zyrivoLiveBox{max-width:520px;margin:40px auto;background:#fff;border-radius:22px;padding:18px;}
+.zyrivoLiveBox h2{margin-bottom:14px;}
+#zyrivoLiveTitle,#zyrivoLiveDescription{width:100%;border:1px solid #e2e8f0;border-radius:12px;padding:12px;margin-bottom:10px;font-size:15px;}
+#zyrivoLiveVideo{width:100%;background:#000;border-radius:16px;margin:12px 0;max-height:55vh;}
+.zyrivoLiveActions{display:flex;gap:8px;flex-wrap:wrap;}
+.zyrivoLiveActions button{border:0;border-radius:12px;padding:11px 14px;font-weight:700;}
+#zyrivoStartLive{background:#ef4444;color:#fff;}
+#zyrivoEndLive{background:#111827;color:#fff;display:none;}
+#zyrivoCloseLive{background:#e5e7eb;color:#111827;}
+#zyrivoLiveStatus{margin-top:10px;font-size:14px;color:#64748b;}
+.zyrivoLiveViewer{margin-top:8px;font-size:14px;font-weight:600;}
+
+@media(min-width:761px){.bottom-nav{left:50%;right:auto;transform:translateX(-50%);width:760px;}}
+</style>
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col pb-20">
+<body>
 
-    <!-- Top Navigation Bar -->
-    <header class="bg-white/95 backdrop-blur-md shadow-sm px-4 py-3 flex justify-between items-center sticky top-0 z-50">
-        <div class="flex items-center space-x-2">
-            <i class="fa-solid fa-layer-group text-blue-600 text-2xl"></i>
-            <span class="font-black text-lg text-blue-600 tracking-wide">MasterHub<span class="text-purple-600">+</span></span>
-        </div>
-        <div class="flex space-x-1 sm:space-x-3 overflow-x-auto py-1">
-            <button onclick="switchTab('feed')" id="tab-feed" class="active-tab py-1 px-3 text-sm transition"><i class="fa-solid fa-house"></i></button>
-            <button onclick="switchTab('ai')" id="tab-ai" class="py-1 px-3 text-sm text-gray-400 hover:text-blue-600 transition"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
-            <button onclick="switchTab('downloader')" id="tab-downloader" class="py-1 px-3 text-sm text-gray-400 hover:text-blue-600 transition"><i class="fa-solid fa-download"></i></button>
-            <button onclick="switchTab('wallet')" id="tab-wallet" class="py-1 px-3 text-sm text-gray-400 hover:text-blue-600 transition"><i class="fa-solid fa-wallet"></i></button>
-            <button onclick="switchTab('live')" id="tab-live" class="py-1 px-3 text-sm text-gray-400 hover:text-blue-600 transition"><i class="fa-solid fa-tower-broadcast"></i></button>
-            <button onclick="switchTab('settings')" id="tab-settings" class="py-1 px-3 text-sm text-gray-400 hover:text-blue-600 transition"><i class="fa-solid fa-gear"></i></button>
-        </div>
-    </header>
+<div class="app">
 
-    <!-- Main Container -->
-    <div class="max-w-xl mx-auto w-full p-4 flex-1 space-y-4">
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">ZYRIVO<span>+</span></div>
+  <div class="header-actions">
+    <button class="icon-btn" onclick="showSection('search')">🔍</button>
+    <button class="icon-btn" onclick="showSection('messages')">💬</button>
+    <button class="icon-btn" onclick="showToast('Notifications will appear here')">🔔</button>
+  </div>
+</header>
 
-        <!-- 1. FEED SECTION (SUPABASE REALTIME) -->
-        <section id="sec-feed" class="space-y-4">
-            <div class="bg-white p-4 rounded-2xl shadow-sm space-y-3">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-purple-600 text-white flex items-center justify-center font-bold">N</div>
-                    <input type="text" id="postText" placeholder="আপনার মনে কি আছে আজ..." class="w-full bg-gray-100 rounded-full px-4 py-2.5 text-sm focus:outline-none">
-                </div>
-                <div class="flex justify-between items-center pt-2 border-t text-xs">
-                    <span class="text-gray-500"><i class="fa-solid fa-image text-green-500"></i> রিয়েলটাইম ডাটাবেস পোস্ট</span>
-                    <button onclick="createRealtimePost()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl font-bold transition">পোস্ট করুন</button>
-                </div>
-            </div>
-            <div id="postContainer" class="space-y-3">
-                <div class="text-center py-6 text-gray-400 text-xs">পোস্ট লোড হচ্ছে...</div>
-            </div>
-        </section>
-
-        <!-- 2. ADVANCED AI STUDIO SECTION -->
-        <section id="sec-ai" class="hidden space-y-4">
-            <div class="bg-white p-5 rounded-2xl shadow-sm space-y-3">
-                <div class="flex items-center space-x-2 border-b pb-2">
-                    <i class="fa-solid fa-wand-magic-sparkles text-purple-600"></i>
-                    <h3 class="font-bold text-sm text-purple-700">Advanced AI Studio & Generator</h3>
-                </div>
-                <div>
-                    <label class="text-xs text-gray-500 block mb-1">এআই প্রম্পট বা কমান্ড লিখুন:</label>
-                    <textarea id="aiPrompt" placeholder="যেমন: Bangladesh নিয়ে একটা ভিডিও স্ক্রিপ্ট বানান..." class="w-full border p-3 rounded-xl text-xs h-28 focus:outline-none focus:ring-2 focus:ring-purple-400"></textarea>
-                </div>
-                <button onclick="generateAIResponse()" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2.5 rounded-xl font-bold text-xs transition">এআই রেসপন্স জেনারেট করুন</button>
-                <div id="aiResultBox" class="bg-purple-50 border border-purple-100 p-3 rounded-xl text-xs text-purple-900 hidden space-y-2">
-                    <p class="font-bold border-b border-purple-200 pb-1">🤖 এআই জেনারেটেড আউটপুট:</p>
-                    <div id="aiOutputText" class="space-y-1 text-gray-800"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. MEDIA DOWNLOADER SECTION -->
-        <section id="sec-downloader" class="hidden space-y-4">
-            <div class="bg-white p-5 rounded-2xl shadow-sm space-y-3">
-                <div class="flex items-center space-x-2 border-b pb-2">
-                    <i class="fa-solid fa-cloud-arrow-down text-emerald-600"></i>
-                    <h3 class="font-bold text-sm text-emerald-700">Media Downloader</h3>
-                </div>
-                <div>
-                    <label class="text-xs text-gray-500 block mb-1">ভিডিও লিংক পেস্ট করুন (Facebook/TikTok/YouTube):</label>
-                    <input type="text" id="videoUrlInput" placeholder="https://..." class="w-full border p-3 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-emerald-400">
-                </div>
-                <button onclick="startDownload()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-xs transition">ডাউনলোড শুরু করুন</button>
-                <div id="downloadStatus" class="text-center text-xs text-gray-500 font-semibold"></div>
-            </div>
-        </section>
-
-        <!-- 4. WALLET SECTION -->
-        <section id="sec-wallet" class="hidden space-y-4">
-            <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-5 rounded-2xl shadow-sm space-y-3">
-                <div class="flex justify-between items-center text-xs opacity-90">
-                    <span>ওয়ালেট আইডি: WLT-409923</span>
-                    <span>স্ট্যাটাস: <strong class="text-yellow-300">অ্যাক্টিভ</strong></span>
-                </div>
-                <div>
-                    <p class="text-xs opacity-80">বর্তমান ব্যালেন্স</p>
-                    <h2 class="text-3xl font-black" id="walletDisplay">৳ ২৫,৮৫০.০০ BDT</h2>
-                </div>
-                <div class="flex space-x-2 pt-2">
-                    <button onclick="requestCashout()" class="bg-white text-emerald-800 font-bold px-4 py-2 rounded-xl text-xs flex-1 shadow transition hover:bg-gray-100">ক্যাশআউট রিকোয়েস্ট</button>
-                    <button onclick="addFunds()" class="bg-emerald-800 text-white font-bold px-4 py-2 rounded-xl text-xs flex-1 border border-emerald-500 transition">ব্যালেন্স যোগ</button>
-                </div>
-            </div>
-            <div class="bg-white p-4 rounded-2xl shadow-sm space-y-2">
-                <h4 class="font-bold text-xs text-gray-700 border-b pb-1">সর্বশেষ লেনদেন ইতিহাস</h4>
-                <div class="space-y-2 text-xs" id="transactionHistory">
-                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
-                        <span>[TXN-102] ডেবিট (ক্যাশআউট)</span>
-                        <span class="text-red-600 font-bold">-৳ ১,০০০.০০</span>
-                    </div>
-                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
-                        <span>[TXN-101] ক্রেডিট (রেভিনিউ)</span>
-                        <span class="text-green-600 font-bold">+৳ ৫,৪০০.০০</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 5. REAL WEBRTC LIVE STREAM SECTION -->
-        <section id="sec-live" class="hidden space-y-4">
-            <div class="bg-gray-900 text-white p-5 rounded-2xl shadow-sm space-y-3 text-center">
-                <div class="flex justify-center items-center space-x-2">
-                    <span class="w-3 h-3 bg-red-500 rounded-full animate-ping"></span>
-                    <h3 class="font-bold text-sm tracking-wide">লাইভ ব্রডকাস্ট স্টুডিও (WebRTC Camera)</h3>
-                </div>
-                <div class="bg-black rounded-xl overflow-hidden border border-gray-800 relative">
-                    <video id="zyrivoLiveVideo" autoplay muted playsinline class="w-full h-48 object-cover"></video>
-                </div>
-                <p class="text-xs text-gray-400" id="liveStateText">স্ট্রিমিং রুম বর্তমানে অফলাইন আছে</p>
-                <div class="flex space-x-2">
-                    <button onclick="toggleLiveStream()" id="liveToggleButton" class="bg-red-600 hover:bg-red-700 text-white w-full py-2.5 rounded-xl font-bold text-xs transition">লাইভ শুরু করুন</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- 6. SETTINGS & RULES SECTION -->
-        <section id="sec-settings" class="hidden space-y-4">
-            <div class="bg-white p-5 rounded-2xl shadow-sm space-y-4 text-xs">
-                <h3 class="font-bold text-sm border-b pb-2 text-gray-800"><i class="fa-solid fa-gear text-blue-600"></i> সেটিংস ও ওনার প্যানেল</h3>
-                
-                <div class="bg-blue-50 border border-blue-200 p-3 rounded-xl space-y-1">
-                    <p class="font-bold text-blue-900">ওনার আইডি: OWNER-998811</p>
-                    <p class="text-gray-600">নিয়ন্ত্রণ লেভেল: MASTER_FULL_CONTROL (সুপাবেস কানেক্টেড)</p>
-                </div>
-
-                <div class="space-y-2">
-                    <label class="font-semibold block text-gray-700">সিস্টেম থিম মোড:</label>
-                    <select class="w-full border p-2.5 rounded-xl focus:outline-none">
-                        <option>ডার্ক থিম</option>
-                        <option selected>লাইট থিম (ডিফল্ট)</option>
-                    </select>
-                </div>
-
-                <div class="bg-gray-50 border p-3 rounded-xl space-y-1.5">
-                    <p class="font-bold text-gray-800">📜 অ্যাপের নিয়ম-কানুন ও শর্তাবলি:</p>
-                    <p>১. ওয়ালেট বা পেমেন্ট পিন কারো সাথে শেয়ার করা সম্পূর্ণ নিষেধ।</p>
-                    <p>২. লাইভ স্ট্রিমিংয়ে কোনো কপিরাইট বা অশ্লীল কনটেন্ট প্রচার করা যাবে না।</p>
-                    <p>৩. এআই স্টুডিওর অপব্যবহার করলে সিস্টেম অ্যাক্সেস স্বয়ংক্রিয়ভাবে বাতিল হতে পারে।</p>
-                </div>
-            </div>
-        </section>
-
+<!-- HOME SECTION -->
+<section id="home" class="section active">
+  <div class="create-box">
+    <div class="create-top">
+      <div class="avatar">N</div>
+      <button class="mind" onclick="openModal('postModal')">What's on your mind?</button>
     </div>
+    <div class="quick-actions">
+      <button onclick="openModal('postModal')">📝 Post</button>
+      <button onclick="openModal('videoModal')">🎬 Video</button>
+      <button onclick="openModal('shortModal')">⚡ Short</button>
+    </div>
+  </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed left-1/2 bottom-20 -translate-x-1/2 translate-y-10 bg-gray-900 text-white px-4 py-2 rounded-full text-xs opacity-0 pointer-events-none transition duration-200 z-50 whitespace-nowrap"></div>
+  <!-- STORIES -->
+  <div class="story-wrap">
+    <button class="story-card add" onclick="openModal('storyModal')">
+      <div class="story-avatar">＋</div>
+      <b>Create Story</b>
+    </button>
+    <div class="story-card"><div class="story-avatar">M</div><b>Misty</b></div>
+    <div class="story-card"><div class="story-avatar">R</div><b>Rima</b></div>
+    <div class="story-card"><div class="story-avatar">S</div><b>Shahin</b></div>
+  </div>
 
-    <script>
-        "use strict";
+  <!-- SUPABASE REALTIME FEED -->
+  <div id="feed">
+    <div style="text-align:center; padding:20px; color:#64748b;">Loading real-time posts...</div>
+  </div>
+</section>
 
-        /* SUPABASE CONFIGURATION */
-        const SUPABASE_URL = "https://crtvemwgsxaicvqzxcuq.supabase.co";
-        const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_CY0qxVJPMOcbRjNDNDUluw_e91Tiiar";
-        const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY) : null;
+<!-- SHORTS SECTION -->
+<section id="shorts" class="section">
+  <div class="page-title">
+    <h2>⚡ ZYRIVO Shorts</h2>
+    <p>Discover short videos from creators worldwide.</p>
+  </div>
+  <div class="short-card">
+    <div class="short-video">▶️</div>
+    <div class="short-info">
+      <b>ZYRIVO Creator</b>
+      <p style="margin-top:8px;">Amazing short video 🔥 #ZYRIVO #Shorts</p>
+      <div class="short-actions">
+        <button onclick="shortLike(this)">❤️ 25K</button>
+        <button onclick="showToast('Comments opened')">💬 1.8K</button>
+        <button onclick="sharePost()">↗ Share</button>
+      </div>
+    </div>
+  </div>
+</section>
 
-        function switchTab(tab) {
-            ['feed', 'ai', 'downloader', 'wallet', 'live', 'settings'].forEach(t => {
-                const sec = document.getElementById('sec-' + t);
-                const btn = document.getElementById('tab-' + t);
-                if(sec) sec.classList.add('hidden');
-                if(btn) {
-                    btn.classList.remove('active-tab');
-                    btn.classList.add('text-gray-400');
-                }
-            });
-            const targetSec = document.getElementById('sec-' + tab);
-            const targetBtn = document.getElementById('tab-' + tab);
-            if(targetSec) targetSec.classList.remove('hidden');
-            if(targetBtn) {
-                targetBtn.classList.add('active-tab');
-                targetBtn.classList.remove('text-gray-400');
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+<!-- VIDEO SECTION -->
+<section id="video" class="section">
+  <div class="page-title">
+    <h2>🎬 ZYRIVO Video</h2>
+    <p>Long-form creator videos.</p>
+  </div>
+  <div class="video-card">
+    <div class="video-thumb">▶️</div>
+    <div class="video-info">
+      <h3>The future of global creators starts here</h3>
+      <p>2.8M Views · 3 days ago</p>
+      <div class="quick-actions" style="margin-top:12px;">
+        <button onclick="showToast('Liked')">👍 Like</button>
+        <button onclick="showToast('Comments opened')">💬 Comment</button>
+        <button onclick="sharePost()">↗ Share</button>
+      </div>
+    </div>
+  </div>
+</section>
 
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            toast.textContent = msg;
-            toast.classList.remove('opacity-0', 'translate-y-10');
-            toast.classList.add('opacity-100', 'translate-y-0');
-            setTimeout(() => {
-                toast.classList.remove('opacity-100', 'translate-y-0');
-                toast.classList.add('opacity-0', 'translate-y-10');
-            }, 2000);
-        }
+<!-- AI SECTION -->
+<section id="ai" class="section">
+  <div class="page-title">
+    <h2>✦ ZYRIVO AI</h2>
+    <p>Your intelligent creative assistant.</p>
+  </div>
+  <div class="ai-card">
+    <b style="font-size:20px;">ZYRIVO AI Studio</b>
+    <textarea id="aiInput" class="ai-input" placeholder="Ask anything or describe what you want..."></textarea>
+    <button class="primary" onclick="askAI()">✦ Generate Answer</button>
+    <div id="aiResponse" class="ai-response"></div>
+  </div>
+  <div class="tool-grid">
+    <button class="tool" onclick="aiTool('Text → Image')"><span>🖼️</span>Text → Image</button>
+    <button class="tool" onclick="aiTool('Text → Video')"><span>🎥</span>Text → Video</button>
+    <button class="tool" onclick="aiTool('Text → Audio')"><span>🗣️</span>Text → Audio</button>
+    <button class="tool" onclick="aiTool('Image → Video')"><span>✨</span>Image → Video</button>
+    <button class="tool" onclick="aiTool('AI Music')"><span>🎵</span>AI Music</button>
+    <button class="tool" onclick="aiTool('AI Writer')"><span>✍️</span>AI Writer</button>
+  </div>
+</section>
 
-        /* REALTIME POSTS LOGIC */
-        function renderPostHTML(post) {
-            const author = post.user_name || 'সাকিব হাসান';
-            const text = escapeHTML(post.caption || '');
-            return `
-                <div class="bg-white p-4 rounded-2xl shadow-sm space-y-2">
-                    <div class="flex justify-between items-center">
-                        <h4 class="font-bold text-sm text-gray-800">${escapeHTML(author)} <span class="text-xs text-blue-600 font-normal">(Verified)</span></h4>
-                        <span class="text-xs text-gray-400">এইমাত্র</span>
-                    </div>
-                    <p class="text-xs text-gray-600">${text}</p>
-                </div>
-            `;
-        }
+<!-- MARKET SECTION -->
+<section id="market" class="section">
+  <div class="page-title">
+    <h2>🛍️ ZYRIVO Market</h2>
+    <p>Buy, sell and grow your creator business.</p>
+  </div>
+  <div class="market-card">
+    <div class="product-image">📦</div>
+    <div class="product-info">
+      <h3>Creator Digital Package</h3>
+      <p>Premium creator resources</p>
+      <div class="price">$9.99</div>
+      <button class="primary" onclick="showToast('Product page opened')">View Product</button>
+    </div>
+  </div>
+</section>
 
-        async function loadRealtimePosts() {
-            const container = document.getElementById('postContainer');
-            if (!supabaseClient) {
-                container.innerHTML = `<div class="bg-white p-4 rounded-2xl text-xs text-red-500 text-center">ডাটাবেস কানেক্ট করা যায়নি।</div>`;
-                return;
-            }
+<!-- PROFILE SECTION -->
+<section id="profile" class="section">
+  <div class="profile-card">
+    <div class="profile-cover"></div>
+    <div class="profile-main">
+      <div class="big-avatar">N</div>
+      <h2>Nur Islam</h2>
+      <p>@nur_islam</p>
+      <div class="profile-stats">
+        <div><strong>12.5K</strong><small>Followers</small></div>
+        <div><strong>284</strong><small>Following</small></div>
+        <div><strong>186</strong><small>Posts</small></div>
+      </div>
+      <button class="primary" onclick="showToast('Profile editor opened')">Edit Profile</button>
+    </div>
+  </div>
+</section>
 
-            const { data, error } = await supabaseClient
-                .from('posts')
-                .select('*')
-                .order('created_at', { ascending: false });
+<!-- MESSAGES SECTION -->
+<section id="messages" class="section">
+  <div class="page-title">
+    <h2>💬 Messages</h2>
+    <p>Connect privately with people around the world.</p>
+  </div>
+  <div class="message-card" onclick="openChat('Alex Creator')">
+    <div class="avatar">A</div>
+    <div class="message-content">
+      <b>Alex Creator</b>
+      <p>Hey! Welcome to ZYRIVO 👋</p>
+      <small>2m</small>
+    </div>
+  </div>
+</section>
 
-            if (error || !data || data.length === 0) {
-                container.innerHTML = `<div class="bg-white p-4 rounded-2xl text-xs text-gray-500 text-center">কোনো পোস্ট পাওয়া যায়নি। প্রথম পোস্ট করুন!</div>`;
-                return;
-            }
+<!-- SEARCH SECTION -->
+<section id="search" class="section">
+  <div class="page-title">
+    <h2>🔍 Search ZYRIVO</h2>
+    <p>Find people, posts, videos and creators.</p>
+  </div>
+  <div class="search-box">
+    <input id="searchInput" type="text" placeholder="Search ZYRIVO..." oninput="searchZYRIVO()">
+    <button class="icon-btn" onclick="searchZYRIVO()">🔍</button>
+  </div>
+  <div id="searchResults"></div>
+</section>
 
-            container.innerHTML = data.map(post => renderPostHTML(post)).join('');
-        }
+</div>
 
-        async function createRealtimePost() {
-            const input = document.getElementById('postText');
-            const txt = input.value.trim();
-            if(!txt) return showToast('কিছু লিখে পোস্ট করুন!');
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showSection('home',this)"><i class="fa-solid fa-house"></i><span>Home</span></button>
+    <button class="nav-btn" onclick="showSection('shorts',this)"><i class="fa-solid fa-bolt"></i><span>Shorts</span></button>
+    <button class="nav-btn" onclick="showSection('video',this)"><i class="fa-solid fa-film"></i><span>Video</span></button>
+    <button class="nav-btn" onclick="showSection('ai',this)"><i class="fa-solid fa-wand-magic-sparkles"></i><span>AI</span></button>
+    <button class="nav-btn" onclick="showSection('market',this)"><i class="fa-solid fa-store"></i><span>Market</span></button>
+    <button class="nav-btn" onclick="showSection('profile',this)"><i class="fa-solid fa-user"></i><span>Profile</span></button>
+  </div>
+</nav>
 
-            if(!supabaseClient) return showToast('ডাটাবেস কানেকশন ত্রুটি!');
+<!-- MODALS -->
+<div id="postModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-head"><h2>Create Post</h2><button class="close" onclick="closeModal('postModal')">×</button></div>
+    <textarea id="postText" rows="6" placeholder="What's on your mind?"></textarea>
+    <button class="primary" onclick="createRealtimePost()">Publish Post</button>
+  </div>
+</div>
 
-            showToast('পোস্ট পাবলিশ হচ্ছে...');
-            const { error } = await supabaseClient.from('posts').insert([{ user_name: 'সাকিব হাসান', caption: txt, post_type: 'post' }]);
+<div id="videoModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-head"><h2>🎬 Upload Video</h2><button class="close" onclick="closeModal('videoModal')">×</button></div>
+    <input id="videoFile" class="file-input" type="file" accept="video/*">
+    <button class="primary" onclick="uploadDemo('video')">Upload Video</button>
+  </div>
+</div>
 
-            if(error) {
-                showToast('পোস্ট করতে সমস্যা হয়েছে!');
-            } else {
-                input.value = '';
-                showToast('সফলভাবে পোস্ট করা হয়েছে!');
-                loadRealtimePosts();
-            }
-        }
+<div id="shortModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-head"><h2>⚡ Create Short</h2><button class="close" onclick="closeModal('shortModal')">×</button></div>
+    <input id="shortFile" class="file-input" type="file" accept="video/*">
+    <button class="primary" onclick="uploadDemo('short')">Publish Short</button>
+  </div>
+</div>
 
-        // Realtime Subscription
-        if(supabaseClient) {
-            supabaseClient.channel('public:posts')
-                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, payload => {
-                    const container = document.getElementById('postContainer');
-                    if(container) {
-                        container.insertAdjacentHTML('afterbegin', renderPostHTML(payload.new));
-                    }
-                }).subscribe();
-        }
+<div id="storyModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-head"><h2>📸 Create Story</h2><button class="close" onclick="closeModal('storyModal')">×</button></div>
+    <input id="storyFile" class="file-input" type="file" accept="image/*,video/*">
+    <button class="primary" onclick="uploadDemo('story')">Publish Story</button>
+  </div>
+</div>
 
-        /* AI STUDIO LOGIC */
-        function generateAIResponse() {
-            const prompt = document.getElementById('aiPrompt').value.trim();
-            if(!prompt) return alert('প্রম্পট বক্সে কিছু লিখুন!');
-            
-            const resBox = document.getElementById('aiResultBox');
-            const outTxt = document.getElementById('aiOutputText');
-            resBox.classList.remove('hidden');
+<div id="chatModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-head"><h2 id="chatTitle">Message</h2><button class="close" onclick="closeModal('chatModal')">×</button></div>
+    <div id="chatMessages" style="min-height:180px;background:#f8fafc;border-radius:14px;padding:12px;margin-bottom:12px;">
+      <div class="comment">Welcome to ZYRIVO+ 👋</div>
+    </div>
+    <div class="comment-input">
+      <input id="chatInput" type="text" placeholder="Write a message...">
+      <button onclick="sendChat()">Send</button>
+    </div>
+  </div>
+</div>
 
-            let outputHtml = "";
-            if (prompt.toLowerCase().includes('bangladesh') || prompt.includes('বাংলাদেশ')) {
-                outputHtml = `
-                    <p><b>🎬 ভিডিও শিরোনাম:</b> অপরূপ বাংলাদেশ ও আমাদের ঐতিহ্য</p>
-                    <p><b>১. ইন্ট্রো (০-১০ সে.):</b> ড্রোন শটে সুন্দর সবুজ প্রকৃতি ও নদীমাতৃক বাংলার দৃশ্য দেখান। ভয়েসওভার: "নদী, সবুজ আর অতিথিপরায়ণ মানুষের দেশ বাংলাদেশ..."</p>
-                    <p><b>২. মূল অংশ (১০-৪০ সে.):</b> সুন্দরবনের রয়্যাল বেঙ্গল টাইগার, কক্সবাজার সমুদ্র সৈকত এবং পাহাড়ি অঞ্চলের সৌন্দর্য তুলে ধরুন।</p>
-                    <p><b>৩. آউটرو (৪০-৬০ সে.):</b> দর্শকদের লাইক ও সাবস্ক্রাইব করার অনুরোধ জানিয়ে ভিডিও শেষ করুন।</p>
-                `;
-            } else {
-                outputHtml = `
-                    <p><b>💡 আইডিয়া ও কন্টেন্ট প্ল্যান (${prompt}):</b></p>
-                    <p>• <b>হুক (Hook):</b> দর্শকদের শুরুতেই আকর্ষণ করার মতো শক্তিশালী একটি প্রশ্ন বা বাক্য রাখুন।</p>
-                    <p>• <b>মূল বর্ণনা:</b> "${prompt}" বিষয়ে ৩টি স্টেপে বিস্তারিত তথ্য বা সমাধান তুলে ধরুন।</p>
-                    <p>• <b>কল টু অ্যাকশন:</b> দর্শকদের মতামত কমেন্টে জানাতে বলুন।</p>
-                `;
-            }
-            outTxt.innerHTML = outputHtml;
-        }
+<!-- LIVE STREAMING BUTTON & PANEL -->
+<button id="zyrivoLiveButton" type="button"><i class="fa-solid fa-tower-broadcast"></i> Go Live</button>
+<div id="zyrivoLivePanel">
+  <div class="zyrivoLiveBox">
+    <h2>🔴 ZYRIVO Live Studio</h2>
+    <input id="zyrivoLiveTitle" type="text" placeholder="Live title">
+    <textarea id="zyrivoLiveDescription" rows="2" placeholder="Description"></textarea>
+    <video id="zyrivoLiveVideo" autoplay muted playsinline></video>
+    <div class="zyrivoLiveActions">
+      <button id="zyrivoStartLive" type="button">🔴 Start Live</button>
+      <button id="zyrivoEndLive" type="button" style="display:none;">⏹ End Live</button>
+      <button id="zyrivoCloseLive" type="button">Close</button>
+    </div>
+    <div id="zyrivoLiveStatus">Ready to start.</div>
+    <div class="zyrivoLiveViewer">👀 Viewers: <span id="zyrivoViewerCount">1,420</span></div>
+  </div>
+</div>
 
-        /* DOWNLOADER LOGIC */
-        function startDownload() {
-            const url = document.getElementById('videoUrlInput').value.trim();
-            if(!url) return alert('সঠিক ভিডিও লিংক প্রদান করুন!');
-            const status = document.getElementById('downloadStatus');
-            status.innerText = "📥 ভিডিও প্রসেসিং ও ডাউনলোড শুরু হয়েছে...";
-            setTimeout(() => {
-                status.innerText = "✅ ভিডিও সফলভাবে গ্যালারিতে ডাউনলোড সম্পন্ন হয়েছে!";
-            }, 1500);
-        }
+<div id="toast" class="toast"></div>
 
-        /* WALLET LOGIC */
-        function requestCashout() {
-            alert('আপনার ক্যাশআউট রিকোয়েস্ট সফলভাবে সাবমিট হয়েছে। ১ থেকে ৭ তারিখের মধ্যে পেমেন্ট পেয়ে যাবেন।');
-        }
+<script>
+"use strict";
 
-        function addFunds() {
-            alert('টেস্ট মোড: ওয়ালেটে নতুন ফান্ড সফলভাবে যুক্ত হয়েছে।');
-        }
+const SUPABASE_URL = "https://crtvemwgsxaicvqzxcuq.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_CY0qxVJPMOcbRjNDNDUluw_e91Tiiar";
+const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY) : null;
 
-        /* WEBRTC LIVE STREAM LOGIC */
-        let zyrivoLiveStream = null;
-        async function toggleLiveStream() {
-            const btn = document.getElementById('liveToggleButton');
-            const stateText = document.getElementById('liveStateText');
-            const video = document.getElementById('zyrivoLiveVideo');
+function showSection(id, btn){
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  if(btn){
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+  }
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
-            if (!zyrivoLiveStream) {
-                try {
-                    stateText.innerText = "ক্যামেরা পারমিশন চাওয়া হচ্ছে...";
-                    zyrivoLiveStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                    video.srcObject = zyrivoLiveStream;
-                    btn.innerText = 'লাইভ বন্ধ করুন';
-                    btn.className = 'bg-gray-700 hover:bg-gray-800 text-white w-full py-2.5 rounded-xl font-bold text-xs transition';
-                    stateText.innerText = "🔴 আপনি এখন লাইভে ব্রডকাস্ট করছেন (ভিউয়ার্স: ১,৪২০)";
-                    stateText.className = "text-xs text-red-400 font-bold animate-pulse";
-                } catch(err) {
-                    alert("ক্যামেরা এক্সেস পাওয়া যায়নি: " + err.message);
-                    stateText.innerText = "স্ট্রিমিং রুম বর্তমানে অফলাইন আছে";
-                }
-            } else {
-                zyrivoLiveStream.getTracks().forEach(track => track.stop());
-                zyrivoLiveStream = null;
-                video.srcObject = null;
-                btn.innerText = 'লাইভ শুরু করুন';
-                btn.className = 'bg-red-600 hover:bg-red-700 text-white w-full py-2.5 rounded-xl font-bold text-xs transition';
-                stateText.innerText = "স্ট্রিমিং রুম বর্তমানে অফলাইন আছে";
-                stateText.className = "text-xs text-gray-400";
-            }
-        }
+function openModal(id){ document.getElementById(id).classList.add("show"); }
+function closeModal(id){ document.getElementById(id).classList.remove("show"); }
 
-        function escapeHTML(str) {
-            return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-        }
+let toastTimer = null;
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+}
 
-        document.addEventListener("DOMContentLoaded", loadRealtimePosts);
-    </script>
+function renderPostHTML(post){
+  const name = post.user_name || 'Nur Islam';
+  const text = escapeHTML(post.caption || '');
+  return `
+    <article class="post">
+      <div class="post-head">
+        <div class="avatar">${name.charAt(0)}</div>
+        <div class="post-user">
+          <strong>${escapeHTML(name)}</strong>
+          <small>Just now · 🌎</small>
+        </div>
+        <button class="more" onclick="showToast('Menu')">•••</button>
+      </div>
+      <div class="post-body">
+        <div class="post-text">${text}</div>
+      </div>
+      <div class="post-stats">
+        <span>👍 0 Likes</span>
+        <span>0 Comments</span>
+      </div>
+      <div class="post-actions">
+        <button onclick="likePost(this)">👍 Like</button>
+        <button onclick="toggleComments(this)">💬 Comment</button>
+        <button onclick="sharePost()">↗ Share</button>
+      </div>
+      <div class="comments">
+        <div class="comment-input">
+          <input type="text" placeholder="Write a comment...">
+          <button onclick="addComment(this)">Send</button>
+        </div>
+        <div class="comment-list"></div>
+      </div>
+    </article>
+  `;
+}
+
+async function loadRealtimePosts(){
+  const feed = document.getElementById("feed");
+  if(!supabaseClient) return;
+  const { data, error } = await supabaseClient.from('posts').select('*').order('created_at', { ascending: false });
+  if(error || !data || data.length === 0){
+    feed.innerHTML = `<div style="text-align:center; padding:20px; color:#64748b;">No posts yet. Create the first post!</div>`;
+    return;
+  }
+  feed.innerHTML = data.map(p => renderPostHTML(p)).join('');
+}
+
+async function createRealtimePost(){
+  const input = document.getElementById("postText");
+  const text = input.value.trim();
+  if(!text) return showToast("Write something first");
+  if(!supabaseClient) return showToast("Database not connected");
+
+  showToast("Publishing...");
+  const { error } = await supabaseClient.from('posts').insert([{ user_name: 'Nur Islam', caption: text, post_type: 'post' }]);
+  if(error){
+    showToast("Failed to publish");
+  } else {
+    input.value = "";
+    closeModal("postModal");
+    showToast("Published successfully! 🚀");
+    loadRealtimePosts();
+  }
+}
+
+if(supabaseClient){
+  supabaseClient.channel('public:posts')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, payload => {
+      const feed = document.getElementById("feed");
+      if(feed) feed.insertAdjacentHTML('afterbegin', renderPostHTML(payload.new));
+    }).subscribe();
+}
+
+function likePost(btn){
+  btn.classList.toggle("liked");
+  btn.textContent = btn.classList.contains("liked") ? "❤️ Liked" : "👍 Like";
+}
+
+function toggleComments(btn){
+  btn.closest(".post").querySelector(".comments").classList.toggle("show");
+}
+
+function addComment(btn){
+  const box = btn.closest(".comments");
+  const input = box.querySelector("input");
+  const list = box.querySelector(".comment-list");
+  if(!input.value.trim()) return;
+  const div = document.createElement("div");
+  div.className = "comment";
+  div.textContent = "You: " + input.value;
+  list.appendChild(div);
+  input.value = "";
+  showToast("Comment added");
+}
+
+function sharePost(){
+  if(navigator.share){ navigator.share({title:"ZYRIVO+", url:window.location.href}); }
+  else { showToast("Link copied"); }
+}
+
+function shortLike(btn){
+  btn.innerHTML = btn.innerHTML.includes("❤️") ? "❤️ 25K" : "❤️ Liked";
+}
+
+function uploadDemo(type){
+  showToast(type.charAt(0).toUpperCase() + type.slice(1) + " uploaded successfully!");
+  closeModal(type + 'Modal');
+}
+
+function askAI(){
+  const q = document.getElementById("aiInput").value.trim();
+  const resp = document.getElementById("aiResponse");
+  if(!q) return showToast("Ask AI something");
+  resp.style.display = "block";
+  resp.innerHTML = `<b>AI Output:</b><br><br>Generated content for: "${escapeHTML(q)}"`;
+}
+
+function aiTool(tool){
+  showToast(tool + " tool opened");
+}
+
+function openChat(name){
+  document.getElementById("chatTitle").textContent = "💬 " + name;
+  openModal('chatModal');
+}
+
+function sendChat(){
+  const inp = document.getElementById("chatInput");
+  if(!inp.value) return;
+  const box = document.getElementById("chatMessages");
+  const div = document.createElement("div");
+  div.className = "comment";
+  div.textContent = "You: " + inp.value;
+  box.appendChild(div);
+  inp.value = "";
+}
+
+function searchZYRIVO(){
+  const query = document.getElementById("searchInput").value.toLowerCase();
+  const res = document.getElementById("searchResults");
+  res.innerHTML = "";
+  if(!query) return;
+  res.innerHTML = `<div class="search-result"><b>Result for:</b> ${escapeHTML(query)}</div>`;
+}
+
+function escapeHTML(str){
+  return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+/* LIVE STREAM SCRIPT */
+let liveStreamObj = null;
+const liveBtn = document.getElementById("zyrivoLiveButton");
+const livePanel = document.getElementById("zyrivoLivePanel");
+const startLiveBtn = document.getElementById("zyrivoStartLive");
+const endLiveBtn = document.getElementById("zyrivoEndLive");
+const closeLiveBtn = document.getElementById("zyrivoCloseLive");
+const liveVideo = document.getElementById("zyrivoLiveVideo");
+const liveStatus = document.getElementById("zyrivoLiveStatus");
+
+liveBtn.addEventListener("click", () => livePanel.style.display = "block");
+closeLiveBtn.addEventListener("click", () => {
+  if(liveStreamObj) return alert("End live first.");
+  livePanel.style.display = "none";
+});
+
+startLiveBtn.addEventListener("click", async () => {
+  try {
+    liveStreamObj = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    liveVideo.srcObject = liveStreamObj;
+    startLiveBtn.style.display = "none";
+    endLiveBtn.style.display = "inline-block";
+    liveStatus.textContent = "🔴 LIVE is active!";
+  } catch(e) {
+    liveStatus.textContent = "Camera error: " + e.message;
+  }
+});
+
+endLiveBtn.addEventListener("click", () => {
+  if(liveStreamObj) liveStreamObj.getTracks().forEach(t => t.stop());
+  liveStreamObj = null;
+  liveVideo.srcObject = null;
+  startLiveBtn.style.display = "inline-block";
+  endLiveBtn.style.display = "none";
+  liveStatus.textContent = "Live ended.";
+});
+
+document.addEventListener("DOMContentLoaded", loadRealtimePosts);
+</script>
 </body>
 </html>
