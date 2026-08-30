@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SocialHub - Live Social Network</title>
+    <title id="appTitleDisplay">SocialHub AI - Global Creator Platform</title>
+    <!-- PWA Requirements for Android App -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1877F2">
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -18,591 +24,565 @@
                         fbBg: '#F0F2F5',
                         fbDarkBg: '#18191A',
                         fbDarkCard: '#242526',
-                        fbDarkHover: '#3A3B3C'
+                        fbDarkHover: '#3A3B3C',
+                        bkash: '#D12053',
+                        nagad: '#F7931E',
+                        rocket: '#8C3494'
                     }
                 }
             }
         }
     </script>
     <style>
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #cbd5e1;
-            border-radius: 10px;
-        }
-        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #475569;
-        }
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; }
+        .active-tab { border-bottom: 3px solid #1877F2; color: #1877F2; font-weight: bold; }
+        .dark .active-tab { color: #60A5FA; border-color: #60A5FA; }
     </style>
 </head>
-<body class="bg-fbBg dark:bg-fbDarkBg text-gray-900 dark:text-gray-100 min-h-screen font-sans transition-colors duration-200">
+<body class="bg-fbBg dark:bg-fbDarkBg text-gray-900 dark:text-gray-100 min-h-screen font-sans transition-colors duration-200 flex flex-col select-none">
+
+    <!-- ================= ANNOUNCEMENT BAR (OWNER CONTROLLABLE) ================= -->
+    <div id="announcementBar" class="bg-gradient-to-r from-purple-600 via-fbBlue to-indigo-600 text-white text-[11px] py-1 px-4 text-center font-semibold flex justify-between items-center">
+        <span id="announcementText">🚀 স্বাগতম SocialHub AI-তে! ৫০% ক্রিয়েটর রেভিনিউ শেয়ার ও ইনস্ট্যান্ট পেআউট চালু আছে।</span>
+        <button onclick="document.getElementById('announcementBar').remove()" class="text-white opacity-80 hover:opacity-100">✕</button>
+    </div>
 
     <!-- ================= NAVBAR ================= -->
-    <header class="sticky top-0 z-40 bg-white dark:bg-fbDarkCard shadow-sm px-4 py-2 flex items-center justify-between">
-        <!-- Left: Logo & Search -->
-        <div class="flex items-center space-x-3">
-            <h1 class="text-fbBlue font-extrabold text-2xl tracking-wider cursor-pointer flex items-center gap-1">
-                <i class="fa-brands fa-facebook text-3xl"></i> SocialHub
+    <header class="sticky top-0 z-40 bg-white dark:bg-fbDarkCard shadow-md px-3 py-2 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+            <h1 onclick="switchTab('feed')" class="text-fbBlue font-extrabold text-xl sm:text-2xl tracking-wider cursor-pointer flex items-center gap-1.5">
+                <i class="fa-brands fa-facebook text-2xl sm:text-3xl"></i> 
+                <span id="navAppName" class="hidden sm:inline">SocialHub</span> 
+                <span class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-[10px] px-2 py-0.5 rounded-full">PRO AI</span>
             </h1>
-            <div class="relative hidden sm:block">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400"></i>
-                <input type="text" id="searchInput" onkeyup="filterPosts()" placeholder="SocialHub এ খুঁজুন..." 
-                       class="bg-gray-100 dark:bg-fbDarkHover pl-9 pr-4 py-2 rounded-full text-sm focus:outline-none w-48 focus:w-64 transition-all">
-            </div>
         </div>
 
-        <!-- Center: Navigation Icons -->
-        <nav class="hidden md:flex items-center space-x-1 lg:space-x-4">
-            <button class="text-fbBlue border-b-4 border-fbBlue py-2 px-6 text-xl">
-                <i class="fa-solid fa-house"></i>
-            </button>
-            <button class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-fbDarkHover rounded-lg py-2 px-6 text-xl">
-                <i class="fa-solid fa-user-group"></i>
-            </button>
-            <button class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-fbDarkHover rounded-lg py-2 px-6 text-xl">
-                <i class="fa-solid fa-tv"></i>
-            </button>
-            <button class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-fbDarkHover rounded-lg py-2 px-6 text-xl">
-                <i class="fa-solid fa-[#1877F2] fa-store"></i>
-            </button>
+        <!-- Center Navigation Tabs -->
+        <nav class="flex items-center space-x-1 sm:space-x-2 overflow-x-auto">
+            <button onclick="switchTab('feed')" id="nav-feed" class="active-tab py-2 px-3 text-lg" title="Feed"><i class="fa-solid fa-house"></i></button>
+            <button onclick="switchTab('watch')" id="nav-watch" class="text-gray-500 dark:text-gray-400 py-2 px-3 text-lg" title="Watch"><i class="fa-solid fa-tv"></i></button>
+            <button onclick="switchTab('marketplace')" id="nav-marketplace" class="text-gray-500 dark:text-gray-400 py-2 px-3 text-lg" title="Marketplace"><i class="fa-solid fa-store"></i></button>
+            <button onclick="switchTab('ads')" id="nav-ads" class="text-gray-500 dark:text-gray-400 py-2 px-3 text-lg" title="Ads Manager"><i class="fa-solid fa-rectangle-ad"></i></button>
+            <button onclick="switchTab('ai-studio')" id="nav-ai-studio" class="text-purple-600 dark:text-purple-400 py-2 px-3 text-lg" title="AI Studio"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
+            <button onclick="switchTab('wallet')" id="nav-wallet" class="text-green-600 dark:text-green-400 py-2 px-3 text-lg" title="Wallet"><i class="fa-solid fa-wallet"></i></button>
         </nav>
 
-        <!-- Right: Controls & Profile -->
-        <div class="flex items-center space-x-2">
-            <!-- Dark Mode Toggle -->
-            <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-full bg-gray-200 dark:bg-fbDarkHover flex items-center justify-center text-gray-700 dark:text-yellow-400 hover:opacity-90">
+        <!-- Right User Controls -->
+        <div class="flex items-center space-x-1.5 sm:space-x-2">
+            <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-gray-100 dark:bg-fbDarkHover text-xs font-semibold px-2 py-1.5 rounded-lg focus:outline-none">
+                <option value="bn">🇧🇩 বাংলা</option>
+                <option value="en">🇺🇸 English</option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="ar">🇸🇦 العربية</option>
+            </select>
+
+            <button onclick="toggleDarkMode()" class="w-8 h-8 rounded-full bg-gray-100 dark:bg-fbDarkHover flex items-center justify-center text-gray-700 dark:text-yellow-400">
                 <i id="themeIcon" class="fa-solid fa-moon"></i>
             </button>
-            <!-- Messenger Icon -->
-            <button onclick="toggleChatWindow('রহিম আহমেদ')" class="w-10 h-10 rounded-full bg-gray-200 dark:bg-fbDarkHover flex items-center justify-center text-gray-700 dark:text-gray-200 hover:opacity-90 relative">
-                <i class="fa-brands fa-facebook-messenger"></i>
-                <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">3</span>
-            </button>
-            <!-- Notifications -->
-            <button onclick="alert('আপনার কোনো নতুন নোটিফিকেশন নেই।')" class="w-10 h-10 rounded-full bg-gray-200 dark:bg-fbDarkHover flex items-center justify-center text-gray-700 dark:text-gray-200 hover:opacity-90">
-                <i class="fa-solid fa-bell"></i>
-            </button>
-            <!-- Profile Avatar Button -->
-            <div onclick="openProfileModal()" class="flex items-center space-x-2 cursor-pointer p-1 rounded-full hover:bg-gray-100 dark:hover:bg-fbDarkHover">
-                <img id="navUserAvatar" src="https://i.pravatar.cc/150?img=68" alt="User Avatar" class="w-9 h-9 rounded-full object-cover border border-fbBlue">
+
+            <div onclick="openProfileModal()" class="cursor-pointer p-0.5 rounded-full border-2 border-fbBlue">
+                <img id="navUserAvatar" src="https://i.pravatar.cc/150?img=68" class="w-7 h-7 rounded-full object-cover">
             </div>
         </div>
     </header>
 
-    <!-- ================= MAIN CONTAINER ================= -->
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 p-4">
+    <!-- ================= MAIN APP WRAPPER ================= -->
+    <div class="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-6 p-2 sm:p-4 flex-1">
 
         <!-- ================= LEFT SIDEBAR ================= -->
-        <aside class="hidden md:block col-span-1 space-y-2">
-            <div onclick="openProfileModal()" class="flex items-center space-x-3 p-2 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover cursor-pointer">
-                <img id="sidebarUserAvatar" src="https://i.pravatar.cc/150?img=68" class="w-10 h-10 rounded-full object-cover">
+        <aside class="hidden md:block col-span-1 space-y-1">
+            <div onclick="openProfileModal()" class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover cursor-pointer">
+                <img id="sidebarUserAvatar" src="https://i.pravatar.cc/150?img=68" class="w-10 h-10 rounded-full object-cover border">
                 <div>
                     <h2 id="sidebarUserName" class="font-bold text-sm">সাকিব হাসান</h2>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">প্রোফাইল দেখুন</p>
+                    <p class="text-[11px] text-gray-500 dark:text-gray-400">প্রোফাইল সম্পাদন</p>
                 </div>
             </div>
-            <div class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover cursor-pointer text-fbBlue">
-                <i class="fa-solid fa-user-group text-xl w-6"></i>
-                <span class="font-medium text-gray-800 dark:text-gray-200 text-sm">বন্ধুরা (Friends)</span>
-            </div>
-            <div class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover cursor-pointer text-purple-600">
-                <i class="fa-solid fa-bookmark text-xl w-6"></i>
-                <span class="font-medium text-gray-800 dark:text-gray-200 text-sm">সংরক্ষিত (Saved)</span>
-            </div>
-            <div class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover cursor-pointer text-green-500">
-                <i class="fa-solid fa-users text-xl w-6"></i>
-                <span class="font-medium text-gray-800 dark:text-gray-200 text-sm">গ্রুপ (Groups)</span>
-            </div>
-            <div class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover cursor-pointer text-red-500">
-                <i class="fa-solid fa-clock-rotate-left text-xl w-6"></i>
-                <span class="font-medium text-gray-800 dark:text-gray-200 text-sm">স্মৃতি (Memories)</span>
-            </div>
-            <hr class="my-2 border-gray-300 dark:border-gray-700">
-            <button onclick="resetAppData()" class="w-full text-left flex items-center space-x-3 p-3 rounded-xl hover:bg-red-100 text-red-600 transition">
-                <i class="fa-solid fa-trash-can text-xl w-6"></i>
-                <span class="font-medium text-sm">অ্যাপ ডাটা রিসেট করুন</span>
+            
+            <button onclick="switchTab('feed')" class="w-full flex items-center space-x-3 p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover text-fbBlue font-medium text-xs">
+                <i class="fa-solid fa-house text-lg w-6"></i> <span>হোম ফিড</span>
+            </button>
+            <button onclick="switchTab('marketplace')" class="w-full flex items-center space-x-3 p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover text-amber-600 font-medium text-xs">
+                <i class="fa-solid fa-store text-lg w-6"></i> <span>মার্কেটপ্লেস</span>
+            </button>
+            <button onclick="switchTab('ads')" class="w-full flex items-center space-x-3 p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover text-blue-600 font-medium text-xs">
+                <i class="fa-solid fa-rectangle-ad text-lg w-6"></i> <span>বিজ্ঞাপন ম্যানেজার</span>
+            </button>
+            <button onclick="switchTab('ai-studio')" class="w-full flex items-center space-x-3 p-2.5 rounded-xl hover:bg-purple-100 dark:hover:bg-purple-900/30 text-purple-600 font-medium text-xs">
+                <i class="fa-solid fa-wand-magic-sparkles text-lg w-6"></i> <span>Global AI Studio</span>
+            </button>
+            <button onclick="switchTab('wallet')" class="w-full flex items-center space-x-3 p-2.5 rounded-xl hover:bg-gray-200 dark:hover:bg-fbDarkHover text-green-600 font-medium text-xs">
+                <i class="fa-solid fa-wallet text-lg w-6"></i> <span>ওয়ালেট ও পেআউট (৫০/৫০)</span>
+            </button>
+            <button onclick="switchTab('owner-panel')" class="w-full flex items-center space-x-3 p-2.5 rounded-xl hover:bg-amber-100 text-amber-700 font-bold text-xs">
+                <i class="fa-solid fa-crown text-lg w-6"></i> <span>ওনার কন্ট্রোল প্যানেল</span>
             </button>
         </aside>
 
-        <!-- ================= CENTER FEED ================= -->
+        <!-- ================= DYNAMIC MAIN CONTENT ================= -->
         <main class="col-span-1 md:col-span-2 space-y-4">
 
-            <!-- Stories Container -->
-            <div class="flex space-x-2 overflow-x-auto custom-scrollbar pb-2">
-                <!-- Add Story Card -->
-                <div onclick="addStory()" class="relative min-w-[110px] h-40 rounded-xl bg-white dark:bg-fbDarkCard shadow cursor-pointer overflow-hidden group flex-shrink-0">
-                    <img id="storyUserAvatar" src="https://i.pravatar.cc/150?img=68" class="h-28 w-full object-cover group-hover:scale-105 transition">
-                    <div class="absolute bottom-0 inset-x-0 h-12 bg-white dark:bg-fbDarkCard flex flex-col items-center justify-end pb-1">
-                        <div class="w-7 h-7 bg-fbBlue text-white rounded-full flex items-center justify-center -top-3 absolute border-2 border-white dark:border-fbDarkCard">
-                            <i class="fa-solid fa-plus text-xs"></i>
-                        </div>
-                        <span class="text-xs font-semibold">স্টোরি দিন</span>
+            <!-- TAB 1: NEWS FEED -->
+            <section id="tab-sec-feed" class="space-y-4">
+                <!-- Create Post Box -->
+                <div class="bg-white dark:bg-fbDarkCard p-4 rounded-xl shadow space-y-3">
+                    <div class="flex items-center space-x-3">
+                        <img id="createPostUserAvatar" src="https://i.pravatar.cc/150?img=68" class="w-9 h-9 rounded-full object-cover">
+                        <input type="text" id="postInput" placeholder="আপনার মনে কি আছে? লিখুন..." class="w-full bg-fbBg dark:bg-fbDarkHover rounded-full px-4 py-2 text-xs focus:outline-none">
+                    </div>
+                    <div id="mediaPreviewContainer" class="hidden relative">
+                        <img id="imagePreview" class="w-full max-h-56 object-cover rounded-lg border hidden">
+                        <video id="videoPreview" controls class="w-full max-h-56 rounded-lg border hidden"></video>
+                        <button onclick="removeMediaPreview()" class="absolute top-2 right-2 bg-gray-800 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">✕</button>
+                    </div>
+                    <hr class="border-gray-200 dark:border-gray-700">
+                    <div class="flex justify-between items-center text-gray-500 text-xs flex-wrap gap-2">
+                        <label class="flex items-center space-x-1 cursor-pointer hover:bg-gray-100 p-1.5 rounded-lg">
+                            <i class="fa-solid fa-images text-green-500 text-base"></i>
+                            <span>ছবি/ভিডিও</span>
+                            <input type="file" id="postMediaInput" accept="image/*,video/*" class="hidden" onchange="handleMediaSelect(event)">
+                        </label>
+                        <button onclick="autoAICaption()" class="flex items-center space-x-1 text-purple-600 hover:bg-gray-100 p-1.5 rounded-lg">
+                            <i class="fa-solid fa-robot"></i> <span>AI রাইটার</span>
+                        </button>
+                        <button onclick="createNewPost()" class="bg-fbBlue text-white font-semibold px-4 py-1.5 rounded-lg hover:bg-blue-600 text-xs">
+                            পোস্ট করুন
+                        </button>
                     </div>
                 </div>
-                <!-- Dynamic Stories Holder -->
-                <div id="storiesList" class="flex space-x-2"></div>
-            </div>
 
-            <!-- Create Post Box -->
-            <div class="bg-white dark:bg-fbDarkCard p-4 rounded-xl shadow space-y-3">
-                <div class="flex items-center space-x-3">
-                    <img id="createPostUserAvatar" src="https://i.pravatar.cc/150?img=68" class="w-10 h-10 rounded-full object-cover">
-                    <input type="text" id="postInput" placeholder="আপনার মনে কি আছে?" 
-                           class="w-full bg-fbBg dark:bg-fbDarkHover rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-fbBlue">
-                </div>
-                <!-- Image Preview Area -->
-                <div id="imagePreviewContainer" class="hidden relative">
-                    <img id="imagePreview" class="w-full max-h-60 object-cover rounded-lg border">
-                    <button onclick="removeImagePreview()" class="absolute top-2 right-2 bg-gray-800 bg-opacity-70 text-white rounded-full w-7 h-7 flex items-center justify-center">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-                <hr class="border-gray-200 dark:border-gray-700">
-                <div class="flex justify-between items-center text-gray-500 dark:text-gray-400 text-sm">
-                    <label class="flex items-center space-x-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-fbDarkHover p-2 rounded-lg flex-1 justify-center">
-                        <i class="fa-solid fa-images text-green-500 text-lg"></i>
-                        <span class="font-medium text-xs sm:text-sm">ছবি/ভিডিও</span>
-                        <input type="file" id="postImageInput" accept="image/*" class="hidden" onchange="previewSelectedImage(event)">
-                    </label>
-                    <button onclick="triggerEmoji()" class="flex items-center space-x-2 hover:bg-gray-100 dark:hover:bg-fbDarkHover p-2 rounded-lg flex-1 justify-center">
-                        <i class="fa-solid fa-face-smile text-yellow-500 text-lg"></i>
-                        <span class="font-medium text-xs sm:text-sm">অনুভূতি</span>
-                    </button>
-                    <button onclick="createNewPost()" class="bg-fbBlue text-white font-semibold px-5 py-1.5 rounded-lg hover:bg-blue-600 transition text-sm">
-                        পোস্ট করুন
-                    </button>
-                </div>
-            </div>
+                <div id="feedPosts" class="space-y-4"></div>
+            </section>
 
-            <!-- Dynamic Feed Posts Holder -->
-            <div id="feedPosts" class="space-y-4"></div>
+            <!-- TAB 2: MARKETPLACE -->
+            <section id="tab-sec-marketplace" class="hidden space-y-4">
+                <div class="flex justify-between items-center bg-white dark:bg-fbDarkCard p-4 rounded-xl shadow">
+                    <div>
+                        <h2 class="text-lg font-bold flex items-center gap-2"><i class="fa-solid fa-store text-amber-500"></i> গ্লোবাল মার্কেটপ্লেস</h2>
+                        <p class="text-xs text-gray-500">বিকাশ, নগদ ও রকেট পেমেন্টে কেনাকাটা করুন।</p>
+                    </div>
+                    <button onclick="openSellModal()" class="bg-amber-500 text-white px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-amber-600">
+                        + পণ্য বিক্রি করুন
+                    </button>
+                </div>
+                <div id="marketplaceGrid" class="grid grid-cols-2 gap-3"></div>
+            </section>
+
+            <!-- TAB 3: AD MANAGER -->
+            <section id="tab-sec-ads" class="hidden space-y-4">
+                <div class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white p-5 rounded-xl shadow-lg space-y-2">
+                    <h2 class="text-xl font-bold flex items-center gap-2"><i class="fa-solid fa-rectangle-ad text-yellow-300"></i> স্পন্সরড অ্যাড সেন্টার</h2>
+                    <p class="text-xs opacity-90">বিকাশ/নগদ দিয়ে বাজেট পরিশোধ করে পোস্ট প্রমোট করুন।</p>
+                </div>
+                <div class="bg-white dark:bg-fbDarkCard p-4 rounded-xl shadow space-y-3">
+                    <h3 class="font-bold text-sm border-b dark:border-gray-700 pb-2">নতুন ক্যাম্পেইন</h3>
+                    <div class="space-y-2 text-xs">
+                        <input type="text" id="adTitle" placeholder="বিজ্ঞাপনের শিরোনাম" class="w-full bg-fbBg dark:bg-fbDarkHover p-2 rounded-lg border border-gray-300 dark:border-gray-700">
+                        <input type="text" id="adImage" placeholder="ছবি URL" class="w-full bg-fbBg dark:bg-fbDarkHover p-2 rounded-lg border border-gray-300 dark:border-gray-700">
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="number" id="adBudget" value="500" placeholder="বাজেট (BDT)" class="w-full bg-fbBg dark:bg-fbDarkHover p-2 rounded-lg border border-gray-300 dark:border-gray-700">
+                            <input type="number" id="adDays" value="3" placeholder="মেয়াদ (দিন)" class="w-full bg-fbBg dark:bg-fbDarkHover p-2 rounded-lg border border-gray-300 dark:border-gray-700">
+                        </div>
+                        <button onclick="launchAdCampaign()" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold hover:bg-blue-700">
+                            🚀 অ্যাড রান করুন
+                        </button>
+                    </div>
+                </div>
+                <div id="activeAdsList" class="space-y-2"></div>
+            </section>
+
+            <!-- TAB 4: ADVANCED AI STUDIO (VOICE, TEXT & VIDEO) -->
+            <section id="tab-sec-ai-studio" class="hidden space-y-4">
+                <div class="bg-gradient-to-r from-purple-800 to-indigo-900 text-white p-5 rounded-xl shadow-xl space-y-2">
+                    <h2 class="text-xl font-black flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles text-yellow-300"></i> SocialHub Advanced AI Studio
+                    </h2>
+                    <p class="text-xs opacity-90">ভয়েস স্পিচ, ভিডিও জেনারেশন এবং এআই কন্টেন্ট ক্রিয়েশন।</p>
+                </div>
+
+                <div class="bg-white dark:bg-fbDarkCard p-4 rounded-xl shadow space-y-4">
+                    <div class="flex space-x-2 border-b dark:border-gray-700 pb-2 text-xs font-bold overflow-x-auto">
+                        <button onclick="openAITool('voice')" id="aitab-voice" class="px-3 py-2 bg-purple-600 text-white rounded-lg">১. AI Text-to-Voice</button>
+                        <button onclick="openAITool('txt2vid')" id="aitab-txt2vid" class="px-3 py-2 bg-gray-200 dark:bg-fbDarkHover rounded-lg">২. Text-to-Video</button>
+                        <button onclick="openAITool('research')" id="aitab-research" class="px-3 py-2 bg-gray-200 dark:bg-fbDarkHover rounded-lg">৩. Smart Script AI</button>
+                    </div>
+
+                    <!-- 1. Text to Voice (Speech Synthesis) -->
+                    <div id="aitool-voice" class="space-y-3">
+                        <label class="block text-xs font-semibold">ভয়েসে রূপান্তর করার জন্য বাংলা/ইংরেজি টেক্সট দিন:</label>
+                        <textarea id="aiVoiceInput" rows="3" placeholder="যেমন: স্বাগতম আমাদের অ্যাপে! এটি সম্পূর্ণ AI দ্বারা চালিত..." class="w-full bg-fbBg dark:bg-fbDarkHover p-3 rounded-lg text-xs border focus:outline-none"></textarea>
+                        <button onclick="generateAIVoice()" class="w-full bg-purple-600 text-white py-2.5 rounded-lg font-bold flex items-center justify-center gap-2 text-xs">
+                            <i class="fa-solid fa-volume-high"></i> AI ভয়েস শুনুন
+                        </button>
+                    </div>
+
+                    <!-- 2. Text to Video -->
+                    <div id="aitool-txt2vid" class="hidden space-y-3">
+                        <textarea id="txt2vidPrompt" rows="3" placeholder="ভিডিও প্রম্পট লিখুন..." class="w-full bg-fbBg dark:bg-fbDarkHover p-3 rounded-lg text-xs border focus:outline-none"></textarea>
+                        <button onclick="generateTextToVideo()" class="w-full bg-indigo-600 text-white py-2 rounded-lg font-bold text-xs">
+                            <i class="fa-solid fa-film"></i> AI ভিডিও জেনারেট করুন
+                        </button>
+                        <div id="txt2vidLoader" class="hidden text-center py-4 text-purple-600">
+                            <i class="fa-solid fa-spinner fa-spin text-2xl"></i>
+                            <p class="text-xs">ভিডিও রেন্ডার হচ্ছে...</p>
+                        </div>
+                        <canvas id="aiCanvas" class="hidden w-full h-48 bg-black rounded-lg mt-2"></canvas>
+                    </div>
+
+                    <!-- 3. Smart Script AI -->
+                    <div id="aitool-research" class="hidden space-y-3">
+                        <input type="text" id="aiTopicInput" placeholder="বিষয় লিখুন (যেমন: ভাইরাল রিল বানানোর উপায়)..." class="w-full bg-fbBg dark:bg-fbDarkHover p-3 rounded-lg text-xs border">
+                        <button onclick="generateAIScript()" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-xs">স্ক্রিপ্ট তৈরি করুন</button>
+                        <div id="aiScriptResult" class="hidden bg-gray-100 dark:bg-fbDarkHover p-3 rounded-lg text-xs"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: WATCH -->
+            <section id="tab-sec-watch" class="hidden space-y-4">
+                <h2 class="font-bold text-lg"><i class="fa-solid fa-tv text-red-500"></i> ওয়াচ ও ট্রেন্ডিং রিলস</h2>
+                <div id="watchFeedPosts" class="space-y-4"></div>
+            </section>
+
+            <!-- TAB 6: WALLET & 50/50 REVENUE SHARE & AUTO PAYOUT -->
+            <section id="tab-sec-wallet" class="hidden space-y-4">
+                <!-- 50/50 Monetization Banner -->
+                <div class="bg-gradient-to-r from-amber-500 to-orange-600 text-white p-4 rounded-xl shadow space-y-2">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-black text-sm"><i class="fa-solid fa-handshake"></i> ৫০/৫০ রেভিনিউ শেয়ার পলিসি</h3>
+                        <span class="bg-white text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded-full">অটো পেআউট</span>
+                    </div>
+                    <p class="text-xs">আপনার বিজ্ঞাপনের মোট আয়: ৫০% আপনি পাবেন, ৫০% প্ল্যাটফর্ম। প্রতি মাসের <strong>১ থেকে ৭ তারিখের মধ্যে</strong> স্বয়ংক্রিয়ভাবে সরাসরি আপনার বিকাশ/নগদ/রকেটে টাকা জমা হবে।</p>
+                </div>
+
+                <div class="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-6 rounded-2xl shadow-lg space-y-3">
+                    <p class="text-xs opacity-80 font-bold">আপনার বর্তমান আর্নিং ব্যালেন্স</p>
+                    <h2 id="walletBalanceDisplay" class="text-3xl font-extrabold">৳ ২৫,৮৫০.০০ BDT</h2>
+                    
+                    <div class="flex gap-2 pt-2">
+                        <button onclick="openPaymentModal('withdraw')" class="bg-white text-green-700 font-bold px-4 py-2 rounded-lg shadow text-xs">
+                            <i class="fa-solid fa-money-bill-transfer"></i> উইথড্র (১-৭ তারিখ অটো)
+                        </button>
+                        <button onclick="openPaymentModal('deposit')" class="bg-green-800 text-white font-bold px-4 py-2 rounded-lg border border-green-400 text-xs">
+                            <i class="fa-solid fa-wallet"></i> ডিপোজিট করুন
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 7: OWNER CONTROL PANEL (CMS & DYNAMIC TEXT EDITOR) -->
+            <section id="tab-sec-owner-panel" class="hidden space-y-4">
+                <div class="bg-amber-500 text-white p-4 rounded-xl shadow space-y-1">
+                    <h2 class="text-lg font-black"><i class="fa-solid fa-crown"></i> ওনার লাইভ কন্ট্রোল প্যানেল</h2>
+                    <p class="text-xs">অ্যাপের যেকোনো বাক্য, নাম ও অ্যানাউন্সমেন্ট সাথে সাথে পরিবর্তন করুন!</p>
+                </div>
+
+                <div class="bg-white dark:bg-fbDarkCard p-4 rounded-xl shadow space-y-3 text-xs">
+                    <h3 class="font-bold border-b dark:border-gray-700 pb-2 text-sm">অ্যাপেক্স টেস্ট/বাক্য পরিবর্তন করুন:</h3>
+                    
+                    <div>
+                        <label class="block font-semibold mb-1">অ্যাপের নাম পরিবর্তন:</label>
+                        <input type="text" id="ownerAppNameInput" value="SocialHub" class="w-full border p-2 rounded dark:bg-fbDarkHover">
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold mb-1">অ্যানাউন্সমেন্ট বার পরিবর্তন:</label>
+                        <input type="text" id="ownerAnnouncementInput" value="🚀 স্বাগতম SocialHub AI-তে! ৫০% ক্রিয়েটর রেভিনিউ শেয়ার ও ইনস্ট্যান্ট পেআউট চালু আছে।" class="w-full border p-2 rounded dark:bg-fbDarkHover">
+                    </div>
+
+                    <button onclick="saveOwnerChanges()" class="w-full bg-amber-500 text-white py-2 rounded-lg font-bold hover:bg-amber-600">
+                        💾 পরিবর্তনসমূহ সেভ করুন (লাইভ আপডেট)
+                    </button>
+                </div>
+            </section>
 
         </main>
 
-        <!-- ================= RIGHT SIDEBAR (Online Friends) ================= -->
+        <!-- ================= RIGHT SIDEBAR ================= -->
         <aside class="hidden md:block col-span-1 space-y-4">
-            <div class="bg-white dark:bg-fbDarkCard p-3 rounded-xl shadow">
-                <h3 class="font-bold text-gray-500 dark:text-gray-400 text-sm mb-3">অনলাইন বন্ধুরা (Contacts)</h3>
-                <div class="space-y-2">
-                    <div onclick="toggleChatWindow('রহিম আহমেদ')" class="flex items-center space-x-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-fbDarkHover cursor-pointer">
-                        <div class="relative">
-                            <img src="https://i.pravatar.cc/150?img=12" class="w-9 h-9 rounded-full">
-                            <span class="w-3 h-3 bg-green-500 border-2 border-white dark:border-fbDarkCard rounded-full absolute bottom-0 right-0"></span>
-                        </div>
-                        <span class="font-medium text-sm">রহিম আহমেদ</span>
-                    </div>
-                    <div onclick="toggleChatWindow('সুমি আক্তার')" class="flex items-center space-x-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-fbDarkHover cursor-pointer">
-                        <div class="relative">
-                            <img src="https://i.pravatar.cc/150?img=47" class="w-9 h-9 rounded-full">
-                            <span class="w-3 h-3 bg-green-500 border-2 border-white dark:border-fbDarkCard rounded-full absolute bottom-0 right-0"></span>
-                        </div>
-                        <span class="font-medium text-sm">সুমি আক্তার</span>
-                    </div>
-                    <div onclick="toggleChatWindow('তানভীর ইসলাম')" class="flex items-center space-x-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-fbDarkHover cursor-pointer">
-                        <div class="relative">
-                            <img src="https://i.pravatar.cc/150?img=33" class="w-9 h-9 rounded-full">
-                            <span class="w-3 h-3 bg-green-500 border-2 border-white dark:border-fbDarkCard rounded-full absolute bottom-0 right-0"></span>
-                        </div>
-                        <span class="font-medium text-sm">তানভীর ইসলাম</span>
-                    </div>
-                </div>
+            <div class="bg-white dark:bg-fbDarkCard p-3 rounded-xl shadow space-y-2">
+                <h3 class="font-bold text-gray-500 text-xs flex justify-between items-center">
+                    <span>স্পন্সরড অ্যাডস</span>
+                    <i class="fa-solid fa-rectangle-ad text-blue-500"></i>
+                </h3>
+                <div id="sidebarSponsoredList" class="space-y-2"></div>
             </div>
         </aside>
 
     </div>
 
-    <!-- ================= FLOATING MESSENGER CHAT BOX ================= -->
-    <div id="chatBox" class="fixed bottom-0 right-4 w-72 bg-white dark:bg-fbDarkCard rounded-t-xl shadow-2xl border border-gray-200 dark:border-gray-700 hidden z-50">
-        <div class="bg-fbBlue text-white px-3 py-2 rounded-t-xl flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <span id="chatFriendName" class="font-bold text-sm">রহিম আহমেদ</span>
+    <!-- ================= LOCAL PAYMENT MODAL (bKash, Nagad, Rocket) ================= -->
+    <div id="paymentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-fbDarkCard rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b pb-2 dark:border-gray-700">
+                <h3 id="paymentModalTitle" class="font-bold text-sm">পেমেন্ট মেথড নির্বাচন করুন</h3>
+                <button onclick="closePaymentModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <button onclick="closeChatWindow()" class="hover:text-gray-200"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div id="chatMessages" class="h-60 p-3 overflow-y-auto space-y-2 text-xs custom-scrollbar">
-            <div class="bg-gray-100 dark:bg-fbDarkHover p-2 rounded-lg max-w-[80%] text-gray-800 dark:text-gray-200">
-                হ্যালো! কেমন আছেন?
+            
+            <p class="text-xs text-gray-500">বাংলাদেশের সবচেয়ে জনপ্রিয় লোকাল গেটওয়ে সিলেক্ট করুন:</p>
+
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="selectPaymentGateway('bKash')" class="p-3 rounded-xl bg-pink-50 hover:bg-pink-100 border border-pink-200 text-center space-y-1">
+                    <div class="w-8 h-8 bg-bkash text-white font-bold text-xs rounded-full flex items-center justify-center mx-auto">বিকাশ</div>
+                    <span class="text-[10px] font-bold text-gray-700">bKash</span>
+                </button>
+                <button onclick="selectPaymentGateway('Nagad')" class="p-3 rounded-xl bg-orange-50 hover:bg-orange-100 border border-orange-200 text-center space-y-1">
+                    <div class="w-8 h-8 bg-nagad text-white font-bold text-xs rounded-full flex items-center justify-center mx-auto">নগদ</div>
+                    <span class="text-[10px] font-bold text-gray-700">Nagad</span>
+                </button>
+                <button onclick="selectPaymentGateway('Rocket')" class="p-3 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-200 text-center space-y-1">
+                    <div class="w-8 h-8 bg-rocket text-white font-bold text-xs rounded-full flex items-center justify-center mx-auto">রকেট</div>
+                    <span class="text-[10px] font-bold text-gray-700">Rocket</span>
+                </button>
             </div>
-        </div>
-        <div class="p-2 border-t border-gray-200 dark:border-gray-700 flex items-center space-x-2">
-            <input type="text" id="chatInput" placeholder="মেসেজ লিখুন..." onkeypress="handleChatKeyPress(event)"
-                   class="w-full bg-fbBg dark:bg-fbDarkHover rounded-full px-3 py-1.5 text-xs focus:outline-none">
-            <button onclick="sendChatMessage()" class="text-fbBlue p-1"><i class="fa-solid fa-paper-plane"></i></button>
+
+            <div id="gatewayForm" class="hidden space-y-2 text-xs pt-2">
+                <label class="block font-semibold" id="gatewayLabel">ফোন নম্বর দিন:</label>
+                <input type="text" id="gatewayPhone" placeholder="017XXXXXXXX" class="w-full border p-2 rounded-lg dark:bg-fbDarkHover">
+                <input type="number" id="gatewayAmount" placeholder="টাকার পরিমাণ (BDT)" class="w-full border p-2 rounded-lg dark:bg-fbDarkHover">
+                <button onclick="processGatewayTransaction()" class="w-full bg-green-600 text-white font-bold py-2 rounded-lg">কনফার্ম করুন</button>
+            </div>
         </div>
     </div>
 
-    <!-- ================= PROFILE EDIT MODAL ================= -->
+    <!-- ================= PROFILE MODAL ================= -->
     <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-fbDarkCard rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4">
-            <div class="flex justify-between items-center border-b pb-3 dark:border-gray-700">
-                <h3 class="font-bold text-lg">প্রোফাইল এডিট করুন</h3>
-                <button onclick="closeProfileModal()" class="text-gray-500 hover:text-black dark:hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+        <div class="bg-white dark:bg-fbDarkCard rounded-2xl max-w-sm w-full p-4 shadow-xl space-y-3">
+            <div class="flex justify-between items-center border-b pb-2 dark:border-gray-700">
+                <h3 class="font-bold text-sm">প্রোফাইল সম্পাদন</h3>
+                <button onclick="closeProfileModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="space-y-3">
-                <div>
-                    <label class="block text-xs font-semibold mb-1">আপনার নাম</label>
-                    <input type="text" id="editUserName" class="w-full border dark:border-gray-700 dark:bg-fbDarkHover rounded-lg px-3 py-2 text-sm focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold mb-1">প্রোফাইল পিকচার ইউআরএল (Image URL)</label>
-                    <input type="text" id="editUserAvatar" class="w-full border dark:border-gray-700 dark:bg-fbDarkHover rounded-lg px-3 py-2 text-sm focus:outline-none">
-                </div>
+            <div class="space-y-2 text-xs">
+                <input type="text" id="editUserName" class="w-full border p-2 rounded-lg dark:bg-fbDarkHover" placeholder="আপনার নাম">
+                <input type="text" id="editUserAvatar" class="w-full border p-2 rounded-lg dark:bg-fbDarkHover" placeholder="ছবি URL">
             </div>
-            <div class="flex justify-end space-x-2 pt-2">
-                <button onclick="closeProfileModal()" class="px-4 py-2 bg-gray-200 dark:bg-fbDarkHover rounded-lg text-sm font-semibold">বাতিল</button>
-                <button onclick="saveUserProfile()" class="px-4 py-2 bg-fbBlue text-white rounded-lg text-sm font-semibold hover:bg-blue-600">সেভ করুন</button>
+            <div class="flex justify-end space-x-2 pt-2 text-xs font-bold">
+                <button onclick="closeProfileModal()" class="px-3 py-1.5 bg-gray-200 rounded-lg">বাতিল</button>
+                <button onclick="saveUserProfile()" class="px-3 py-1.5 bg-fbBlue text-white rounded-lg">সেভ</button>
             </div>
         </div>
     </div>
 
-    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <!-- ================= JAVASCRIPT MASTER ENGINE ================= -->
     <script>
-        // Default State & LocalStorage Management
-        let currentUser = JSON.parse(localStorage.getItem('socialhub_user')) || {
-            name: 'সাকিব হাসান',
-            avatar: 'https://i.pravatar.cc/150?img=68'
-        };
-
-        let posts = JSON.parse(localStorage.getItem('socialhub_posts')) || [
-            {
-                id: 1,
-                author: 'তানভীর ইসলাম',
-                avatar: 'https://i.pravatar.cc/150?img=33',
-                time: '২ ঘণ্টা আগে',
-                content: 'আজকের আবহাওয়া অসাধারণ! নতুন অ্যাপস প্রজেক্টের কাজ শেষ করলাম। 🚀🔥',
-                image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600',
-                likes: 12,
-                liked: false,
-                comments: [
-                    { author: 'সুমি আক্তার', text: 'অনেক শুভকামনা ভাইয়া!' }
-                ]
-            }
+        let currentUser = JSON.parse(localStorage.getItem('sh_user')) || { name: 'সাকিব হাসান', avatar: 'https://i.pravatar.cc/150?img=68', balance: 25850 };
+        let posts = JSON.parse(localStorage.getItem('sh_posts')) || [
+            { id: 1, author: 'তানভীর ইসলাম', avatar: 'https://i.pravatar.cc/150?img=33', time: '১ ঘণ্টা আগে', content: 'SocialHub AI অ্যাপে ৫০/৫০ রেভিনিউ শেয়ার ও বিকাশ/নগদ পেআউট ব্যবস্থা দুর্দান্ত হয়েছে! 🚀', image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600', video: '', likes: 52, liked: false, comments: [] }
+        ];
+        let products = JSON.parse(localStorage.getItem('sh_products')) || [
+            { id: 101, name: 'Smart Watch', price: 3200, img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400' }
+        ];
+        let adsList = JSON.parse(localStorage.getItem('sh_ads')) || [
+            { id: 501, title: 'ডিজিটাল কোর্স ৫০% ডিসকাউন্ট!', budget: 1500, days: 3, img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400' }
         ];
 
-        let stories = JSON.parse(localStorage.getItem('socialhub_stories')) || [
-            { id: 1, name: 'সুমি আক্তার', img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300' },
-            { id: 2, name: 'রহিম আহমেদ', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300' }
-        ];
+        let selectedMediaBase64 = null, selectedMediaType = null, currentGatewayMode = 'deposit';
 
-        let selectedPostImageBase64 = null;
-
-        // Save State to LocalStorage
-        function saveData() {
-            localStorage.setItem('socialhub_user', JSON.stringify(currentUser));
-            localStorage.setItem('socialhub_posts', JSON.stringify(posts));
-            localStorage.setItem('socialhub_stories', JSON.stringify(stories));
-        }
-
-        // Initialize UI
         function initApp() {
             updateUserUI();
-            renderStories();
             renderPosts();
-
-            // Dark Mode check
-            if (localStorage.getItem('socialhub_theme') === 'dark') {
-                document.documentElement.classList.add('dark');
-                document.getElementById('themeIcon').classList.replace('fa-moon', 'fa-sun');
-            }
+            renderMarketplace();
+            renderAdsManager();
         }
 
         function updateUserUI() {
             document.getElementById('navUserAvatar').src = currentUser.avatar;
             document.getElementById('sidebarUserAvatar').src = currentUser.avatar;
             document.getElementById('createPostUserAvatar').src = currentUser.avatar;
-            document.getElementById('storyUserAvatar').src = currentUser.avatar;
             document.getElementById('sidebarUserName').innerText = currentUser.name;
+            document.getElementById('walletBalanceDisplay').innerText = `৳ ${currentUser.balance.toLocaleString()}.০০ BDT`;
         }
 
-        // Render Stories
-        function renderStories() {
-            const list = document.getElementById('storiesList');
-            list.innerHTML = stories.map(s => `
-                <div class="relative min-w-[110px] h-40 rounded-xl overflow-hidden cursor-pointer flex-shrink-0 group">
-                    <img src="${s.img}" class="w-full h-full object-cover group-hover:scale-105 transition">
-                    <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60"></div>
-                    <span class="absolute bottom-2 left-2 text-white font-bold text-xs z-10">${s.name}</span>
-                </div>
-            `).join('');
+        function saveData() {
+            localStorage.setItem('sh_user', JSON.stringify(currentUser));
+            localStorage.setItem('sh_posts', JSON.stringify(posts));
+            localStorage.setItem('sh_products', JSON.stringify(products));
+            localStorage.setItem('sh_ads', JSON.stringify(adsList));
         }
 
-        function addStory() {
-            const imgUrl = prompt('স্টোরির জন্য ছবির URL দিন:');
-            if (imgUrl) {
-                stories.unshift({ id: Date.now(), name: currentUser.name, img: imgUrl });
-                saveData();
-                renderStories();
+        function switchTab(tabName) {
+            const tabs = ['feed', 'watch', 'marketplace', 'ads', 'ai-studio', 'wallet', 'owner-panel'];
+            tabs.forEach(t => {
+                const sec = document.getElementById('tab-sec-' + t);
+                if(sec) sec.classList.add('hidden');
+                const nav = document.getElementById('nav-' + t);
+                if(nav) nav.classList.remove('active-tab');
+            });
+            document.getElementById('tab-sec-' + tabName).classList.remove('hidden');
+            const targetNav = document.getElementById('nav-' + tabName);
+            if(targetNav) targetNav.classList.add('active-tab');
+        }
+
+        // AI Voice Generator Engine (Web Speech API integration)
+        function generateAIVoice() {
+            const txt = document.getElementById('aiVoiceInput').value.trim();
+            if(!txt) return alert('ভয়েস এর জন্য কোন টেক্সট লিখুন!');
+            const utterance = new SpeechSynthesisUtterance(txt);
+            utterance.lang = 'bn-BD';
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function generateAIScript() {
+            const topic = document.getElementById('aiTopicInput').value.trim();
+            if(!topic) return alert('বিষয় লিখুন!');
+            const res = document.getElementById('aiScriptResult');
+            res.classList.remove('hidden');
+            res.innerHTML = `<strong>🤖 AI তৈরি করা স্ক্রিপ্ট (${topic}):</strong><br>১. হুক (০-৩ সেকেন্ড): আপনি কি জানেন ${topic} করার সবচেয়ে সহজ উপায়?<br>২. বডি: আজ আমরা দেখব কিভাবে সোশ্যাল হাব AI দিয়ে দ্রুত কাজ সম্পন্ন করা যায়...`;
+        }
+
+        // Local Payment Gateway Modal Handler (bKash, Nagad, Rocket)
+        function openPaymentModal(mode) {
+            currentGatewayMode = mode;
+            document.getElementById('paymentModalTitle').innerText = mode === 'withdraw' ? 'টাকা তুলুন (Withdraw)' : 'টাকা ডিপোজিট করুন (Deposit)';
+            document.getElementById('paymentModal').classList.remove('hidden');
+        }
+        function closePaymentModal() { document.getElementById('paymentModal').classList.add('hidden'); }
+        
+        function selectPaymentGateway(name) {
+            document.getElementById('gatewayForm').classList.remove('hidden');
+            document.getElementById('gatewayLabel').innerText = `${name} নম্বর এবং টাকার পরিমাণ দিন:`;
+        }
+
+        function processGatewayTransaction() {
+            const phone = document.getElementById('gatewayPhone').value;
+            const amount = parseInt(document.getElementById('gatewayAmount').value);
+            if(!phone || !amount) return alert('সঠিক তথ্য দিন!');
+
+            if(currentGatewayMode === 'deposit') {
+                currentUser.balance += amount;
+                alert(`সফলভাবে ৳${amount} BDT যোগ করা হয়েছে!`);
+            } else {
+                if(currentUser.balance < amount) return alert('পর্যাপ্ত ব্যালেন্স নেই!');
+                currentUser.balance -= amount;
+                alert(`৳${amount} BDT পেআউট রিকোয়েস্ট তৈরি হয়েছে। ১-৭ তারিখের মধ্যে অটো আপনার ট্রানজ্যাকশনে পৌঁছে যাবে!`);
             }
+            saveData(); updateUserUI(); closePaymentModal();
         }
 
-        // Handle Image Upload Preview
-        function previewSelectedImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    selectedPostImageBase64 = e.target.result;
-                    document.getElementById('imagePreview').src = selectedPostImageBase64;
-                    document.getElementById('imagePreviewContainer').classList.remove('hidden');
+        // Owner Dynamic Text Editor Logic
+        function saveOwnerChanges() {
+            const newName = document.getElementById('ownerAppNameInput').value.trim();
+            const newAnnounce = document.getElementById('ownerAnnouncementInput').value.trim();
+
+            if(newName) {
+                document.getElementById('navAppName').innerText = newName;
+                document.getElementById('appTitleDisplay').innerText = newName + " - Global AI Platform";
+            }
+            if(newAnnounce) {
+                document.getElementById('announcementText').innerText = newAnnounce;
+            }
+            alert('ওনার সেটিংস লাইভ আপডেট সম্পন্ন হয়েছে!');
+        }
+
+        // Media and Posts
+        function handleMediaSelect(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                selectedMediaBase64 = evt.target.result;
+                selectedMediaType = file.type.startsWith('video') ? 'video' : 'image';
+                document.getElementById('mediaPreviewContainer').classList.remove('hidden');
+                const imgPrev = document.getElementById('imagePreview');
+                const vidPrev = document.getElementById('videoPreview');
+                if(selectedMediaType === 'image') {
+                    imgPrev.src = selectedMediaBase64; imgPrev.classList.remove('hidden'); vidPrev.classList.add('hidden');
+                } else {
+                    vidPrev.src = selectedMediaBase64; vidPrev.classList.remove('hidden'); imgPrev.classList.add('hidden');
                 }
-                reader.readAsDataURL(file);
             }
+            reader.readAsDataURL(file);
         }
-
-        function removeImagePreview() {
-            selectedPostImageBase64 = null;
-            document.getElementById('postImageInput').value = '';
-            document.getElementById('imagePreviewContainer').classList.add('hidden');
+        function removeMediaPreview() {
+            selectedMediaBase64 = null; selectedMediaType = null;
+            document.getElementById('mediaPreviewContainer').classList.add('hidden');
         }
-
-        // Create New Post
         function createNewPost() {
             const input = document.getElementById('postInput');
-            const content = input.value.trim();
-
-            if (!content && !selectedPostImageBase64) {
-                alert('পোস্টে লিখুন বা একটি ছবি যুক্ত করুন!');
-                return;
-            }
-
-            const newPost = {
-                id: Date.now(),
-                author: currentUser.name,
-                avatar: currentUser.avatar,
-                time: 'এখনই',
-                content: content,
-                image: selectedPostImageBase64,
-                likes: 0,
-                liked: false,
-                comments: []
-            };
-
-            posts.unshift(newPost);
-            saveData();
-            renderPosts();
-
-            // Reset Form
-            input.value = '';
-            removeImagePreview();
+            const txt = input.value.trim();
+            if(!txt && !selectedMediaBase64) return alert('পোস্টে কিছু লিখুন!');
+            posts.unshift({
+                id: Date.now(), author: currentUser.name, avatar: currentUser.avatar, time: 'এখনই',
+                content: txt, image: selectedMediaType === 'image' ? selectedMediaBase64 : '',
+                video: selectedMediaType === 'video' ? selectedMediaBase64 : '', likes: 0, liked: false, comments: []
+            });
+            saveData(); renderPosts(); input.value = ''; removeMediaPreview();
         }
-
-        // Render All Posts
-        function renderPosts(filteredPosts = null) {
+        function renderPosts() {
             const container = document.getElementById('feedPosts');
-            const targetPosts = filteredPosts || posts;
-
-            if (targetPosts.length === 0) {
-                container.innerHTML = `<div class="bg-white dark:bg-fbDarkCard p-6 rounded-xl text-center text-gray-500">কোনো পোস্ট পাওয়া যায়নি।</div>`;
-                return;
-            }
-
-            container.innerHTML = targetPosts.map(post => `
+            container.innerHTML = posts.map(p => `
                 <div class="bg-white dark:bg-fbDarkCard rounded-xl shadow p-4 space-y-3">
-                    <!-- Post Header -->
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <img src="${post.avatar}" class="w-10 h-10 rounded-full object-cover">
-                            <div>
-                                <h4 class="font-bold text-sm">${post.author}</h4>
-                                <span class="text-xs text-gray-500 dark:text-gray-400">${post.time} · <i class="fa-solid fa-earth-americas"></i></span>
-                            </div>
-                        </div>
-                        ${post.author === currentUser.name ? `
-                            <button onclick="deletePost(${post.id})" class="text-gray-400 hover:text-red-500 p-2">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        ` : ''}
-                    </div>
-
-                    <!-- Post Content -->
-                    ${post.content ? `<p class="text-sm leading-relaxed">${escapeHtml(post.content)}</p>` : ''}
-
-                    <!-- Post Image -->
-                    ${post.image ? `<img src="${post.image}" class="w-full rounded-lg max-h-96 object-cover">` : ''}
-
-                    <!-- Post Stats -->
-                    <div class="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 pt-1">
-                        <div class="flex items-center space-x-1">
-                            <span class="bg-fbBlue text-white p-1 rounded-full w-4 h-4 flex items-center justify-center text-[10px]">
-                                <i class="fa-solid fa-thumbs-up"></i>
-                            </span>
-                            <span>${post.likes}</span>
-                        </div>
+                    <div class="flex items-center space-x-3">
+                        <img src="${p.avatar}" class="w-9 h-9 rounded-full object-cover">
                         <div>
-                            <span>${post.comments.length} কমেন্ট</span>
+                            <h4 class="font-bold text-xs">${p.author}</h4>
+                            <span class="text-[10px] text-gray-400">${p.time}</span>
                         </div>
                     </div>
-
-                    <hr class="border-gray-200 dark:border-gray-700">
-
-                    <!-- Like / Comment / Share Buttons -->
-                    <div class="flex justify-around items-center text-gray-500 dark:text-gray-400 text-sm font-semibold">
-                        <button onclick="toggleLike(${post.id})" class="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-fbDarkHover rounded-lg flex-1 justify-center transition ${post.liked ? 'text-fbBlue' : ''}">
-                            <i class="fa-solid fa-thumbs-up"></i>
-                            <span>লাইক</span>
-                        </button>
-                        <button onclick="focusCommentInput(${post.id})" class="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-fbDarkHover rounded-lg flex-1 justify-center transition">
-                            <i class="fa-solid fa-comment"></i>
-                            <span>কমেন্ট</span>
-                        </button>
-                        <button onclick="sharePost()" class="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-fbDarkHover rounded-lg flex-1 justify-center transition">
-                            <i class="fa-solid fa-share"></i>
-                            <span>শেয়ার</span>
-                        </button>
-                    </div>
-
-                    <!-- Comments Section -->
-                    <div class="space-y-2 pt-2 border-t border-gray-100 dark:border-gray-800">
-                        ${post.comments.map(c => `
-                            <div class="flex items-start space-x-2 text-xs">
-                                <img src="https://i.pravatar.cc/150?u=${c.author}" class="w-7 h-7 rounded-full">
-                                <div class="bg-fbBg dark:bg-fbDarkHover p-2 rounded-xl max-w-[85%]">
-                                    <span class="font-bold block">${c.author}</span>
-                                    <span>${escapeHtml(c.text)}</span>
-                                </div>
-                            </div>
-                        `).join('')}
-
-                        <!-- Add Comment Input -->
-                        <div class="flex items-center space-x-2 pt-2">
-                            <img src="${currentUser.avatar}" class="w-7 h-7 rounded-full">
-                            <input type="text" id="comment-input-${post.id}" placeholder="একটি কমেন্ট লিখুন..." 
-                                   onkeypress="handleCommentKeyPress(event, ${post.id})"
-                                   class="w-full bg-fbBg dark:bg-fbDarkHover rounded-full px-3 py-1 text-xs focus:outline-none">
-                            <button onclick="addComment(${post.id})" class="text-fbBlue p-1 text-sm"><i class="fa-solid fa-paper-plane"></i></button>
-                        </div>
-                    </div>
-
+                    ${p.content ? `<p class="text-xs leading-relaxed">${p.content}</p>` : ''}
+                    ${p.image ? `<img src="${p.image}" class="w-full rounded-lg max-h-80 object-cover">` : ''}
+                    ${p.video ? `<video src="${p.video}" controls class="w-full rounded-lg max-h-80 bg-black"></video>` : ''}
                 </div>
             `).join('');
         }
-
-        // Post Actions
-        function toggleLike(postId) {
-            const post = posts.find(p => p.id === postId);
-            if (post) {
-                post.liked = !post.liked;
-                post.likes += post.liked ? 1 : -1;
-                saveData();
-                renderPosts();
-            }
-        }
-
-        function addComment(postId) {
-            const input = document.getElementById(`comment-input-${postId}`);
-            const text = input.value.trim();
-            if (text) {
-                const post = posts.find(p => p.id === postId);
-                post.comments.push({ author: currentUser.name, text: text });
-                saveData();
-                renderPosts();
-            }
-        }
-
-        function handleCommentKeyPress(e, postId) {
-            if (e.key === 'Enter') addComment(postId);
-        }
-
-        function deletePost(postId) {
-            if (confirm('আপনি কি এই পোস্টটি মুছে ফেলতে চান?')) {
-                posts = posts.filter(p => p.id !== postId);
-                saveData();
-                renderPosts();
-            }
-        }
-
-        function sharePost() {
-            alert('পোস্টের লিংক কপি করা হয়েছে!');
-        }
-
-        function filterPosts() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = posts.filter(p => p.content.toLowerCase().includes(query) || p.author.toLowerCase().includes(query));
-            renderPosts(filtered);
-        }
-
-        // Profile Modal Logic
-        function openProfileModal() {
-            document.getElementById('editUserName').value = currentUser.name;
-            document.getElementById('editUserAvatar').value = currentUser.avatar;
-            document.getElementById('profileModal').classList.remove('hidden');
-        }
-
-        function closeProfileModal() {
-            document.getElementById('profileModal').classList.add('hidden');
-        }
-
-        function saveUserProfile() {
-            const name = document.getElementById('editUserName').value.trim();
-            const avatar = document.getElementById('editUserAvatar').value.trim();
-            if (name) currentUser.name = name;
-            if (avatar) currentUser.avatar = avatar;
-            saveData();
-            updateUserUI();
-            closeProfileModal();
-        }
-
-        // Dark Mode Logic
-        function toggleDarkMode() {
-            const isDark = document.documentElement.classList.toggle('dark');
-            localStorage.setItem('socialhub_theme', isDark ? 'dark' : 'light');
-            document.getElementById('themeIcon').classList.toggle('fa-sun', isDark);
-            document.getElementById('themeIcon').classList.toggle('fa-moon', !isDark);
-        }
-
-        // Live Chat Messenger Window
-        let activeChatFriend = 'রহিম আহমেদ';
-        function toggleChatWindow(friendName) {
-            activeChatFriend = friendName;
-            document.getElementById('chatFriendName').innerText = friendName;
-            document.getElementById('chatBox').classList.remove('hidden');
-        }
-
-        function closeChatWindow() {
-            document.getElementById('chatBox').classList.add('hidden');
-        }
-
-        function sendChatMessage() {
-            const input = document.getElementById('chatInput');
-            const msg = input.value.trim();
-            if (msg) {
-                const chatArea = document.getElementById('chatMessages');
-                chatArea.innerHTML += `
-                    <div class="bg-fbBlue text-white p-2 rounded-lg max-w-[80%] ml-auto text-right">
-                        ${escapeHtml(msg)}
+        function renderMarketplace() {
+            document.getElementById('marketplaceGrid').innerHTML = products.map(p => `
+                <div class="bg-white dark:bg-fbDarkCard rounded-xl border overflow-hidden shadow">
+                    <img src="${p.img}" class="w-full h-32 object-cover">
+                    <div class="p-2 space-y-1">
+                        <h4 class="font-bold text-xs truncate">${p.name}</h4>
+                        <p class="text-xs font-black text-amber-500">৳ ${p.price} BDT</p>
+                        <button onclick="alert('চ্যাট কানেক্ট করা হচ্ছে...')" class="w-full bg-fbBlue text-white text-[11px] font-bold py-1 rounded">ম্যাসেজ দিন</button>
                     </div>
-                `;
-                input.value = '';
-                chatArea.scrollTop = chatArea.scrollHeight;
-            }
+                </div>
+            `).join('');
+        }
+        function renderAdsManager() {
+            document.getElementById('activeAdsList').innerHTML = adsList.map(a => `
+                <div class="flex items-center space-x-3 p-2 border rounded-lg bg-gray-50 dark:bg-fbDarkHover text-xs">
+                    <img src="${a.img}" class="w-12 h-12 rounded object-cover">
+                    <div class="flex-1">
+                        <h4 class="font-bold">${a.title}</h4>
+                        <p class="text-[10px] text-gray-500">বাজেট: ৳${a.budget} | মেয়াাদ: ${a.days} দিন</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+        function launchAdCampaign() {
+            const title = document.getElementById('adTitle').value;
+            const img = document.getElementById('adImage').value || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400';
+            const budget = parseInt(document.getElementById('adBudget').value) || 500;
+            const days = parseInt(document.getElementById('adDays').value) || 3;
+            if(!title) return alert('বিজ্ঞাপনের শিরোনাম দিন!');
+            if(currentUser.balance < budget) return alert('পর্যাপ্ত ব্যালেন্স নেই!');
+            currentUser.balance -= budget;
+            adsList.unshift({ id: Date.now(), title, budget, days, img });
+            saveData(); updateUserUI(); renderAdsManager();
+            alert('বিজ্ঞাপন লাইভ প্রমোট করা শুরু হয়েছে!');
+        }
+        function openAITool(t) {
+            ['voice', 'txt2vid', 'research'].forEach(x => {
+                document.getElementById('aitool-' + x).classList.add('hidden');
+                document.getElementById('aitab-' + x).className = "px-3 py-2 bg-gray-200 dark:bg-fbDarkHover rounded-lg";
+            });
+            document.getElementById('aitool-' + t).classList.remove('hidden');
+            document.getElementById('aitab-' + t).className = "px-3 py-2 bg-purple-600 text-white rounded-lg";
+        }
+        function autoAICaption() {
+            document.getElementById('postInput').value = "🚀 সোশ্যাল হাব AI প্ল্যাটফর্মে বিকাশ/নগদে ৫০% রেভিনিউ শেয়ার পেয়ে খুব ভালো লাগছে!";
+        }
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+        function openProfileModal() { document.getElementById('profileModal').classList.remove('hidden'); }
+        function closeProfileModal() { document.getElementById('profileModal').classList.add('hidden'); }
+        function saveUserProfile() {
+            currentUser.name = document.getElementById('editUserName').value.trim() || currentUser.name;
+            currentUser.avatar = document.getElementById('editUserAvatar').value.trim() || currentUser.avatar;
+            saveData(); updateUserUI(); closeProfileModal();
         }
 
-        function handleChatKeyPress(e) {
-            if (e.key === 'Enter') sendChatMessage();
-        }
-
-        // Reset App Data
-        function resetAppData() {
-            if (confirm('আপনি কি অ্যাপের সমস্ত ডাটা মুছে প্রথম অবস্থায় ফিরিয়ে নিতে চান?')) {
-                localStorage.clear();
-                location.reload();
-            }
-        }
-
-        function triggerEmoji() {
-            const emojis = ['😊', '❤️', '🔥', '👍', '😍', '🎉'];
-            const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-            document.getElementById('postInput').value += ' ' + randomEmoji;
-        }
-
-        function escapeHtml(text) {
-            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        }
-
-        // App Launch
         initApp();
     </script>
 </body>
