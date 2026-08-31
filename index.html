@@ -1,1 +1,61 @@
+<!-- ZYRIVO PROMO CODE -->
+<div id="promoModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:white;width:90%;max-width:380px;border-radius:18px;padding:22px;text-align:center;">
+    <h2>🎁 ZYRIVO Promo Code</h2>
+    <p>Enter your promo code to unlock your reward.</p>
 
+    <input id="promoInput"
+      type="text"
+      placeholder="Enter promo code"
+      style="width:100%;box-sizing:border-box;padding:13px;border:1px solid #ddd;border-radius:10px;font-size:16px;">
+
+    <button onclick="applyPromoCode()"
+      style="width:100%;margin-top:12px;padding:13px;border:0;border-radius:10px;background:#1877f2;color:white;font-size:16px;">
+      Apply Code
+    </button>
+
+    <button onclick="closePromo()"
+      style="margin-top:10px;padding:8px 18px;border:0;background:#eee;border-radius:8px;">
+      Close
+    </button>
+
+    <p id="promoMessage" style="font-weight:bold;margin-top:15px;"></p>
+  </div>
+</div>
+
+<script>
+function openPromo() {
+  document.getElementById("promoModal").style.display = "flex";
+  document.getElementById("promoMessage").innerText = "";
+  document.getElementById("promoInput").value = "";
+}
+
+function closePromo() {
+  document.getElementById("promoModal").style.display = "none";
+}
+
+function applyPromoCode() {
+  const input = document.getElementById("promoInput");
+  const message = document.getElementById("promoMessage");
+
+  const code = input.value.trim().toUpperCase();
+
+  const promoCodes = {
+    "ZYRIVO2026": "🎉 Welcome to ZYRIVO! Your promo code has been activated.",
+    "WELCOMEZYRIVO": "🎁 Welcome bonus activated!",
+    "ZYRIVOPREMIUM": "⭐ Premium promo activated!",
+    "ZYRIVOCREATOR": "🚀 Creator bonus activated!",
+    "ZYRIVOFRIEND": "👥 Referral reward activated!"
+  };
+
+  if (promoCodes[code]) {
+    message.style.color = "green";
+    message.innerText = promoCodes[code];
+
+    localStorage.setItem("zyrivoPromoCode", code);
+  } else {
+    message.style.color = "red";
+    message.innerText = "❌ Invalid promo code.";
+  }
+}
+</script>
